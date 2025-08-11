@@ -94,9 +94,11 @@
 		{ "name": "test-ninja-gcc-debug", "configurePreset": "ninja-gcc", "configuration": "Debug", "inheritConfigureEnvironment": true },
 		{ "name": "test-ninja-gcc-release", "configurePreset": "ninja-gcc", "configuration": "Release", "inheritConfigureEnvironment": true },
 		{ "name": "test-ninja-clang-debug", "configurePreset": "ninja-clang", "configuration": "Debug", "inheritConfigureEnvironment": true },
+		{ "name": "test-ninja-clang-release", "configurePreset": "ninja-clang", "configuration": "Release", "inheritConfigureEnvironment": true },
 
 		{ "name": "test-ninja-gcc-single-debug", "configurePreset": "ninja-gcc-Debug", "inheritConfigureEnvironment": true },
 		{ "name": "test-ninja-gcc-single-release", "configurePreset": "ninja-gcc-Release", "inheritConfigureEnvironment": true },
-		{ "name": "test-ninja-clang-single-debug", "configurePreset": "ninja-clang-Debug", "inheritConfigureEnvironment": true }
+		{ "name": "test-ninja-clang-single-debug", "configurePreset": "ninja-clang-Debug", "inheritConfigureEnvironment": true },
+		{ "name": "test-ninja-clang-single-release", "configurePreset": "ninja-clang-Release", "inheritConfigureEnvironment": true }
 	]
 }
