@@ -1,0 +1,204 @@
+name: Bug Report
+description: Create a report to help improve snap
+title: "[BUG]: "
+labels: ["bug"]
+body:
+  - type: checkboxes
+    attributes:
+      label: Due diligence
+      description: Please confirm the following before submitting.
+      options:
+        - label: I searched existing issues and discussions
+          required: true
+        - label: I can reproduce on the latest main branch
+          required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the bug
+      description: A clear and concise description of the problem.
+      placeholder: >
+        When using snap::bit_ceil on MSVC 17.10 with C++20, bit_ceil(3u) returns 2 instead of 4.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      description: Exact steps to reproduce the issue. Include a minimal code sample (≤ 30 lines) if possible.
+      placeholder: |
+        1. Configure with CMake preset "vs22" (Debug)
+        2. Set the compiler to clang-16 on x86-64 (or specify your toolchain)
+        3. Write and compile the following program:
+           ```cpp
+           #include <iostream>
+           #include <snap/bit/bit_ceil.hpp>
+           int main() {
+             std::cout << snap::bit_ceil(5u) << std::endl; // expected 8
+           }
+           ```
+        4. Run the program
+        5. Observe the output
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What did you expect to happen?
+      placeholder: The program should print 8.
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: What actually happened? Include exact output and/or error messages.
+      placeholder: The program prints 2.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: cxx-standard
+    attributes:
+      label: C++ standard in use
+      description: The language level used to build your repro.
+      options:
+        - 17
+        - 20
+        - 23
+    validations:
+      required: true
+
+  - type: input
+    id: snap-version
+    attributes:
+      label: snap version / commit
+      description: Tag (e.g., v0.2.0) or commit SHA used.
+      placeholder: v0.2.0 or 1a2b3c4d
+    validations:
+      required: true
+
+  - type: input
+    id: compiler
+    attributes:
+      label: Compiler and version
+      description: Name and version of your compiler.
+      placeholder: "MSVC 19.44 (VS 17.10) / GCC 13.2 / Clang 16.0.6"
+    validations:
+      required: true
+
+  - type: input
+    id: stdlib
+    attributes:
+      label: C++ standard library
+      description: Which STL implementation is being used?
+      placeholder: libstdc++ / libc++ / MSVC STL
+    validations:
+      required: true
+
+  - type: input
+    id: os
+    attributes:
+      label: Operating system
+      description: OS and version.
+      placeholder: Windows 11 23H2 / Ubuntu 22.04 / macOS 14
+    validations:
+      required: true
+
+  - type: input
+    id: arch
+    attributes:
+      label: CPU architecture
+      description: Target architecture for your build.
+      placeholder: x86_64 / arm64 / aarch64
+    validations:
+      required: true
+
+  - type: input
+    id: cmake-version
+    attributes:
+      label: CMake version
+      description: Output of `cmake --version`.
+      placeholder: 3.29.2
+    validations:
+      required: true
+
+  - type: input
+    id: presets
+    attributes:
+      label: Presets used
+      description: Names of the CMake presets you used for configure/build/test.
+      placeholder: configure=vs22, build=build-vs22-debug, test=test-vs22-debug
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: sanitizers
+    attributes:
+      label: Sanitizers enabled
+      description: Which sanitizers (if any) were enabled?
+      options:
+        - label: AddressSanitizer (ASan)
+        - label: UndefinedBehaviorSanitizer (UBSan)
+        - label: ThreadSanitizer (TSan)
+        - label: None selected
+
+  - type: textarea
+    id: relevant-headers
+    attributes:
+      label: Relevant snap headers
+      description: List the snap headers involved in this issue.
+      placeholder: |
+        snap/bit/bit_ceil.hpp
+        snap/bit/bit_cast.hpp
+        snap/internal/compat/std.hpp
+    validations:
+      required: false
+
+  - type: textarea
+    id: macro-dump
+    attributes:
+      label: snap std/feature macros (from compat)
+      description: Paste the values of these if available in your environment (include "snap/internal/compat/std.hpp").
+      placeholder: |
+        SNAP_CPLUSPLUS=202002L
+        SNAP_CXX_STD=20
+        SNAP_HAS_CPP20=1
+        SNAP_HAS_CPP23=0
+    validations:
+      required: false
+
+  - type: textarea
+    id: build-logs
+    attributes:
+      label: Build and test logs
+      description: Paste relevant compiler output and/or `ctest --output-on-failure` excerpts.
+      placeholder: |
+        CMake configure output…
+        Build errors/warnings…
+        Test output…
+    validations:
+      required: false
+
+  - type: textarea
+    id: minimal-repro
+    attributes:
+      label: Minimal reproducer repository or gist (optional)
+      description: Link to a small repository or gist that reproduces the issue.
+      placeholder: https://gist.github.com/yourname/…
+    validations:
+      required: false
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots (optional)
+      description: Add screenshots or profiler traces if helpful.
+      placeholder: Drag-and-drop images here
+    validations:
+      required: false

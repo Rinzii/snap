@@ -1,0 +1,20 @@
+/*
+ * Copyright (c) Ian Pike
+ * Copyright (c) Snap contributors
+ *
+ * CCMath is provided under the Apache-2.0 License WITH LLVM-exception.
+ * See LICENSE for more information.
+ *
+ * SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+ */
+
+#ifndef SNAP_VERSION_HPP
+#define SNAP_VERSION_HPP
+
+#define SNAP_VERSION_MAJOR @SNAP_VERSION_MAJOR@
+#define SNAP_VERSION_MINOR @SNAP_VERSION_MINOR@
+#define SNAP_VERSION_PATCH @SNAP_VERSION_PATCH@
+#define SNAP_TO_VERSION(MAJOR, MINOR, PATCH) ((MAJOR) * 10000 + (MINOR) * 100 + (PATCH))
+#define SNAP_VERSION SNAP_TO_VERSION(SNAP_VERSION_MAJOR, SNAP_VERSION_MINOR, SNAP_VERSION_PATCH)
+
+#endif // SNAP_VERSION_HPP

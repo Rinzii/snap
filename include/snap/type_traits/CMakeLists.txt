@@ -1,0 +1,19 @@
+snap_add_headers(
+        common_reference.hpp
+        container_traits.hpp
+        dependent_type.hpp
+        is_bounded_array.hpp
+        is_brace_constructible.hpp
+        is_char.hpp
+        is_constant_evaluated.hpp
+        is_implicit_lifetime.hpp
+        is_integer.hpp
+        is_neither.hpp
+        is_signed_integral.hpp
+        is_specialization.hpp
+        is_unbounded_array.hpp
+        is_unsigned_integral.hpp
+        remove_cvref.hpp
+        type_identity.hpp
+        unwrap_reference.hpp
+)

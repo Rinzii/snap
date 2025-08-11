@@ -1,0 +1,14 @@
+snap_add_headers(
+        bit_cast.hpp
+        bit_ceil.hpp
+        bit_floor.hpp
+        bit_width.hpp
+        byteswap.hpp
+        countl.hpp
+        countr.hpp
+        endian.hpp
+        has_single_bit.hpp
+        popcount.hpp
+        rotl.hpp
+        rotr.hpp
+)
