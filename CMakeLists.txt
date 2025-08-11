@@ -80,7 +80,7 @@ add_library(${SNAP_TARGET_NAME}::${SNAP_TARGET_NAME} ALIAS ${SNAP_TARGET_NAME})
 
 # Collect all header files for installation or packaging
 include(cmake/helpers/SnapAddHeaders.cmake) # Helper for adding headers to interface
-add_subdirectory(include/SNAP)
+add_subdirectory(include/snap)
 
 # Detect supported compiler features
 include(cmake/features/GetAllSupportedFeatures.cmake)
