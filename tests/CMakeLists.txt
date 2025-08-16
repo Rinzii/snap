@@ -136,7 +136,7 @@ endif()
 # ==================================================================
 function(snap_add_gtest name)
   set(oneValueArgs FOLDER)
-  set(multiValueArgs SOURCES LIBS LABELS STANDARDS INCLUDES)
+  set(multiValueArgs SOURCES LIBS LABELS STANDARDS INCLUDES HEADERS DEFINES)
   cmake_parse_arguments(ARG "" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
   if (NOT ARG_STANDARDS)
@@ -152,11 +152,21 @@ function(snap_add_gtest name)
 
     set(tgt ${name}_cxx${std})
     add_executable(${tgt} ${ARG_SOURCES})
+    if (ARG_HEADERS)
+      target_sources(${tgt} PRIVATE ${ARG_HEADERS})
+      foreach(_h IN LISTS ARG_HEADERS)
+        if (EXISTS "${_h}")
+          set_source_files_properties(${_h} PROPERTIES HEADER_FILE_ONLY TRUE)
+        endif()
+      endforeach()
+    endif()
+
     target_link_libraries(${tgt} PRIVATE snap snap_test_support ${ARG_LIBS})
     target_compile_features(${tgt} PRIVATE cxx_std_${std})
-    target_compile_definitions(${tgt} PRIVATE SNAP_TEST_DATA_DIR="${CMAKE_CURRENT_LIST_DIR}/data")
+    target_compile_definitions(${tgt} PRIVATE ${ARG_DEFINES}
+            SNAP_TEST_DATA_DIR="${CMAKE_CURRENT_LIST_DIR}/data")
     target_include_directories(${tgt} PRIVATE
-            ${CMAKE_SOURCE_DIR}/include
+            ${CMAKE_SOURCE_DIR}/include        # snap headers (default)
             ${CMAKE_CURRENT_LIST_DIR}
             ${CMAKE_CURRENT_LIST_DIR}/support
             ${ARG_INCLUDES}
@@ -171,18 +181,16 @@ function(snap_add_gtest name)
     endif()
     _snap_harden(${tgt})
 
-    # Labels for either mode
+    # Labels
     set(_labels "${ARG_LABELS};cxx${std}")
 
     if (SNAP_TEST_GROUPED)
-      # One CTest entry per binary -> IDEs (CLion) will show suite/case tree
       add_test(NAME ${tgt}_all
               COMMAND $<TARGET_FILE:${tgt}> --gtest_color=yes)
       set_tests_properties(${tgt}_all PROPERTIES
               LABELS "${_labels}"
               WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
     else()
-      # Per-test discovery -> finer CI granularity & parallelism
       include(GoogleTest)
       string(REPLACE ";" "\\;" _labels_escaped "${_labels}")
       gtest_discover_tests(${tgt}
@@ -195,6 +203,149 @@ function(snap_add_gtest name)
   endforeach()
 endfunction()
 
+# ==================================================================
+# Helper: register unit tests by *sources only* with optional per-test overrides
+#
+# Usage A (simple, recommended):
+#   snap_add_unit_tests(
+#     NAME bit
+#     SOURCES
+#       bit/test_bit_cast.cpp
+#       bit/test_bit_ceil.cpp
+#     STANDARDS 17;20
+#     LIBS <global-extra-libs...>
+#     INCLUDES <global-extra-include-dirs...>
+#     HEADERS <extra-header-files-for-IDE...>
+#   )
+#
+# Usage B (per-test overrides):
+#   CASES entries allow: "src[|lib1,lib2][|inc1,inc2][|hdr1,hdr2]"
+# ==================================================================
+function(snap_add_unit_tests)
+  set(oneValueArgs NAME)
+  set(multiValueArgs SOURCES CASES STANDARDS LIBS INCLUDES HEADERS DEFINES)
+  cmake_parse_arguments(ARG "" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+
+  if (NOT ARG_NAME)
+    message(FATAL_ERROR "snap_add_unit_tests: NAME is required")
+  endif()
+  if (NOT ARG_SOURCES AND NOT ARG_CASES)
+    message(FATAL_ERROR "snap_add_unit_tests: provide SOURCES or CASES")
+  endif()
+  if (NOT ARG_STANDARDS)
+    set(ARG_STANDARDS 17)
+  endif()
+
+  # Helper: resolve a source under tests/unit if relative
+  function(_snap_resolve_test_src out path)
+    if (IS_ABSOLUTE "${path}")
+      set(${out} "${path}" PARENT_SCOPE)
+    else()
+      # Default to tests/unit/<path>
+      set(_cand "${CMAKE_CURRENT_LIST_DIR}/unit/${path}")
+      if (EXISTS "${_cand}")
+        set(${out} "${_cand}" PARENT_SCOPE)
+      else()
+        # Fallback: treat as relative to tests/ (rare)
+        set(_cand2 "${CMAKE_CURRENT_LIST_DIR}/${path}")
+        set(${out} "${_cand2}" PARENT_SCOPE)
+      endif()
+    endif()
+  endfunction()
+
+  # Helper: resolve an include dir header or extra header path if relative
+  function(_snap_resolve_path out path)
+    if (IS_ABSOLUTE "${path}")
+      set(${out} "${path}" PARENT_SCOPE)
+    else()
+      set(_a "${CMAKE_CURRENT_LIST_DIR}/${path}")
+      if (EXISTS "${_a}")
+        set(${out} "${_a}" PARENT_SCOPE)
+      else()
+        set(_b "${CMAKE_SOURCE_DIR}/${path}")
+        set(${out} "${_b}" PARENT_SCOPE)
+      endif()
+    endif()
+  endfunction()
+
+  # Build targets from simple SOURCES (same libs/includes for all)
+  foreach(src IN LISTS ARG_SOURCES)
+    _snap_resolve_test_src(_src "${src}")
+    if (NOT EXISTS "${_src}")
+      message(FATAL_ERROR "snap_add_unit_tests: source not found: ${src} (resolved '${_src}')")
+    endif()
+
+    get_filename_component(_base "${_src}" NAME_WE)
+    snap_add_gtest(snap_${ARG_NAME}_${_base}
+            SOURCES "${_src}"
+            STANDARDS ${ARG_STANDARDS}
+            LIBS ${ARG_LIBS}
+            INCLUDES ${ARG_INCLUDES}
+            HEADERS ${ARG_HEADERS}
+            DEFINES ${ARG_DEFINES}
+            LABELS unit;${ARG_NAME};${ARG_NAME}:${_base}
+            FOLDER "tests/${ARG_NAME}"
+    )
+  endforeach()
+
+  # Build targets from CASES with per-test overrides
+  foreach(case IN LISTS ARG_CASES)
+    string(REPLACE "|" ";" _parts "${case}")
+    list(LENGTH _parts _len)
+    if (_len LESS 1)
+      message(FATAL_ERROR "snap_add_unit_tests: bad CASE entry '${case}'")
+    endif()
+
+    list(GET _parts 0 _src_in)
+    _snap_resolve_test_src(_src "${_src_in}")
+    if (NOT EXISTS "${_src}")
+      message(FATAL_ERROR "snap_add_unit_tests: source not found in CASE '${case}' (resolved '${_src}')")
+    endif()
+
+    set(_case_libs "")
+    set(_case_includes "")
+    set(_case_headers "")
+
+    if (_len GREATER 1)
+      list(GET _parts 1 _libs_raw)
+      if (NOT _libs_raw STREQUAL "")
+        string(REPLACE "," ";" _case_libs "${_libs_raw}")
+      endif()
+    endif()
+    if (_len GREATER 2)
+      list(GET _parts 2 _incs_raw)
+      if (NOT _incs_raw STREQUAL "")
+        string(REPLACE "," ";" _incs_list "${_incs_raw}")
+        foreach(i IN LISTS _incs_list)
+          _snap_resolve_path(_ri "${i}")
+          list(APPEND _case_includes "${_ri}")
+        endforeach()
+      endif()
+    endif()
+    if (_len GREATER 3)
+      list(GET _parts 3 _hdrs_raw)
+      if (NOT _hdrs_raw STREQUAL "")
+        string(REPLACE "," ";" _hdrs_list "${_hdrs_raw}")
+        foreach(h IN LISTS _hdrs_list)
+          _snap_resolve_path(_rh "${h}")
+          list(APPEND _case_headers "${_rh}")
+        endforeach()
+      endif()
+    endif()
+
+    get_filename_component(_base "${_src}" NAME_WE)
+    snap_add_gtest(snap_${ARG_NAME}_${_base}
+            SOURCES "${_src}"
+            STANDARDS ${ARG_STANDARDS}
+            LIBS ${ARG_LIBS} ${_case_libs}
+            INCLUDES ${ARG_INCLUDES} ${_case_includes}
+            HEADERS ${ARG_HEADERS} ${_case_headers}
+            DEFINES ${ARG_DEFINES}
+            LABELS unit;${ARG_NAME};${ARG_NAME}:${_base}
+            FOLDER "tests/${ARG_NAME}"
+    )
+  endforeach()
+endfunction()
 
 # ==================================================================
 # Helper: compile-fail test (expects compiler error)
@@ -296,65 +447,26 @@ function(snap_add_compile_fail)
 endfunction()
 
 # ==================================================================
-# Helper: register many unit tests by header paths
+# bit (unit tests)
+# Sources are relative to tests/unit/.
 # ==================================================================
-function(snap_add_component_tests COMPONENT)
-  set(oneValueArgs DIR)
-  set(multiValueArgs HEADERS STANDARDS LIBS INCLUDES)
-  cmake_parse_arguments(ARG "" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
-
-  if (NOT ARG_DIR)
-    set(ARG_DIR ${CMAKE_CURRENT_LIST_DIR}/unit/${COMPONENT})
-  endif()
-  if (NOT ARG_STANDARDS)
-    set(ARG_STANDARDS 17)
-  endif()
-
-  if (ARG_HEADERS)
-    set(_headers ${ARG_HEADERS})
-  else()
-    set(_headers ${ARG_UNPARSED_ARGUMENTS})
-  endif()
-
-  set(_created_targets "")
-  foreach(h IN LISTS _headers)
-    get_filename_component(_base "${h}" NAME_WE)
-    set(_src "${ARG_DIR}/test_${_base}.cpp")
-    if (NOT EXISTS "${_src}")
-      message(FATAL_ERROR "Missing test source ${_src} (for header ${h})")
-    endif()
-
-    snap_add_gtest(snap_${COMPONENT}_${_base}
-            SOURCES "${_src}"
-            LIBS ${ARG_LIBS}
-            LABELS unit;${COMPONENT};${COMPONENT}:${_base}
-            STANDARDS ${ARG_STANDARDS}
-            INCLUDES ${ARG_INCLUDES}
-            FOLDER "tests/${COMPONENT}"
-    )
-
-    foreach(std IN LISTS ARG_STANDARDS)
-      set(_tgt snap_${COMPONENT}_${_base}_cxx${std})
-      if (TARGET "${_tgt}")
-        list(APPEND _created_targets "${_tgt}")
-      endif()
-    endforeach()
-  endforeach()
-
-  if (_created_targets)
-    add_custom_target(${COMPONENT}_tests DEPENDS ${_created_targets})
-    set_property(TARGET ${COMPONENT}_tests PROPERTY FOLDER "tests/${COMPONENT}")
-  endif()
-endfunction()
-
-# ==================================================================
-# Component: bit (matches your current unit tests)
-# ==================================================================
-snap_add_component_tests(bit
+snap_add_unit_tests(
+        NAME bit
         STANDARDS 17;20
-        HEADERS
-        bit/bit_cast.hpp
-        bit/bit_ceil.hpp
+        SOURCES
+        bit/test_bit_cast.cpp
+        bit/test_bit_ceil.cpp
+)
+
+# ==================================================================
+# fixed_string (unit tests)
+# test file lives directly under tests/unit/
+# ==================================================================
+snap_add_unit_tests(
+        NAME fixed_string
+        STANDARDS 17;20
+        SOURCES
+        test_fixed_string.cpp
 )
 
 # ==================================================================

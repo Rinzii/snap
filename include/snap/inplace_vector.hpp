@@ -12,7 +12,7 @@
 
 namespace snap {
 
-// ============================ primary template (N > 0) ============================
+// primary template (N > 0)
 template<class T, std::size_t N>
 struct inplace_vector {
     static_assert(N > 0, "Primary template is for N > 0; N==0 has a specialization");
@@ -147,10 +147,10 @@ struct inplace_vector {
         }
     }
 
-    // -------------------------------- destructor --------------------------------
+    // destructor
     ~inplace_vector() { destroy_all_(); }
 
-    // ------------------------------ assignment ops ------------------------------
+    // assignment ops
     inplace_vector& operator=(const inplace_vector& rhs) {
         if (this == &rhs) return *this;
         assign(rhs.begin(), rhs.end());
@@ -247,7 +247,7 @@ struct inplace_vector {
         assign(std::begin(rg), std::end(rg));
     }
 
-    // ------------------------------- element access ------------------------------
+    // element access
     reference at(size_type pos) {
         if (pos >= m_size) throw std::out_of_range("inplace_vector::at");
         return base()[pos];
@@ -269,7 +269,7 @@ struct inplace_vector {
     pointer       data()       noexcept { return m_size ? base() : nullptr; } // allowed to be null when empty
     const_pointer data() const noexcept { return m_size ? base() : nullptr; }
 
-    // --------------------------------- iterators --------------------------------
+    // iterators
     iterator begin()               noexcept { return base(); }
     const_iterator begin()   const noexcept { return base(); }
     const_iterator cbegin()  const noexcept { return base(); }
@@ -283,7 +283,7 @@ struct inplace_vector {
     const_reverse_iterator rend()   const noexcept { return const_reverse_iterator(begin()); }
     const_reverse_iterator crend()  const noexcept { return const_reverse_iterator(begin()); }
 
-    // --------------------------- size & capacity (static) ------------------------
+    // size & capacity (static)
     constexpr size_type size()     const noexcept { return m_size; }
     static constexpr size_type max_size() noexcept { return N; }
     static constexpr size_type capacity() noexcept { return N; }
@@ -292,7 +292,7 @@ struct inplace_vector {
     static constexpr void reserve(size_type /*n*/) noexcept { /* no-op */ }
     static constexpr void shrink_to_fit()         noexcept { /* no-op */ }
 
-    // ---------------------------------- modifiers --------------------------------
+    // modifiers
     void clear() noexcept { destroy_all_(); }
 
     // pop_back: precondition !empty(); UB otherwise (like std containers in non-hardened mode)
@@ -630,7 +630,7 @@ struct inplace_vector {
         return std::lexicographical_compare(a.begin(), a.end(), b.begin(), b.end());
     }
 
-    // ------------------------------ friend ADL swap ------------------------------
+    // friend ADL swap
     friend void swap(inplace_vector& a, inplace_vector& b) noexcept(noexcept(a.swap(b))) { a.swap(b); }
 
 private:

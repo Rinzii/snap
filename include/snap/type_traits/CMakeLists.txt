@@ -1,6 +1,5 @@
 snap_add_headers(
         common_reference.hpp
-        container_traits.hpp
         dependent_type.hpp
         is_bounded_array.hpp
         is_brace_constructible.hpp

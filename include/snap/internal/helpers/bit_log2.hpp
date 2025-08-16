@@ -4,7 +4,7 @@
 #include <type_traits>
 
 #include "snap/bit/countl.hpp"
-#include "snap/type_traits/is_unsigned_integral.hpp"
+#include "snap/type_traits/is_integer.hpp"
 
 namespace snap::internal {
     template <typename T>

@@ -2,7 +2,7 @@
 
 #include <type_traits>
 
-namespace riot::internal
+namespace snap::internal
 {
 	/**
 	 * @brief Helper function to prevent the user from accidentally passing an integer to an expect function.

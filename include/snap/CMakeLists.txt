@@ -1,4 +1,5 @@
 snap_add_headers(
+        fixed_string.hpp
         inplace_vector.hpp
         numbers.hpp
         span.hpp
