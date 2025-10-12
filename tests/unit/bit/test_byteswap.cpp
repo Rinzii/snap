@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include <cstring>
 #include <cstdint>
+#include <cstring>
 #include <limits>
 #include <type_traits>
 #include <vector>
@@ -18,7 +18,7 @@ constexpr T reference_byteswap(T value)
   U u = static_cast<U>(value);
   U result = 0;
   for (int i = 0; i < byte_count; ++i) {
-    const U byte = (u >> (i * 8)) & static_cast<U>(0xFFu);
+    const U byte = (u >> (i * 8)) & static_cast<U>(0xFFU);
     result |= byte << ((byte_count - 1 - i) * 8);
   }
   return static_cast<T>(result);
@@ -49,7 +49,7 @@ TYPED_TEST(ByteswapTyped, MatchesReferenceAndIsInvolutory)
   samples.push_back(static_cast<T>(-1));
   samples.push_back(std::numeric_limits<T>::max());
   samples.push_back(std::numeric_limits<T>::min());
-  samples.push_back(static_cast<T>(0x0102030405060708ull));
+  samples.push_back(static_cast<T>(0x0102030405060708ULL));
 
   for (T value : samples) {
     const T swapped = snap::byteswap(value);
@@ -60,10 +60,10 @@ TYPED_TEST(ByteswapTyped, MatchesReferenceAndIsInvolutory)
 
 TEST(Byteswap, DistinguishesBytePatterns)
 {
-  constexpr std::uint32_t value = 0x01020304u;
+  constexpr std::uint32_t value = 0x01020304U;
   const auto swapped = snap::byteswap(value);
   EXPECT_NE(swapped, value);
-  EXPECT_EQ(swapped, 0x04030201u);
+  EXPECT_EQ(swapped, 0x04030201U);
 }
 
 } // namespace
