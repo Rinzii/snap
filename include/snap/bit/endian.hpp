@@ -49,7 +49,6 @@ Configuration
 - Define SNAP_DISABLE_ENDIAN_ARCH_HINTS to skip architecture hints.
 */
 
-
 #pragma once
 
 #if defined(__has_include)
