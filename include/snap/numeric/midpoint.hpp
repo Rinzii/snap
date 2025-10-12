@@ -49,13 +49,13 @@ namespace snap
 
 			if (aa < lo)
 			{
-				// Not safe to halve a (may underflow toward subnormals): halve b.
+				// Not safe to halve a (may underflow toward subnormals) so halve b.
 				return a + b / T(2);
 			}
 
 			if (bb < lo)
 			{
-				// Not safe to halve b: halve a.
+				// Not safe to halve b so halve a.
 				return a / T(2) + b;
 			}
 
