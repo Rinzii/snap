@@ -3,6 +3,7 @@
 #include "snap/internal/builtin/bit/bit_cast.hpp"
 
 #include <type_traits>
+#include <cstring>
 
 namespace snap
 {
