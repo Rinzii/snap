@@ -3,7 +3,6 @@
 #include "snap/bit/bit_width.hpp"
 #include "snap/type_traits/is_neither.hpp"
 
-#include <limits>
 #include <type_traits>
 
 namespace snap {

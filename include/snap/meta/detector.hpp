@@ -5,7 +5,7 @@
 namespace snap
 {
 	// Primary: expression is ill-formed -> yields fallback type T and false
-	template <class T, class Void, template <class...> class, class...> struct detector : type_identity<T>
+	template <class T, class, template <class...> class, class...> struct detector : type_identity<T>
 	{
 		using value_t = std::false_type;
 	};
