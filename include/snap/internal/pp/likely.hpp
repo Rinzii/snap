@@ -19,11 +19,11 @@
 /// \note Expands to [[likely]] if the compiler supports it, or nothing otherwise.
 
 #if defined(__has_cpp_attribute)
-#  if __has_cpp_attribute(likely)
-#    define SNAP_LIKELY_ATTR [[likely]]
-#  else
-#    define SNAP_LIKELY_ATTR
-#  endif
+	#if __has_cpp_attribute(likely)
+		#define SNAP_LIKELY_ATTR [[likely]]
+	#else
+		#define SNAP_LIKELY_ATTR
+	#endif
 #else
-#  define SNAP_LIKELY_ATTR
+	#define SNAP_LIKELY_ATTR
 #endif

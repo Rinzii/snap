@@ -1,7 +1,7 @@
 # Security Policy for Snap
 
 ## 1. Introduction
-This security policy outlines the procedures and guidelines for reporting vulnerabilities and managing security issues related to the Snap library. Our commitment is to provide only the essential support necessary to maintain the security of this project.
+This security policy outlines the procedures and guidelines for reporting vulnerabilities and managing security issues related to the CCMath library. Our commitment is to provide only the essential support necessary to maintain the security of this project.
 
 ## 2. Supported Versions
 We only support the latest released version of the Snap library, according to [Semantic Versioning (SemVer)](https://semver.org/). If you are using an older version, we strongly encourage you to upgrade to the latest version to ensure you receive any security updates.
@@ -29,10 +29,10 @@ Once the vulnerability is resolved, we will:
 - Credit the individual who reported the vulnerability unless they wish to remain anonymous.
 
 ## 6. Security Best Practices
-We recommend that users of the Snap library:
-- Keep their Snap version up to date by always using the latest release.
+We recommend that users of the CCMath library:
+- Keep their CCMath version up to date by always using the latest release.
 - Regularly review and apply security patches as they become available.
-- Follow secure coding practices when integrating Snap into their projects.
+- Follow secure coding practices when integrating CCMath into their projects.
 
 ## 7. Security Contact Information
 If you have any questions or need further assistance, please contact us at ianpike98(at)gmail(dot)com.

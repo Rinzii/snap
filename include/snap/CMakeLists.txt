@@ -16,3 +16,6 @@ add_subdirectory(meta)
 add_subdirectory(numeric)
 add_subdirectory(type_traits)
 add_subdirectory(utility)
+
+add_subdirectory(iterator)
+add_subdirectory(simd)

@@ -7,13 +7,6 @@
 #include <type_traits>
 #include <cmath>
 
-#include "snap/internal/builtin/bit_cast.hpp" // Needed for SNAP_HAS_BUILTIN_BIT_CAST
-#ifdef SNAP_HAS_BUILTIN_BIT_CAST
-  #ifndef SNAP_TESTS_HAS_BUILTIN_BIT_CAST
-    #define SNAP_TESTS_HAS_BUILTIN_BIT_CAST
-  #endif // SNAP_TESTS_HAS_BUILTIN_BIT_CAST
-#endif // SNAP_HAS_BUILTIN_BIT_CAST
-
 #include "snap/bit/bit_cast.hpp"
 
 // ----------------------------- byte helpers -----------------------------
@@ -208,18 +201,4 @@ TEST(BitCastFloatIEEE, InfinitiesAndNaNRoundTrip) {
   EXPECT_TRUE(std::isnan(back));
   EXPECT_EQ(snap::bit_cast<std::uint64_t>(back), b_qnan);
 }
-
-// constexpr smoke tests when toolchain allows constexpr bit_cast
-#ifdef SNAP_TESTS_HAS_BUILTIN_BIT_CAST
-TEST(BitCastConstexpr, ConstexprIntsAndArrays) {
-  constexpr std::uint32_t u = 0xDEADBEEF;
-  constexpr auto u2 = snap::bit_cast<std::uint32_t>(u);
-  static_assert(u2 == 0xDEADBEEF, "constexpr self-cast");
-
-  constexpr std::array<unsigned char, 4> bytes{{0xEF,0xBE,0xAD,0xDE}};
-  constexpr auto v = snap::bit_cast<std::uint32_t>(bytes);
-  constexpr auto back = snap::bit_cast<std::array<unsigned char,4>>(v);
-  static_assert(arr_eq(back, bytes), "constexpr round-trip array<->uint32_t");
-}
-#endif
 

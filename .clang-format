@@ -13,7 +13,7 @@ AllowShortIfStatementsOnASingleLine: WithoutElse
 AllowShortLambdasOnASingleLine: All
 AllowShortLoopsOnASingleLine: true
 AlwaysBreakBeforeMultilineStrings: true
-AlwaysBreakTemplateDeclarations: Yes
+AlwaysBreakTemplateDeclarations: No
 BasedOnStyle: LLVM
 BinPackArguments: false
 BinPackParameters: false
@@ -34,7 +34,7 @@ BraceWrapping:
   IndentBraces: true
   SplitEmptyFunction: true
   SplitEmptyNamespace: true
-  SplitEmptyRecord: true
+  SplitEmptyRecord: false
 BreakAfterAttributes: Never
 BreakBeforeBraces: Allman
 ColumnLimit: 160

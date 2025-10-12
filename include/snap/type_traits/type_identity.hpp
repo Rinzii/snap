@@ -2,8 +2,8 @@
 
 namespace snap
 {
-    template<typename Type>
-    struct type_identity { // needed for c++17 support
-        using type = Type;
-    };
+	template <typename Type> struct type_identity
+	{
+		using type = Type;
+	};
 } // namespace snap

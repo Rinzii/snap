@@ -2,6 +2,8 @@
 # ==================================================================
 # Options (opt-in)
 # ==================================================================
+option(SNAP_BUILD_TESTS            "Build snap's test suite" ON)
+option(SNAP_BUILD_FUZZERS          "Build libFuzzer harnesses for snap" OFF)
 option(SNAP_TEST_ENABLE_ASAN       "Enable Address/UBSan for tests" OFF)
 option(SNAP_TEST_ENABLE_TSAN       "Enable ThreadSanitizer for tests" OFF)
 option(SNAP_TEST_WERROR            "Treat warnings as errors in tests" OFF)

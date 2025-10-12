@@ -1,4 +1,4 @@
 snap_add_headers(
-        bit_cast.hpp
+        bit/bit_cast.hpp
 )
 

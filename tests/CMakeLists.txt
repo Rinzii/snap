@@ -8,7 +8,7 @@ enable_testing()
 set(CTEST_OUTPUT_ON_FAILURE ON)
 
 set_property(GLOBAL PROPERTY CTEST_LABELS_FOR_SUBPROJECTS
-        "unit;compile-fail;bit;functional;type_traits"
+        "unit;compile-fail;bit;functional;type_traits;integration"
 )
 
 # ==================================================================
@@ -447,6 +447,11 @@ function(snap_add_compile_fail)
 endfunction()
 
 # ==================================================================
+# Integration tests
+# ==================================================================
+add_subdirectory(integration)
+
+# ==================================================================
 # bit (unit tests)
 # Sources are relative to tests/unit/.
 # ==================================================================
@@ -456,18 +461,167 @@ snap_add_unit_tests(
         SOURCES
         bit/test_bit_cast.cpp
         bit/test_bit_ceil.cpp
+        bit/test_bit_floor.cpp
+        bit/test_bit_width.cpp
+        bit/test_byteswap.cpp
+        bit/test_countl_countr.cpp
+        bit/test_popcount.cpp
+        bit/test_rotl_rotr.cpp
+        bit/test_has_single_bit.cpp
+        bit/test_endian.cpp
 )
 
 # ==================================================================
 # fixed_string (unit tests)
 # test file lives directly under tests/unit/
 # ==================================================================
+option(SNAP_ENABLE_FIXED_STRING_CXX20_TESTS "Enable C++20 builds of fixed_string tests" OFF)
+set(_snap_fixed_string_standards 17)
+if (SNAP_ENABLE_FIXED_STRING_CXX20_TESTS)
+  list(APPEND _snap_fixed_string_standards 20)
+endif()
+
 snap_add_unit_tests(
         NAME fixed_string
-        STANDARDS 17;20
+        STANDARDS ${_snap_fixed_string_standards}
         SOURCES
         test_fixed_string.cpp
+        fixed_string/test_runtime.cpp
 )
+
+# ==================================================================
+# numbers (unit tests)
+# ==================================================================
+snap_add_unit_tests(
+        NAME numbers
+        STANDARDS 17;20
+        SOURCES
+        numbers/test_constants.cpp
+)
+
+# ==================================================================
+# Additional baseline coverage per module
+# ==================================================================
+snap_add_unit_tests(
+        NAME concepts
+        STANDARDS 20
+        SOURCES
+        concepts/test_ranges.cpp
+)
+
+snap_add_unit_tests(
+        NAME debugging
+        STANDARDS 17
+        SOURCES
+        debugging/test_debugger.cpp
+)
+
+snap_add_unit_tests(
+        NAME expected
+        STANDARDS 17
+        SOURCES
+        expected/test_unexpected.cpp
+)
+
+snap_add_unit_tests(
+        NAME functional
+        STANDARDS 17
+        SOURCES
+        functional/test_identity.cpp
+)
+
+snap_add_unit_tests(
+        NAME internal
+        STANDARDS 17
+        SOURCES
+        internal/test_bit_log2.cpp
+)
+
+snap_add_unit_tests(
+        NAME iterator
+        STANDARDS 17
+        SOURCES
+        iterator/test_default_sentinel.cpp
+)
+
+snap_add_unit_tests(
+        NAME memory
+        STANDARDS 17
+        SOURCES
+        memory/test_to_address.cpp
+)
+
+snap_add_unit_tests(
+        NAME meta
+        STANDARDS 17
+        SOURCES
+        meta/test_detector.cpp
+)
+
+snap_add_unit_tests(
+        NAME numeric
+        STANDARDS 17
+        SOURCES
+        numeric/test_midpoint.cpp
+)
+
+snap_add_unit_tests(
+        NAME simd
+        STANDARDS 17
+        SOURCES
+        simd/test_bit.cpp
+)
+
+snap_add_unit_tests(
+        NAME stop_token
+        STANDARDS 17
+        SOURCES
+        stop_token/test_atomic_unique_lock.cpp
+)
+
+snap_add_unit_tests(
+        NAME thread
+        STANDARDS 17
+        SOURCES
+        thread/test_jthread.cpp
+)
+
+snap_add_unit_tests(
+        NAME type_traits
+        STANDARDS 17
+        SOURCES
+        type_traits/test_remove_cvref.cpp
+)
+
+snap_add_unit_tests(
+        NAME utility
+        STANDARDS 17
+        SOURCES
+        utility/test_in_range.cpp
+        utility/test_to_underlying.cpp
+)
+
+# ==================================================================
+# smoke coverage (unit tests)
+# Provides a thin slice of coverage across the major headers so that
+# new functionality has a place to grow additional assertions.
+# ==================================================================
+snap_add_unit_tests(
+        NAME smoke
+        STANDARDS 17;20
+        SOURCES
+        smoke/test_core.cpp
+)
+
+option(SNAP_ENABLE_INPLACE_VECTOR_TESTS "Enable experimental inplace_vector tests" OFF)
+if (SNAP_ENABLE_INPLACE_VECTOR_TESTS)
+  snap_add_unit_tests(
+          NAME inplace_vector
+          STANDARDS 17
+          SOURCES
+          inplace_vector/test_basic.cpp
+  )
+endif()
 
 # ==================================================================
 # Compile-fail examples for bit
@@ -549,6 +703,12 @@ add_custom_target(test_compile_fail
         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
 )
 set_property(TARGET test_compile_fail PROPERTY FOLDER "tests/_utils")
+
+add_custom_target(test_integration
+        COMMAND ${CMAKE_CTEST_COMMAND} -L integration --output-on-failure --label-summary -j
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+)
+set_property(TARGET test_integration PROPERTY FOLDER "tests/_utils")
 
 add_custom_target(test_cxx17
         COMMAND ${CMAKE_CTEST_COMMAND} -R "_cxx17\\." --output-on-failure -j

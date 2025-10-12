@@ -34,6 +34,21 @@ if (SNAP_PROJECT_IS_TOP_LEVEL)
     endif ()
 endif ()
 
+# ----------------------------------------------------------------------
+# Optional fuzzing harnesses
+# ----------------------------------------------------------------------
+if (SNAP_BUILD_FUZZERS)
+    if (NOT SNAP_BUILD_TESTS)
+        include(CTest)
+        enable_testing()
+    endif ()
+    if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.25)
+        add_subdirectory(fuzzing SYSTEM)
+    else ()
+        add_subdirectory(fuzzing)
+    endif ()
+endif ()
+
 message(STATUS "SNAP: Version: ${SNAP_BUILD_VERSION}")
 
 # Load user-configurable options (e.g., BUILD_EXAMPLES, BUILD_TESTS, etc.)

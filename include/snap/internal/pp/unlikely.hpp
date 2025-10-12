@@ -18,11 +18,11 @@
 /// \brief Attribute for marking a statement or branch as unlikely (C++20 [[likely]] where supported).
 /// \note Falls back to nothing on unsupported compilers.
 #if defined(__has_cpp_attribute)
-#  if __has_cpp_attribute(likely)
-#    define SNAP_UNLIKELY_ATTR [[likely]]
-#  else
-#    define SNAP_UNLIKELY_ATTR
-#  endif
+	#if __has_cpp_attribute(likely)
+		#define SNAP_UNLIKELY_ATTR [[likely]]
+	#else
+		#define SNAP_UNLIKELY_ATTR
+	#endif
 #else
-#  define SNAP_UNLIKELY_ATTR
+	#define SNAP_UNLIKELY_ATTR
 #endif

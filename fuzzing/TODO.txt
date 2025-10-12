@@ -1,4 +1,12 @@
-# TODO: Implement fuzzing with libFuzzer
-# libFuzzer's command is as follows: -fsanitize=fuzzer
-# We should also couple it with -fsanitize=address and -fsanitize=undefined to detect memory errors and undefined behavior
-# More info here: https://llvm.org/docs/LibFuzzer.html
+Fuzzing harnesses for snap live in this directory.
+
+Build with libFuzzer support enabled:
+  cmake -S .. -B ../out/fuzz -DSNAP_BUILD_FUZZERS=ON
+  cmake --build ../out/fuzz --target snap_byteswap_fuzzer
+
+A short smoke run is wired into CTest and can be executed with:
+  ctest --test-dir ../out/fuzz -R snap_byteswap_fuzzer_smoke --output-on-failure
+
+Each harness links with the snap interface library and uses -fsanitize=fuzzer by
+default (falling back to the compiler's native support if address/undefined
+sanitizers are unavailable).
