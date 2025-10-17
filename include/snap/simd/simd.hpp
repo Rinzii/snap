@@ -1,110 +1,12 @@
-#include <cassert>
-#include <iostream>
-#include <iterator>
-#include <limits>
-#include <list>
-#include <memory>
-#include <numeric>
-#include <sstream>
-#include <type_traits>
-#include <utility>
-#include <vector>
 
-#if defined(_MSC_VER)
-	#if defined(_MSVC_LANG)
-		#define SNAP_CPLUSPLUS _MSVC_LANG
-	#else
-		#define SNAP_CPLUSPLUS 0L
-	#endif
-#else
-	#define SNAP_CPLUSPLUS __cplusplus
-#endif
+// is_constant_evaluated
+// is_char
+// has_single_bit
+#prgama once
 
-#if SNAP_CPLUSPLUS < 201703L
-	#error "Requires C++17 or later."
-#endif
-
-#define SNAP_HAS_CPP20			(SNAP_CPLUSPLUS >= 202002L)
-#define SNAP_HAS_CPP23			(SNAP_CPLUSPLUS >= 202302L)
-#define SNAP_HAS_CPP26			(SNAP_CPLUSPLUS >= 202602L)
-#define SNAP_LANG_AT_LEAST(CXX) (SNAP_CPLUSPLUS >= (CXX##L))
-
-#if defined(__has_builtin)
-	#if __has_builtin(__builtin_is_constant_evaluated)
-		#define SNAP_HAS_BUILTIN_IS_CONSTANT_EVALUATED
-	#endif
-#endif
-#if (defined(__GNUC__) && (__GNUC__ >= 9)) || (defined(__clang__) && (__clang_major__ >= 9))
-	#define SNAP_HAS_BUILTIN_IS_CONSTANT_EVALUATED
-#endif
-#if defined(_MSC_FULL_VER) && (_MSC_FULL_VER >= 192528326)
-	#define SNAP_HAS_BUILTIN_IS_CONSTANT_EVALUATED
-#endif
-
-namespace snap
-{
-	constexpr bool is_constant_evaluated() noexcept
-	{
-#if defined(SNAP_HAS_BUILTIN_IS_CONSTANT_EVALUATED)
-		return __builtin_is_constant_evaluated();
-#else
-		return false;
-#endif
-	}
-} // namespace snap
-#undef SNAP_HAS_BUILTIN_IS_CONSTANT_EVALUATED
-
-#include <type_traits>
-
-namespace snap
-{
-
-	namespace detail
-	{
-		template <class> struct is_char_impl : std::false_type
-		{
-		};
-		template <> struct is_char_impl<char> : std::true_type
-		{
-		};
-		template <> struct is_char_impl<signed char> : std::true_type
-		{
-		};
-		template <> struct is_char_impl<unsigned char> : std::true_type
-		{
-		};
-		template <> struct is_char_impl<wchar_t> : std::true_type
-		{
-		};
-		template <> struct is_char_impl<char16_t> : std::true_type
-		{
-		};
-		template <> struct is_char_impl<char32_t> : std::true_type
-		{
-		};
-#if defined(__cpp_char8_t)
-		template <> struct is_char_impl<char8_t> : std::true_type
-		{
-		};
-#endif
-	} // namespace detail
-
-	template <class T> struct is_char : detail::is_char_impl<typename std::remove_cv<typename std::remove_reference<T>::type>::type>
-	{
-	};
-
-	template <class T> inline constexpr bool is_char_v = is_char<T>::value;
-
-} // namespace snap
-
-namespace snap
-{
-	template <class T, std::enable_if_t<std::is_integral_v<T> && std::is_unsigned_v<T> && !is_char_v<T> && !std::is_same_v<T, bool>, bool> = true>
-	constexpr bool has_single_bit(T x) noexcept
-	{
-		return x && !(x & (x - 1));
-	}
-} // namespace snap
+#include "snap/type_traits/is_constant_evaluated.hpp"
+#include "snap/type_traits/is_char.hpp"
+#include "snap/bit/has_single_bit.hpp"
 
 #include <cstddef>
 #include <cstdint>
