@@ -1,8 +1,5 @@
 
-// is_constant_evaluated
-// is_char
-// has_single_bit
-#prgama once
+#pragma once
 
 #include "snap/type_traits/is_constant_evaluated.hpp"
 #include "snap/type_traits/is_char.hpp"
