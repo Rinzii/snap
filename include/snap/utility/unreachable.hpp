@@ -1,11 +1,11 @@
 #pragma once
 
+#include "snap/internal/abi_namespace.hpp"
+
 #include <type_traits>
 
-namespace snap
-{
-
-	[[noreturn]] inline void unreachable()
+SNAP_BEGIN_NAMESPACE
+[[noreturn]] inline void unreachable()
 	{
 		// Uses compiler specific extensions if possible.
 		// Even if no extension is used, undefined behavior is still raised by
@@ -17,4 +17,4 @@ namespace snap
 #endif
 	}
 
-} // namespace snap
+SNAP_END_NAMESPACE

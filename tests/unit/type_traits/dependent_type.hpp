@@ -1,8 +1,9 @@
 #pragma once
 
-namespace snap
-{
-	template <class T, bool> struct dependent_type : public T
+#include "snap/internal/abi_namespace.hpp"
+
+SNAP_BEGIN_NAMESPACE
+template <class T, bool> struct dependent_type : public T
 	{
 	};
-} // namespace snap
+SNAP_END_NAMESPACE

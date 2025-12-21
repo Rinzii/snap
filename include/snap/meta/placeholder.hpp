@@ -1,10 +1,11 @@
 #pragma once
 
+#include "snap/internal/abi_namespace.hpp"
+
 #include "snap/meta/always_false.hpp"
 
-namespace snap
-{
-	struct placeholder_t {
+SNAP_BEGIN_NAMESPACE
+struct placeholder_t {
 		placeholder_t() = default;
 
 		template<class... Ts>

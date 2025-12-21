@@ -1,10 +1,11 @@
 #pragma once
 
+#include "snap/internal/abi_namespace.hpp"
+
 #include "snap/type_traits/type_identity.hpp"
 
-namespace snap
-{
-	// Primary: expression is ill-formed -> yields fallback type T and false
+SNAP_BEGIN_NAMESPACE
+// Primary: expression is ill-formed -> yields fallback type T and false
 	template <class T, class Void, template <class...> class, class...> struct detector : type_identity<T>
 	{
 		using value_t = std::false_type;
@@ -51,4 +52,4 @@ namespace snap
 	template <class T, template <class...> class U, class... Args> using is_detected_exact = std::is_same<T, detected_t<U, Args...>>;
 
 	template <class T, template <class...> class U, class... Args> inline constexpr bool is_detected_exact_v = is_detected_exact<T, U, Args...>::value;
-} // namespace snap
+SNAP_END_NAMESPACE

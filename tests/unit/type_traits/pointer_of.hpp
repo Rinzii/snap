@@ -1,14 +1,14 @@
 #pragma once
 
+#include "snap/internal/abi_namespace.hpp"
+
 #include "snap/meta/detector.hpp"
 
 #include <type_traits>
 #include <utility>
 
-namespace snap
-{
-
-	// Detection helpers
+SNAP_BEGIN_NAMESPACE
+// Detection helpers
 	template <class T> using pointer_member_t			   = typename T::pointer;
 	template <class T> using element_type_member_t		   = typename T::element_type;
 	template <class T> using pointer_traits_element_type_t = typename std::pointer_traits<T>::element_type;
@@ -48,4 +48,4 @@ namespace snap
 
 	// Fallback: if pointer_of_t<T> is not detectable, use U instead
 	template <class T, class U> using pointer_of_or_t = detected_or_t<U, pointer_of_t, T>;
-} // namespace snap
+SNAP_END_NAMESPACE

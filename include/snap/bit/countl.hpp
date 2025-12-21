@@ -1,13 +1,14 @@
 #pragma once
 
+#include "snap/internal/abi_namespace.hpp"
+
 #include "snap/internal/pp/has_builtin.hpp"
 #include "snap/type_traits/is_integer.hpp"
 
 #include <limits>
 #include <type_traits>
 
-namespace snap
-{
+SNAP_BEGIN_NAMESPACE
 // Macro to allow simplified creation of specializations
 // NOLINTBEGIN(bugprone-macro-parentheses)
 #define INTERNAL_SNP_ADD_CTZ_SPECIALIZATION(FUNC, TYPE, BUILTIN)                                                                                               \
@@ -59,4 +60,4 @@ namespace snap
 	{
 		return value != std::numeric_limits<T>::max() ? snap::countl_zero(static_cast<T>(~value)) : std::numeric_limits<T>::digits;
 	}
-} // namespace snap
+SNAP_END_NAMESPACE

@@ -8,7 +8,7 @@ We only support the latest released version of the Snap library, according to [S
 
 ## 3. Reporting a Vulnerability
 If you discover a security vulnerability in Snap, please disclose it responsibly by following these steps:
-1. **Contact**: Email the details to ianpike98(at)gmail(dot)com. Please include:
+1. **Contact**: Email the details to ianpike98cs(at)gmail(dot)com. Please include:
    - A detailed description of the vulnerability.
    - Steps to reproduce the issue.
    - Any potential impact or threat associated with the vulnerability.

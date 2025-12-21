@@ -1,14 +1,14 @@
 #pragma once
 
+#include "snap/internal/abi_namespace.hpp"
+
 #include <atomic>
 #include <thread>
 #include <type_traits>
 #include <utility>
 
-namespace snap
-{
-
-	// RAII lock over an atomic<State>. Locks by setting a single-bit mask (LockedBit).
+SNAP_BEGIN_NAMESPACE
+// RAII lock over an atomic<State>. Locks by setting a single-bit mask (LockedBit).
 	// Pred/give-up and state_after_lock let callers customize behavior.
 	template <class State, State LockedBit> class atomic_unique_lock
 	{
@@ -103,4 +103,4 @@ namespace snap
 		bool is_locked_;
 	};
 
-} // namespace snap
+SNAP_END_NAMESPACE

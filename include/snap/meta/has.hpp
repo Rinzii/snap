@@ -1,10 +1,11 @@
 #pragma once
 
+#include "snap/internal/abi_namespace.hpp"
+
 #include "snap/meta/detector.hpp"
 
-namespace snap
-{
-	template <template <class...> class Expr, class... Ts> inline constexpr bool has = ::snap::is_detected_v<Expr, Ts...>;
+SNAP_BEGIN_NAMESPACE
+template <template <class...> class Expr, class... Ts> inline constexpr bool has = ::snap::is_detected_v<Expr, Ts...>;
 
 	template <template <class...> class Expr, class To, class... Ts> inline constexpr bool has_as = ::snap::is_detected_convertible_v<To, Expr, Ts...>;
 
@@ -156,4 +157,4 @@ namespace snap
 	} // namespace op
 
 	template <class T> inline constexpr bool has_arrow = std::is_pointer_v<std::remove_reference_t<T>> || ::snap::is_detected_v<op::member_arrow, T>;
-} // namespace snap
+SNAP_END_NAMESPACE

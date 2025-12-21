@@ -1,10 +1,11 @@
 #pragma once
 
+#include "snap/internal/abi_namespace.hpp"
+
 #include <type_traits>
 
-namespace snap
-{
-	template <class T> struct is_unbounded_array : std::false_type
+SNAP_BEGIN_NAMESPACE
+template <class T> struct is_unbounded_array : std::false_type
 	{
 	};
 
@@ -13,4 +14,4 @@ namespace snap
 	};
 
 	template <class T> constexpr inline bool is_unbounded_array_v = is_unbounded_array<T>::value;
-} // namespace snap
+SNAP_END_NAMESPACE

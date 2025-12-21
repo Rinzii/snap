@@ -1,8 +1,9 @@
 #pragma once
 
-namespace snap
-{
-	struct contiguous_iterator_tag : public std::random_access_iterator_tag
+#include "snap/internal/abi_namespace.hpp"
+
+SNAP_BEGIN_NAMESPACE
+struct contiguous_iterator_tag : public std::random_access_iterator_tag
 	{
 	};
 
@@ -72,4 +73,4 @@ namespace snap
 	};
 
 	template <class I> constexpr bool is_contiguous_iterator_v = is_contiguous_iterator<I>::value;
-} // namespace snap
+SNAP_END_NAMESPACE

@@ -1,12 +1,13 @@
-
-
 #pragma once
+
+#include "snap/internal/abi_namespace.hpp"
 
 #include <tuple>
 #include <type_traits>
 #include <utility>
 
-namespace snap::internal
+SNAP_BEGIN_NAMESPACE
+namespace internal
 {
 
 	// Forward declaration
@@ -71,4 +72,5 @@ namespace snap::internal
 	// Alias that builds the index sequence for BoundArgs...
 	template <class Op, class... Args> using perfect_forward = perfect_forward_impl<Op, std::index_sequence_for<Args...>, Args...>;
 
-} // namespace snap::internal
+} // namespace internal
+SNAP_END_NAMESPACE

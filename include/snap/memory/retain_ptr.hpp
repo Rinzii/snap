@@ -1,5 +1,7 @@
 #pragma once
 
+#include "snap/internal/abi_namespace.hpp"
+
 #include "snap/internal/compat/constexpr.hpp"
 #include "snap/meta/detector.hpp"
 
@@ -10,10 +12,8 @@
 #include <type_traits>
 #include <utility>
 
-namespace snap
-{
-
-	using std::add_pointer_t;
+SNAP_BEGIN_NAMESPACE
+using std::add_pointer_t;
 	using std::conditional_t;
 	using std::declval;
 	using std::is_convertible;
@@ -214,7 +214,7 @@ namespace snap
 		return retain_ptr<To, R>(dynamic_cast<To *>(p.get()));
 	}
 
-} // namespace snap
+SNAP_END_NAMESPACE
 
 // hash support
 template <class T, class R> struct std::hash<snap::retain_ptr<T, R>>
@@ -222,10 +222,8 @@ template <class T, class R> struct std::hash<snap::retain_ptr<T, R>>
 	std::size_t operator()(const snap::retain_ptr<T, R> &p) const noexcept { return std::hash<typename snap::retain_ptr<T, R>::pointer>()(p.get()); }
 };
 
-namespace snap
-{
-
-	template <class T, class R> constexpr void swap(retain_ptr<T, R> &lhs, retain_ptr<T, R> &rhs) noexcept
+SNAP_BEGIN_NAMESPACE
+template <class T, class R> constexpr void swap(retain_ptr<T, R> &lhs, retain_ptr<T, R> &rhs) noexcept
 	{
 		lhs.swap(rhs);
 	}
@@ -320,4 +318,4 @@ namespace snap
 		return std::less<>()(nullptr, rhs.get());
 	}
 
-} // namespace snap
+SNAP_END_NAMESPACE

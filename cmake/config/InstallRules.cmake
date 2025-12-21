@@ -15,6 +15,10 @@ install(FILES
         "${CMAKE_CURRENT_BINARY_DIR}/include/snap/version.hpp"
         DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/snap"
 )
+install(FILES
+        "${CMAKE_CURRENT_BINARY_DIR}/include/snap/internal/config/abi_namespace.hpp"
+        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/snap/internal/config"
+)
 
 install(
         TARGETS ${SNAP_TARGET_NAME}

@@ -1,4 +1,6 @@
 #pragma once
+
+#include "snap/internal/abi_namespace.hpp"
 #include "snap/internal/helpers/perfect_forward.hpp"
 
 #include <functional>
@@ -6,9 +8,8 @@
 #include <type_traits>
 #include <utility>
 
-namespace snap
-{
-	namespace detail
+SNAP_BEGIN_NAMESPACE
+namespace detail
 	{
 
 		// Builds an index pack [0, NBound) used to expand the bound tuple at call sites.
@@ -49,4 +50,4 @@ namespace snap
 																						std::forward_as_tuple(std::forward<Args>(args)...));
 	}
 
-} // namespace snap
+SNAP_END_NAMESPACE

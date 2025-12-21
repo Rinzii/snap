@@ -1,12 +1,13 @@
 #pragma once
 
+#include "snap/internal/abi_namespace.hpp"
+
 #include "snap/internal/pp/has_builtin.hpp"
 
 #include <limits>
 #include <type_traits>
 
-namespace snap
-{
+SNAP_BEGIN_NAMESPACE
 // Macro to allow simplified creation of specializations
 // NOLINTBEGIN(bugprone-macro-parentheses)
 #define INTERNAL_SNP_ADD_CTZ_SPECIALIZATION(FUNC, TYPE, BUILTIN)                                                                                               \
@@ -73,4 +74,4 @@ namespace snap
 	{
 		return snap::countr_zero<T>(~value);
 	}
-} // namespace snap
+SNAP_END_NAMESPACE

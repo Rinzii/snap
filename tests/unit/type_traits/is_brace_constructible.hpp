@@ -1,8 +1,9 @@
 #pragma once
 
-namespace snap
-{
-	// C++17: detect brace-constructibility (aggregate-friendly)
+#include "snap/internal/abi_namespace.hpp"
+
+SNAP_BEGIN_NAMESPACE
+// C++17: detect brace-constructibility (aggregate-friendly)
 	template <class T, class... Args> struct is_brace_constructible
 	{
 	private:
@@ -14,4 +15,4 @@ namespace snap
 	};
 
 	template <class T, class... Args> inline constexpr bool is_brace_constructible_v = is_brace_constructible<T, Args...>::value;
-} // namespace snap
+SNAP_END_NAMESPACE

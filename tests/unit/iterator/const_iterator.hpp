@@ -1,8 +1,9 @@
 #pragma once
 
-namespace snap
-{
-	namespace details
+#include "snap/internal/abi_namespace.hpp"
+
+SNAP_BEGIN_NAMESPACE
+namespace details
 	{
 		template <class I, class = void> struct deref_type
 		{
@@ -350,4 +351,4 @@ namespace snap
 		return const_sentinel<S>(s);
 	}
 
-} // namespace snap
+SNAP_END_NAMESPACE

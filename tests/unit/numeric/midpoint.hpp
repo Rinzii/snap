@@ -1,11 +1,11 @@
 #pragma once
+
+#include "snap/internal/abi_namespace.hpp"
 #include <cstddef> // ptrdiff_t
 #include <type_traits>
 
-namespace snap
-{
-
-	// (1) Arithmetic midpoint: participates only if T is arithmetic and not bool
+SNAP_BEGIN_NAMESPACE
+// (1) Arithmetic midpoint: participates only if T is arithmetic and not bool
 	template <class T, class = std::enable_if_t<std::is_arithmetic_v<T> && !std::is_same_v<T, bool>>> constexpr T midpoint(T a, T b) noexcept
 	{
 		if (std::is_floating_point_v<T>)
@@ -39,15 +39,14 @@ namespace snap
 		return a + (b - a) / 2;
 	}
 
-} // namespace snap
+SNAP_END_NAMESPACE
+
 #pragma once
 #include <cstddef> // ptrdiff_t
 #include <type_traits>
 
-namespace snap
-{
-
-	// (1) Arithmetic midpoint: participates only if T is arithmetic and not bool
+SNAP_BEGIN_NAMESPACE
+// (1) Arithmetic midpoint: participates only if T is arithmetic and not bool
 	template <class T, class = std::enable_if_t<std::is_arithmetic_v<T> && !std::is_same_v<T, bool>>> constexpr T midpoint(T a, T b) noexcept
 	{
 		if (std::is_floating_point_v<T>)
@@ -81,4 +80,4 @@ namespace snap
 		return a + (b - a) / 2;
 	}
 
-} // namespace snap
+SNAP_END_NAMESPACE

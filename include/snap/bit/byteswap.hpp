@@ -1,14 +1,15 @@
 #pragma once
 
+#include "snap/internal/abi_namespace.hpp"
+
 #include "snap/bit/bit_cast.hpp"
 #include "snap/type_traits/is_integer.hpp"
 
 #include <array>
 #include <type_traits>
 
-namespace snap
-{
-	template <class T, std::enable_if_t<is_integer_v<T>, int> = 0>
+SNAP_BEGIN_NAMESPACE
+template <class T, std::enable_if_t<is_integer_v<T>, int> = 0>
 	constexpr T byteswap(T value) noexcept
 	{
 		static_assert(std::has_unique_object_representations_v<T>, "T may not have padding/trap bits");
@@ -22,4 +23,4 @@ namespace snap
 
 		return snap::bit_cast<T>(repr);
 	}
-} // namespace snap
+SNAP_END_NAMESPACE

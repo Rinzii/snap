@@ -1,8 +1,9 @@
 #pragma once
 
-namespace snap
-{
-	namespace details
+#include "snap/internal/abi_namespace.hpp"
+
+SNAP_BEGIN_NAMESPACE
+namespace details
 	{
 		template <class Sig> struct signature_qualifiers;
 
@@ -36,4 +37,4 @@ namespace snap
 			template <class T> using cv = T const;
 		};
 	} // namespace details
-} // namespace snap
+SNAP_END_NAMESPACE

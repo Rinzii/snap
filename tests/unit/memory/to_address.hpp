@@ -1,13 +1,13 @@
 #pragma once
 
+#include "snap/internal/abi_namespace.hpp"
+
 #include <memory>
 #include <type_traits>
 #include <utility>
 
-namespace snap
-{
-
-	namespace detail
+SNAP_BEGIN_NAMESPACE
+namespace detail
 	{
 		// Detects: std::pointer_traits<T>::to_address(std::declval<const T&>())
 		template <class T, class = void> struct has_ptr_traits_to_address : std::false_type
@@ -40,4 +40,4 @@ namespace snap
 		}
 	}
 
-} // namespace snap
+SNAP_END_NAMESPACE

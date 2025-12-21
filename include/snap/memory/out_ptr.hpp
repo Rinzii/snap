@@ -1,5 +1,7 @@
 #pragma once
 
+#include "snap/internal/abi_namespace.hpp"
+
 #include "snap/memory/pointer_of.hpp"
 #include "snap/memory/ptr_traits.hpp"
 
@@ -8,9 +10,8 @@
 #include <type_traits>
 #include <utility>
 
-namespace snap
-{
-	template <class Smart, class Pointer, class... Args> class out_ptr_t
+SNAP_BEGIN_NAMESPACE
+template <class Smart, class Pointer, class... Args> class out_ptr_t
 	{
 		static_assert(!snap::is_specialization_of_v<Smart, std::shared_ptr> || sizeof...(Args) > 0,
 					  "Using std::shared_ptr<> without a deleter in snap::out_ptr is not supported.");
@@ -68,4 +69,4 @@ namespace snap
 		return out_ptr_t<Smart, Ptr, Args&&...>(smart, std::forward<Args>(args)...);
 	}
 
-} // namespace snap
+SNAP_END_NAMESPACE

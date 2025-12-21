@@ -1,15 +1,15 @@
 #pragma once
 
+#include "snap/internal/abi_namespace.hpp"
+
 #include "snap/bit/rotr.hpp"
 
 #include <cstdint> // For std::uint64_t
 #include <limits>
 #include <type_traits>
 
-namespace snap
-{
-
-	template <class T, std::enable_if_t<std::is_unsigned_v<T>, bool> = true>
+SNAP_BEGIN_NAMESPACE
+template <class T, std::enable_if_t<std::is_unsigned_v<T>, bool> = true>
 	constexpr T rotl(T t, int cnt) noexcept
 	{
 #if defined(_MSC_VER) && !defined(__clang__)
@@ -24,4 +24,4 @@ namespace snap
 		return rotr(t, -cnt);
 	}
 
-} // namespace snap
+SNAP_END_NAMESPACE

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "snap/internal/abi_namespace.hpp"
+
 #include "snap/bit/countl.hpp"
 #include "snap/type_traits/is_integer.hpp"
 
@@ -7,10 +9,8 @@
 #include <type_traits>
 #include <cassert>
 
-namespace snap
-{
-
-	template <typename T>
+SNAP_BEGIN_NAMESPACE
+template <typename T>
 	[[nodiscard]] constexpr auto bit_ceil(T x) noexcept -> std::enable_if_t<is_unsigned_integer_v<T>, T>
 	{
 		if (x < 2) { return 1; }
@@ -26,4 +26,4 @@ namespace snap
 		}
 	}
 
-} // namespace snap
+SNAP_END_NAMESPACE

@@ -1,15 +1,15 @@
 #pragma once
 
+#include "snap/internal/abi_namespace.hpp"
+
 #include "snap/stop_token/stop_source.hpp"
 
 #include <thread>
 #include <type_traits>
 #include <utility>
 
-namespace snap
-{
-
-	class jthread
+SNAP_BEGIN_NAMESPACE
+class jthread
 	{
 	public:
 		using id				 = std::thread::id;
@@ -96,4 +96,4 @@ namespace snap
 		std::thread thread_{};
 	};
 
-} // namespace snap
+SNAP_END_NAMESPACE

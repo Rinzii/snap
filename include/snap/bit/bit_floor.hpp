@@ -1,12 +1,14 @@
 #pragma once
 
+#include "snap/internal/abi_namespace.hpp"
+
 #include "snap/bit/bit_width.hpp"
 #include "snap/type_traits/is_neither.hpp"
 
 #include <type_traits>
 
-namespace snap {
-	namespace detail {
+SNAP_BEGIN_NAMESPACE
+namespace detail {
 		template <class T>
 		inline constexpr bool is_not_invalid_for_bit_floor =
 			std::is_unsigned_v<std::remove_cv_t<T>> &&
@@ -30,4 +32,4 @@ namespace snap {
 		}
 		return T{0};
 	}
-} // namespace snap
+SNAP_END_NAMESPACE

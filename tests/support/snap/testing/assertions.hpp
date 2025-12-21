@@ -1,5 +1,7 @@
 #pragma once
 
+#include "snap/internal/abi_namespace.hpp"
+
 #include <gtest/gtest.h>
 
 #include <algorithm>
@@ -14,7 +16,8 @@
 #include <vector>
 #include <utility>
 
-namespace snap::test
+SNAP_BEGIN_NAMESPACE
+namespace test
 {
 
 namespace detail
@@ -161,7 +164,8 @@ template <class Exception, class Func>
         return ::testing::AssertionFailure() << "Expected exception was not thrown.";
 }
 
-} // namespace snap::test
+} // namespace test
+SNAP_END_NAMESPACE
 
 #define SNAP_EXPECT_RANGE_EQ(actual, expected) EXPECT_TRUE(::snap::test::RangeEqual((actual), (expected)))
 #define SNAP_ASSERT_RANGE_EQ(actual, expected) ASSERT_TRUE(::snap::test::RangeEqual((actual), (expected)))

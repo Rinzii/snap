@@ -1,12 +1,12 @@
 #pragma once
 
+#include "snap/internal/abi_namespace.hpp"
+
 #include <type_traits>
 #include <utility> // std::move, std::as_const
 
-namespace snap
-{
-
-	template <class T, class U> constexpr decltype(auto) forward_like(U&& x) noexcept
+SNAP_BEGIN_NAMESPACE
+template <class T, class U> constexpr decltype(auto) forward_like(U&& x) noexcept
 	{
 		using T_no_ref			 = std::remove_reference_t<T>;
 		constexpr bool add_const = std::is_const_v<T_no_ref>;
@@ -35,4 +35,4 @@ namespace snap
 		}
 	}
 
-} // namespace snap
+SNAP_END_NAMESPACE

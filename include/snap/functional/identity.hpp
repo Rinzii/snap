@@ -1,10 +1,11 @@
 #pragma once
 
+#include "snap/internal/abi_namespace.hpp"
+
 #include <functional>
 
-namespace snap
-{
-	struct identity
+SNAP_BEGIN_NAMESPACE
+struct identity
 	{
 		template <class T> [[nodiscard]] constexpr T&& operator()(T&& t) const noexcept { return std::forward<T>(t); }
 		using is_transparent = void;
@@ -19,4 +20,4 @@ namespace snap
 	};
 
 	template <class T> inline constexpr bool is_identity_v = is_identity<T>::value;
-} // namespace snap
+SNAP_END_NAMESPACE

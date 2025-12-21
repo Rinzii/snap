@@ -19,6 +19,29 @@ project(
 include(cmake/config/ProjectIsTopLevel.cmake)
 include(cmake/config/ProjectOptions.cmake)
 
+option(SNAP_ENABLE_ABI_NAMESPACE "Enable inline ABI namespace for snap symbols" ON)
+set(SNAP_ABI_NAMESPACE "abi_v1" CACHE STRING "Inline ABI namespace nested inside snap")
+
+set(_snap_abi_namespace_pattern "^[A-Za-z_][A-Za-z0-9_]*$")
+if (NOT SNAP_ABI_NAMESPACE MATCHES "${_snap_abi_namespace_pattern}")
+    message(FATAL_ERROR "SNAP_ABI_NAMESPACE ('${SNAP_ABI_NAMESPACE}') must match ${_snap_abi_namespace_pattern}")
+endif ()
+string(SUBSTRING "${SNAP_ABI_NAMESPACE}" 0 1 _snap_abi_namespace_first_char)
+if (_snap_abi_namespace_first_char STREQUAL "_")
+    message(FATAL_ERROR "SNAP_ABI_NAMESPACE ('${SNAP_ABI_NAMESPACE}') must not start with '_'")
+endif ()
+if (SNAP_ABI_NAMESPACE MATCHES "__")
+    message(FATAL_ERROR "SNAP_ABI_NAMESPACE ('${SNAP_ABI_NAMESPACE}') must not contain '__'")
+endif ()
+
+set(_snap_enable_abi_namespace_bool ${SNAP_ENABLE_ABI_NAMESPACE})
+if (_snap_enable_abi_namespace_bool)
+    set(SNAP_ENABLE_ABI_NAMESPACE 1)
+else ()
+    set(SNAP_ENABLE_ABI_NAMESPACE 0)
+endif ()
+unset(_snap_enable_abi_namespace_bool)
+
 
 # ----------------------------------------------------------------------
 # Color Diagnostics (Only if at top-level with Ninja)
@@ -102,6 +125,7 @@ include(cmake/features/GetAllSupportedFeatures.cmake)
 
 target_include_directories(${SNAP_TARGET_NAME} INTERFACE
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>"
+        "$<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include/>"
         "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
 )
 
@@ -135,6 +159,7 @@ set(SNAP_VERSION_MAJOR ${CMAKE_PROJECT_VERSION_MAJOR})
 set(SNAP_VERSION_MINOR ${CMAKE_PROJECT_VERSION_MINOR})
 set(SNAP_VERSION_PATCH ${CMAKE_PROJECT_VERSION_PATCH})
 configure_file("${PROJECT_SOURCE_DIR}/cmake/in/version.hpp.in" "${PROJECT_BINARY_DIR}/include/snap/version.hpp")
+configure_file("${PROJECT_SOURCE_DIR}/include/snap/internal/config/abi_namespace.hpp.in" "${PROJECT_BINARY_DIR}/include/snap/internal/config/abi_namespace.hpp" @ONLY)
 
 
 # ----------------------------------------------------------------------

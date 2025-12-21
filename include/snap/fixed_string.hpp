@@ -1,5 +1,7 @@
 #pragma once
 
+#include "snap/internal/abi_namespace.hpp"
+
 #include <cassert>
 #include <cstddef>
 #include <iterator>
@@ -24,9 +26,7 @@
 #include "snap/internal/compat/constexpr.hpp" // SNAP_CONSTEVAL
 #include "snap/internal/compat/explicit.hpp"  // SNAP_EXPLICIT_EXPR_ONLY
 
-namespace snap
-{
-
+SNAP_BEGIN_NAMESPACE
 #if defined(__cpp_lib_containers_ranges) && (__cpp_lib_containers_ranges >= 202202L)
 	using from_range_t = std::from_range_t;
 	inline constexpr from_range_t from_range{};
@@ -324,7 +324,7 @@ namespace snap
 	template <std::size_t N> using fixed_u32string = basic_fixed_string<char32_t, N>;
 	template <std::size_t N> using fixed_wstring   = basic_fixed_string<wchar_t, N>;
 
-} // namespace snap
+SNAP_END_NAMESPACE
 
 // std::hash
 #include <functional>

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "snap/internal/abi_namespace.hpp"
+
 // C++17 stop state using snap::intrusive_list_view (converted earlier) and
 // snap::atomic_unique_lock. No reserved identifiers.
 
@@ -15,10 +17,8 @@
 #include <thread>
 #include <utility>
 
-namespace snap
-{
-
-	template <class T> struct intrusive_shared_ptr_traits;
+SNAP_BEGIN_NAMESPACE
+template <class T> struct intrusive_shared_ptr_traits;
 
 	// Node base for registered callbacks.
 	struct stop_callback_base : intrusive_node_base<stop_callback_base>
@@ -179,4 +179,4 @@ namespace snap
 		static std::atomic<std::uint32_t>& get_atomic_ref_count(stop_state& s) noexcept { return s.ref_count_; }
 	};
 
-} // namespace snap
+SNAP_END_NAMESPACE

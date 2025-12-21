@@ -1,15 +1,17 @@
-
 #pragma once
 
+#include "snap/internal/abi_namespace.hpp"
+
 #include "snap/type_traits/is_constant_evaluated.hpp"
-#include "snap/type_traits/is_char.hpp"
 #include "snap/bit/has_single_bit.hpp"
+#include "snap/type_traits/is_char.hpp"
 
 #include <cstddef>
 #include <cstdint>
 #include <type_traits>
 
-namespace snap::simd
+SNAP_BEGIN_NAMESPACE
+namespace simd
 {
 	using simd_size_type = std::size_t;
 
@@ -133,7 +135,7 @@ namespace snap::simd
 		{ // 256-bit vectors
 			template <class T> static constexpr std::size_t lanes_for()
 			{
-				static_assert(std::is_integral<T>::value || std::is_floating_point<T>::value, "avx2_tag requires integral or floating types");
+				static_assert(std::is_integral_v<T> || std::is_floating_point_v<T>, "avx2_tag requires integral or floating types");
 				return 32 / sizeof(T); // 256 bits / sizeof(T) bytes
 			}
 			template <std::size_t Bits> static constexpr std::size_t lanes_for_mask()
@@ -211,7 +213,7 @@ namespace snap::simd
 		// Enabled when T is vectorizable and the registry contains a tag with lanes_for<T>() == N.
 		// Exposes the matching tag as ::type; otherwise the primary template leaves it absent.
 		template <class T, std::size_t N>
-		struct deduce_abi<T, N, std::enable_if_t<is_vectorizable<T>::value && !std::is_void<typename select_abi<T, N, abi_registry>::type>::value, void>>
+		struct deduce_abi<T, N, std::enable_if_t<is_vectorizable<T>::value && !std::is_void_v<typename select_abi<T, N, abi_registry>::type>, void>>
 		{
 			using type = typename select_abi<T, N, abi_registry>::type;
 		};
@@ -460,4 +462,5 @@ namespace snap::simd
 	template <std::size_t N, std::enable_if_t<has_single_bit(static_cast<std::uint64_t>(N)), int> = 0>
 	inline constexpr flags<overaligned_flag<N>> flag_overaligned{};
 
-} // namespace snap::simd
+} // namespace simd
+SNAP_END_NAMESPACE

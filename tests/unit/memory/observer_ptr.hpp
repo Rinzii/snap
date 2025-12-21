@@ -1,14 +1,14 @@
 #pragma once
 
+#include "snap/internal/abi_namespace.hpp"
+
 #include <cstddef>	   // std::nullm_ptrt
 #include <functional>  // std::hash, std::less
 #include <type_traits> // std::is_reference_v, std::enable_if_t, std::is_convertible_v, std::add_lvalue_reference_t
 #include <utility>	   // std::swap
 
-namespace snap
-{
-
-	template <class W> class observer_ptr
+SNAP_BEGIN_NAMESPACE
+template <class W> class observer_ptr
 	{
 		static_assert(!std::is_reference_v<W>, "observer_ptr<W>: W must not be a reference type");
 
@@ -114,7 +114,7 @@ namespace snap
 		a.swap(b);
 	}
 
-} // namespace snap
+SNAP_END_NAMESPACE
 
 // std::hash specialization for snap::observer_ptr
 namespace std

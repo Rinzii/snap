@@ -1,11 +1,11 @@
 #pragma once
 
+#include "snap/internal/abi_namespace.hpp"
+
 #include <type_traits>
 
-namespace snap
-{
-
-	// is_signed_integer
+SNAP_BEGIN_NAMESPACE
+// is_signed_integer
 	template <class T> struct is_signed_integer : std::false_type
 	{
 	};
@@ -70,4 +70,4 @@ namespace snap
 
 	template <class T> inline constexpr bool is_integer_v = is_integer<T>::value;
 
-} // namespace snap
+SNAP_END_NAMESPACE

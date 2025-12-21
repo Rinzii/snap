@@ -1,5 +1,7 @@
 #pragma once
 
+#include "snap/internal/abi_namespace.hpp"
+
 #include <cstdlib>
 #include <string>
 #include <string_view>
@@ -9,7 +11,8 @@
 #  include <cxxabi.h>
 #endif
 
-namespace snap::test
+SNAP_BEGIN_NAMESPACE
+namespace test
 {
 
 inline std::string sanitize_for_gtest(std::string_view input)
@@ -56,4 +59,5 @@ struct TypeNameGenerator
         }
 };
 
-} // namespace snap::test
+} // namespace test
+SNAP_END_NAMESPACE

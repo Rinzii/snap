@@ -1,11 +1,12 @@
 #pragma once
 
+#include "snap/internal/abi_namespace.hpp"
+
 #include <limits>
 #include <type_traits>
 
-namespace snap
-{
-	/**
+SNAP_BEGIN_NAMESPACE
+/**
 	 * \brief Computes the midpoint of the integers, floating-points, or pointers a and b.
 	 *
 	 * \tparam T Arithmetic type other than bool.
@@ -104,4 +105,4 @@ namespace snap
 		return a + (b - a) / 2;
 	}
 
-} // namespace snap
+SNAP_END_NAMESPACE

@@ -1,12 +1,12 @@
 #pragma once
 
+#include "snap/internal/abi_namespace.hpp"
+
 #include <cstddef>
 #include <type_traits>
 
-namespace snap
-{
-
-	namespace detail
+SNAP_BEGIN_NAMESPACE
+namespace detail
 	{
 
 #if defined(__has_builtin)
@@ -65,7 +65,7 @@ namespace snap
 
 	template <class T> inline constexpr bool is_implicit_lifetime_v = is_implicit_lifetime<T>::value;
 
-} // namespace snap
+SNAP_END_NAMESPACE
 
 #ifdef SNAP_HAS_IL_BUILTIN
 	#undef SNAP_HAS_IL_BUILTIN

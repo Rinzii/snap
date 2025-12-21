@@ -4,7 +4,7 @@
 /// \brief Provides the SNAP_UNLIKELY macro and SNAP_UNLIKELY_ATTR attribute for branch prediction hints.
 /// \ingroup SNAP_branch_prediction
 
-#include "tiny/predef/expects_bool_condition.hpp"
+#include "snap/internal/helpers/expects_bool_condition.hpp"
 
 /// \def SNAP_UNLIKELY(x)
 /// \brief Hints to the compiler that the given boolean expression is unlikely to be true.

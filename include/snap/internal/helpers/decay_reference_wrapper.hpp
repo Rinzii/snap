@@ -1,8 +1,11 @@
 #pragma once
 
+#include "snap/internal/abi_namespace.hpp"
+
 #include "snap/functional/is_reference_wrapper.hpp"
 
-namespace snap::internal
+SNAP_BEGIN_NAMESPACE
+namespace internal
 {
 
 	template <typename T> constexpr auto decay_reference_wrapper(T&& t) noexcept -> decltype(auto)
@@ -11,4 +14,5 @@ namespace snap::internal
 		else { return std::forward<T>(t); }
 	}
 
-} // namespace snap::internal
+} // namespace internal
+SNAP_END_NAMESPACE

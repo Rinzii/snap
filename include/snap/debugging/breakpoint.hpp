@@ -1,5 +1,7 @@
 #pragma once
 
+#include "snap/internal/abi_namespace.hpp"
+
 // TODO: Should be complete but needs more testing on other environments.
 
 #include <csignal> // std::raise, SIGTRAP
@@ -13,10 +15,8 @@
 	#include <emscripten/emscripten.h> // emscripten_debugger
 #endif
 
-namespace snap
-{
-
-	inline void breakpoint() noexcept
+SNAP_BEGIN_NAMESPACE
+inline void breakpoint() noexcept
 	{
 #if defined(_MSC_VER)
 		// MSVC / clang-cl
@@ -73,4 +73,4 @@ namespace snap
 #endif
 	}
 
-} // namespace snap
+SNAP_END_NAMESPACE

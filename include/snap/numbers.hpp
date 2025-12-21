@@ -1,11 +1,14 @@
 #pragma once
 
+#include "snap/internal/abi_namespace.hpp"
+
 #include <type_traits>
 
 /*
  * @brief This namespace contains a set of constants that are useful for mathematical operations.
  */
-namespace snap::numbers
+SNAP_BEGIN_NAMESPACE
+namespace numbers
 {
 	// Values taken from llvm-project
 	// https://github.com/llvm/llvm-project/blob/main/libcxx/include/numbers
@@ -62,4 +65,5 @@ namespace snap::numbers
 	inline constexpr double inv_sqrt3  = inv_sqrt3_v<double>;
 	inline constexpr double egamma	   = egamma_v<double>;
 	inline constexpr double phi		   = phi_v<double>;
-} // namespace snap::numbers
+} // namespace numbers
+SNAP_END_NAMESPACE

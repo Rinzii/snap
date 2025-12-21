@@ -15,6 +15,7 @@ out*/
 CMakeSettings.json
 compile_commands.json
 /CMakeUserPresets.json
+include/snap/internal/config/abi_namespace.hpp
 
 ### C++ specific
 # Prerequisites

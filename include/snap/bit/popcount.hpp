@@ -1,5 +1,7 @@
 #pragma once
 
+#include "snap/internal/abi_namespace.hpp"
+
 #include "snap/bit/countl.hpp"
 #include "snap/internal/pp/has_builtin.hpp"
 
@@ -7,9 +9,7 @@
 #include <limits>
 #include <type_traits>
 
-namespace snap
-{
-
+SNAP_BEGIN_NAMESPACE
 #if SNAP_HAS_BUILTIN(__builtin_popcountg)
 	template <typename T> [[nodiscard]] constexpr std::enable_if_t<std::is_unsigned_v<T>, int> popcount(T value)
 	{
@@ -119,4 +119,4 @@ namespace snap
 #endif // SNAP_HAS_BUILTIN(__builtin_popcountll)
 
 #undef INTERNAL_SNP_ADD_POPCOUNT_SPECIALIZATION
-} // namespace snap
+SNAP_END_NAMESPACE

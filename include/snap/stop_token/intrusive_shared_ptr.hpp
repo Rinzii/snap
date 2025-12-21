@@ -1,15 +1,15 @@
 #pragma once
 
+#include "snap/internal/abi_namespace.hpp"
+
 #include <atomic>
 #include <cstddef> // std::nullptr_t
 #include <memory>  // std::addressof
 #include <type_traits>
 #include <utility> // std::swap, std::move
 
-namespace snap
-{
-
-	// Users must specialize this for their type T:
+SNAP_BEGIN_NAMESPACE
+// Users must specialize this for their type T:
 	//   struct MyType { std::atomic<unsigned> refcnt{0}; ... };
 	//   template<> struct intrusive_shared_ptr_traits<MyType> {
 	//     static std::atomic<unsigned>& get_atomic_ref_count(MyType& obj) noexcept { return obj.refcnt; }
@@ -96,4 +96,4 @@ namespace snap
 		}
 	};
 
-} // namespace snap
+SNAP_END_NAMESPACE

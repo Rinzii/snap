@@ -1,15 +1,15 @@
 #pragma once
 
+#include "snap/internal/abi_namespace.hpp"
+
 #include "snap/memory/pointer_of.hpp"
 #include "snap/meta/detector.hpp"
 
 #include <type_traits>
 #include <utility>
 
-namespace snap
-{
-
-	template <class Smart> using reset_expr_t = decltype(std::declval<Smart &>().reset());
+SNAP_BEGIN_NAMESPACE
+template <class Smart> using reset_expr_t = decltype(std::declval<Smart &>().reset());
 
 	template <class Smart> struct is_resettable_smart_pointer : is_detected<reset_expr_t, Smart>
 	{
@@ -36,4 +36,4 @@ namespace snap
 	template <class Smart, class Pointer, class... Args> inline constexpr bool is_resettable_smart_pointer_with_args_v =
 		is_resettable_smart_pointer_with_args<Smart, Pointer, Args...>::value;
 
-} // namespace snap
+SNAP_END_NAMESPACE

@@ -1,13 +1,14 @@
 #pragma once
 
+#include "snap/internal/abi_namespace.hpp"
+
 #include "snap/internal/builtin/bit/bit_cast.hpp"
 
 #include <type_traits>
 #include <cstring>
 
-namespace snap
-{
-	namespace detail
+SNAP_BEGIN_NAMESPACE
+namespace detail
 	{
 		template<class To, class From>
 		using bit_cast_req = std::enable_if_t<
@@ -31,4 +32,4 @@ namespace snap
 			return static_cast<To>(u);
 		}
 	}
-} // namespace snap
+SNAP_END_NAMESPACE

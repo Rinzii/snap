@@ -51,6 +51,8 @@ Configuration
 
 #pragma once
 
+#include "snap/internal/abi_namespace.hpp"
+
 #if defined(__has_include)
 	#if !defined(__BYTE_ORDER__) && __has_include(<endian.h>)
 		#include <endian.h>
@@ -76,9 +78,8 @@ Configuration
 	#error "Define only one of SNAP_ASSUME_LITTLE_ENDIAN or SNAP_ASSUME_BIG_ENDIAN."
 #endif
 
-namespace snap
-{
-	namespace detail
+SNAP_BEGIN_NAMESPACE
+namespace detail
 	{
 
 #if defined(SNAP_ASSUME_LITTLE_ENDIAN)
@@ -156,4 +157,4 @@ namespace snap
 		big	   = detail::big_value,
 		native = detail::native_value
 	};
-} // namespace snap
+SNAP_END_NAMESPACE

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "snap/internal/abi_namespace.hpp"
+
 /// SNAP_HAS_BUILTIN_BIT_CAST
 /// Defined if the compiler has __builtin_bit_cast
 ///
@@ -71,7 +73,8 @@
     #endif
 #endif
 
-namespace snap::builtin {
+SNAP_BEGIN_NAMESPACE
+namespace builtin {
     constexpr bool is_constant_evaluated() noexcept {
 #if defined(SNAP_HAS_BUILTIN_IS_CONSTANT_EVALUATED)
 		return __builtin_is_constant_evaluated();
@@ -79,7 +82,8 @@ namespace snap::builtin {
         return false;
 #endif
     }
-} // namespace snap::builtin
+} // namespace builtin
+SNAP_END_NAMESPACE
 
 #ifdef SNAP_HAS_BUILTIN_IS_CONSTANT_EVALUATED
 	#undef SNAP_HAS_BUILTIN_IS_CONSTANT_EVALUATED

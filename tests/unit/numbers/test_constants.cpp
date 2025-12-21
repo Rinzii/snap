@@ -1,4 +1,5 @@
 #include "snap/numbers.hpp"
+#include "snap/internal/abi_namespace.hpp"
 
 #include "snap/testing/assertions.hpp"
 #include "snap/testing/type_name.hpp"
@@ -22,7 +23,8 @@ struct is_numbers_constant_available<T, std::void_t<decltype(snap::numbers::pi_v
 
 } // namespace
 
-namespace snap::numbers
+SNAP_BEGIN_NAMESPACE
+namespace numbers
 {
 
 namespace
@@ -83,5 +85,6 @@ TEST(NumbersConstants, RequireFloatingPoint)
         static_assert(!is_numbers_constant_available<int>::value, "constants should be SFINAE friendly");
 }
 
-} // namespace snap::numbers
+} // namespace numbers
+SNAP_END_NAMESPACE
 

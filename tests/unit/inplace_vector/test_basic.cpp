@@ -2,6 +2,7 @@
 // the current inplace_vector implementation requires additional fixes to build
 // cleanly across all supported compilers.
 #include "snap/inplace_vector.hpp"
+#include "snap/internal/abi_namespace.hpp"
 
 #include "snap/testing/assertions.hpp"
 
@@ -111,7 +112,8 @@ struct ThrowOnCopy
 
 } // namespace
 
-namespace snap::test_cases
+SNAP_BEGIN_NAMESPACE
+namespace test_cases
 {
 
 template <class Container>
@@ -245,4 +247,5 @@ TEST(InplaceVector, TracksLifetimeCorrectly)
         EXPECT_EQ(Tracking::constructions, Tracking::destructions);
 }
 
-} // namespace snap::test_cases
+} // namespace test_cases
+SNAP_END_NAMESPACE

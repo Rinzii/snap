@@ -1,11 +1,11 @@
 #pragma once
 
+#include "snap/internal/abi_namespace.hpp"
+
 #include <utility> // std::swap
 
-namespace snap
-{
-
-	class stop_source;						// forward decl (friend)
+SNAP_BEGIN_NAMESPACE
+class stop_source;						// forward decl (friend)
 	template <class T> class stop_callback; // forward decl (friend)
 
 	// C++17 stop_token backed by snap::stop_state via intrusive refcounting.
@@ -40,4 +40,4 @@ namespace snap
 		template <class T> friend class stop_callback;
 	};
 
-} // namespace snap
+SNAP_END_NAMESPACE

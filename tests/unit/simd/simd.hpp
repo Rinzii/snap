@@ -1,3 +1,6 @@
+#pragma once
+
+#include "snap/internal/abi_namespace.hpp"
 #include <cassert>
 #include <iostream>
 #include <iterator>
@@ -41,9 +44,8 @@
 	#define SNAP_HAS_BUILTIN_IS_CONSTANT_EVALUATED
 #endif
 
-namespace snap
-{
-	constexpr bool is_constant_evaluated() noexcept
+SNAP_BEGIN_NAMESPACE
+constexpr bool is_constant_evaluated() noexcept
 	{
 #if defined(SNAP_HAS_BUILTIN_IS_CONSTANT_EVALUATED)
 		return __builtin_is_constant_evaluated();
@@ -51,15 +53,14 @@ namespace snap
 		return false;
 #endif
 	}
-} // namespace snap
+SNAP_END_NAMESPACE
+
 #undef SNAP_HAS_BUILTIN_IS_CONSTANT_EVALUATED
 
 #include <type_traits>
 
-namespace snap
-{
-
-	namespace detail
+SNAP_BEGIN_NAMESPACE
+namespace detail
 	{
 		template <class> struct is_char_impl : std::false_type
 		{
@@ -95,22 +96,22 @@ namespace snap
 
 	template <class T> inline constexpr bool is_char_v = is_char<T>::value;
 
-} // namespace snap
+SNAP_END_NAMESPACE
 
-namespace snap
-{
-	template <class T, std::enable_if_t<std::is_integral_v<T> && std::is_unsigned_v<T> && !is_char_v<T> && !std::is_same_v<T, bool>, bool> = true>
+SNAP_BEGIN_NAMESPACE
+template <class T, std::enable_if_t<std::is_integral_v<T> && std::is_unsigned_v<T> && !is_char_v<T> && !std::is_same_v<T, bool>, bool> = true>
 	constexpr bool has_single_bit(T x) noexcept
 	{
 		return x && !(x & (x - 1));
 	}
-} // namespace snap
+SNAP_END_NAMESPACE
 
 #include <cstddef>
 #include <cstdint>
 #include <type_traits>
 
-namespace snap::simd
+SNAP_BEGIN_NAMESPACE
+namespace simd
 {
 	using simd_size_type = std::size_t;
 
@@ -573,7 +574,8 @@ namespace snap::simd
 	template <std::size_t N, std::enable_if_t<has_single_bit(static_cast<std::uint64_t>(N)), int> = 0>
 	inline constexpr flags<overaligned_flag<N>> flag_overaligned{};
 
-} // namespace snap::simd
+} // namespace simd
+SNAP_END_NAMESPACE
 
 // helpers
 namespace helpers

@@ -1,13 +1,14 @@
 #pragma once
 
+#include "snap/internal/abi_namespace.hpp"
+
 #include "snap/type_traits/remove_cvref.hpp"
 
 #include <type_traits>
 #include <utility>
 
-namespace snap
-{
-	namespace internal
+SNAP_BEGIN_NAMESPACE
+namespace internal
 	{
 
 		// Copy both const and volatile qualifiers
@@ -157,4 +158,4 @@ namespace snap
 	// Detection alias for if common_reference_t exists
 	template <class... Types> using is_common_reference_detected = internal::has_type_member<common_reference<Types...>>;
 
-} // namespace snap
+SNAP_END_NAMESPACE

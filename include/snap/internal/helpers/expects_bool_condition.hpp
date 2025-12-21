@@ -1,8 +1,11 @@
 #pragma once
 
+#include "snap/internal/abi_namespace.hpp"
+
 #include <type_traits>
 
-namespace snap::internal
+SNAP_BEGIN_NAMESPACE
+namespace internal
 {
 	/**
 	 * @brief Helper function to prevent the user from accidentally passing an integer to an expect function.
@@ -16,4 +19,5 @@ namespace snap::internal
 		return value;
 #endif // defined(__GNUC__) || defined(__clang__)
 	}
-} // namespace snap::internal
+} // namespace internal
+SNAP_END_NAMESPACE

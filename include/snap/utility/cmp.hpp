@@ -1,12 +1,13 @@
 #pragma once
+
+#include "snap/internal/abi_namespace.hpp"
 #include "snap/type_traits/remove_cvref.hpp"
 
 #include <cstdint>
 #include <type_traits>
 
-namespace snap
-{
-	namespace detail
+SNAP_BEGIN_NAMESPACE
+namespace detail
 	{
 
 		template <class T> struct is_forbidden_char_base : std::false_type
@@ -87,4 +88,4 @@ namespace snap
 		return !cmp_less(t, u);
 	}
 
-} // namespace snap
+SNAP_END_NAMESPACE

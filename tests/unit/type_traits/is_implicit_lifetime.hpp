@@ -1,3 +1,6 @@
+#pragma once
+
+#include "snap/internal/abi_namespace.hpp"
 /**
  * @file
  * @brief Portable C++17 trait to detect implicit-lifetime types with a conservative fallback.
@@ -18,10 +21,8 @@
 #include <cstddef>
 #include <type_traits>
 
-namespace snap
-{
-
-	namespace detail
+SNAP_BEGIN_NAMESPACE
+namespace detail
 	{
 
 /**
@@ -132,7 +133,7 @@ namespace snap
 	 */
 	template <class T> inline constexpr bool is_implicit_lifetime_v = is_implicit_lifetime<T>::value;
 
-} // namespace snap
+SNAP_END_NAMESPACE
 
 #ifdef SNAP_HAS_IL_BUILTIN
 	#undef SNAP_HAS_IL_BUILTIN

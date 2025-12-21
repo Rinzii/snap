@@ -1,11 +1,11 @@
 #pragma once
 
+#include "snap/internal/abi_namespace.hpp"
+
 #include <cassert>
 
-namespace snap
-{
-
-	// A tiny base you can inherit from to get next/prev links.
+SNAP_BEGIN_NAMESPACE
+// A tiny base you can inherit from to get next/prev links.
 	// Example: struct Node : snap::intrusive_node_base<Node> { /* ... */ };
 	template <class Derived> struct intrusive_node_base
 	{
@@ -66,4 +66,4 @@ namespace snap
 		Node* m_head = nullptr;
 	};
 
-} // namespace snap
+SNAP_END_NAMESPACE

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "tiny/predef/expects_bool_condition.hpp"
+#include "snap/internal/helpers/expects_bool_condition.hpp"
 
 /// \file likely.hpp
 /// \brief Provides the SNAP_LIKELY and SNAP_LIKELY_ATTR macros for branch prediction hints.

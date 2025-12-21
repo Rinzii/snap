@@ -74,6 +74,8 @@ add_library(snap_test_support STATIC support/test_main.cpp)
 target_link_libraries(snap_test_support PUBLIC GTest::gtest GTest::gmock)
 target_compile_features(snap_test_support PUBLIC cxx_std_17)
 target_include_directories(snap_test_support PUBLIC
+        ${CMAKE_SOURCE_DIR}/include
+        ${CMAKE_BINARY_DIR}/include
         ${CMAKE_CURRENT_LIST_DIR}
         ${CMAKE_CURRENT_LIST_DIR}/support
 )
@@ -167,6 +169,7 @@ function(snap_add_gtest name)
             SNAP_TEST_DATA_DIR="${CMAKE_CURRENT_LIST_DIR}/data")
     target_include_directories(${tgt} PRIVATE
             ${CMAKE_SOURCE_DIR}/include        # snap headers (default)
+            ${CMAKE_BINARY_DIR}/include        # generated headers (version/abi)
             ${CMAKE_CURRENT_LIST_DIR}
             ${CMAKE_CURRENT_LIST_DIR}/support
             ${ARG_INCLUDES}

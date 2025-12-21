@@ -1,9 +1,10 @@
 #pragma once
 
-namespace snap
-{
-	template <typename Type> struct type_identity
+#include "snap/internal/abi_namespace.hpp"
+
+SNAP_BEGIN_NAMESPACE
+template <typename Type> struct type_identity
 	{
 		using type = Type;
 	};
-} // namespace snap
+SNAP_END_NAMESPACE

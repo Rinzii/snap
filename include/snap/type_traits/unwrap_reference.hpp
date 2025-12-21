@@ -1,11 +1,12 @@
 #pragma once
 
+#include "snap/internal/abi_namespace.hpp"
+
 #include <functional>
 #include <type_traits>
 
-namespace snap
-{
-	template <class T> struct unwrap_reference
+SNAP_BEGIN_NAMESPACE
+template <class T> struct unwrap_reference
 	{
 		using type = T;
 	};
@@ -21,4 +22,4 @@ namespace snap
 	template <class T> using unwrap_reference_t = typename unwrap_reference<T>::type;
 
 	template <class T> using unwrap_ref_decay_t = typename unwrap_ref_decay<T>::type;
-} // namespace snap
+SNAP_END_NAMESPACE

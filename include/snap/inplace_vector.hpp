@@ -1,3 +1,6 @@
+#pragma once
+
+#include "snap/internal/abi_namespace.hpp"
 
 #include "snap/internal/compat/constexpr.hpp"
 
@@ -10,10 +13,8 @@
 #include <type_traits>
 #include <utility> // std::swap, std::move, std::addressof
 
-namespace snap
-{
-
-	// primary template (N > 0)
+SNAP_BEGIN_NAMESPACE
+// primary template (N > 0)
 	template <class T, std::size_t N> struct inplace_vector
 	{
 		static_assert(N > 0, "Primary template is for N > 0; N==0 has a specialization");
@@ -1069,4 +1070,4 @@ namespace snap
 		return removed;
 	}
 
-} // namespace snap
+SNAP_END_NAMESPACE

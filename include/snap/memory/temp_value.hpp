@@ -1,5 +1,7 @@
 #pragma once
 
+#include "snap/internal/abi_namespace.hpp"
+
 #include <memory>  // std::allocator_traits
 #include <utility> // std::forward
 
@@ -13,10 +15,8 @@
  * std::allocator_traits for the provided allocator type.
  */
 
-namespace snap
-{
-
-	/**
+SNAP_BEGIN_NAMESPACE
+/**
 	 * @brief Temporary value whose lifetime is managed via allocator traits.
 	 *
 	 * @tparam T Element type to construct and destroy.
@@ -121,4 +121,4 @@ namespace snap
 		Alloc& alloc_;
 	};
 
-} // namespace snap
+SNAP_END_NAMESPACE

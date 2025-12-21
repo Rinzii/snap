@@ -1,12 +1,13 @@
 #pragma once
 
+#include "snap/internal/abi_namespace.hpp"
+
 #include <atomic>
 #include <memory>
 #include <utility>
 
-namespace snap
-{
-        struct nostopstate_t
+SNAP_BEGIN_NAMESPACE
+struct nostopstate_t
         {
                 explicit constexpr nostopstate_t(int) noexcept {}
         };
@@ -87,4 +88,4 @@ namespace snap
                 state_ptr state_{};
         };
 
-} // namespace snap
+SNAP_END_NAMESPACE

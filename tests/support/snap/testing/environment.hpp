@@ -1,12 +1,15 @@
 #pragma once
 
+#include "snap/internal/abi_namespace.hpp"
+
 #include <gtest/gtest.h>
 
 #include <clocale>
 #include <mutex>
 #include <string>
 
-namespace snap::test
+SNAP_BEGIN_NAMESPACE
+namespace test
 {
 
 /**
@@ -37,4 +40,5 @@ inline void InstallGlobalEnvironment()
         std::call_once(installed, [] { ::testing::AddGlobalTestEnvironment(new ScopedCLocaleEnvironment()); });
 }
 
-} // namespace snap::test
+} // namespace test
+SNAP_END_NAMESPACE

@@ -1,11 +1,11 @@
 #pragma once
 
+#include "snap/internal/abi_namespace.hpp"
+
 #include <type_traits>
 
-namespace snap
-{
-
-	namespace detail
+SNAP_BEGIN_NAMESPACE
+namespace detail
 	{
 		template <class> struct is_char_impl : std::false_type
 		{
@@ -41,4 +41,4 @@ namespace snap
 
 	template <class T> inline constexpr bool is_char_v = is_char<T>::value;
 
-} // namespace snap
+SNAP_END_NAMESPACE

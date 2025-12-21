@@ -1,5 +1,7 @@
 #pragma once
 
+#include "snap/internal/abi_namespace.hpp"
+
 #include <type_traits>
 
 /// SNAP_HAS_BUILTIN_BIT_CAST
@@ -73,7 +75,8 @@
 	#endif
 #endif
 
-namespace snap::builtin
+SNAP_BEGIN_NAMESPACE
+namespace builtin
 {
 
 	template <typename T> inline constexpr bool has_constexpr_bit_cast =
@@ -91,4 +94,5 @@ namespace snap::builtin
 		return __builtin_bit_cast(To, from);
 	}
 
-} // namespace snap::builtin
+} // namespace builtin
+SNAP_END_NAMESPACE

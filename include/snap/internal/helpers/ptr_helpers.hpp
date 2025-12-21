@@ -1,11 +1,14 @@
 #pragma once
 
+#include "snap/internal/abi_namespace.hpp"
+
 #include <memory>
 #include <tuple>
 #include <type_traits>
 #include <utility>
 
-namespace snap::internal
+SNAP_BEGIN_NAMESPACE
+namespace internal
 {
 
 	template <typename Pointer> using void_ptr_convertible = std::is_convertible<Pointer *, void **>;
@@ -18,4 +21,5 @@ namespace snap::internal
 	{
 	};
 
-} // namespace snap::internal
+} // namespace internal
+SNAP_END_NAMESPACE

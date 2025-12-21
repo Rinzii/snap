@@ -1,14 +1,14 @@
 #pragma once
 
+#include "snap/internal/abi_namespace.hpp"
+
 #include "snap/internal/helpers/perfect_forward.hpp"
 
 #include <type_traits>
 #include <utility>
 
-namespace snap
-{
-
-	namespace detail
+SNAP_BEGIN_NAMESPACE
+namespace detail
 	{
 
 		struct bind_front_op
@@ -37,4 +37,4 @@ namespace snap
 		return detail::bind_front_t<std::decay_t<Fn>, std::decay_t<Args>...>(std::forward<Fn>(f), std::forward<Args>(args)...);
 	}
 
-} // namespace snap
+SNAP_END_NAMESPACE

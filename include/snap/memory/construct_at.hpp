@@ -1,5 +1,7 @@
 #pragma once
 
+#include "snap/internal/abi_namespace.hpp"
+
 #include "snap/internal/compat/constexpr.hpp"
 #include "snap/type_traits/is_bounded_array.hpp"
 
@@ -9,10 +11,8 @@
 #include <type_traits> // std::declval, std::enable_if_t, std
 #include <utility>	   // std::forward
 
-namespace snap
-{
-
-	namespace details
+SNAP_BEGIN_NAMESPACE
+namespace details
 	{
 		template <class U> SNAP_CONSTEXPR20 inline void* voidify(U& r) noexcept
 		{
@@ -51,4 +51,4 @@ namespace snap
 		for (auto&& elem : *location) { ::snap::destroy_at(std::addressof(elem)); }
 	}
 
-} // namespace snap
+SNAP_END_NAMESPACE

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "snap/internal/abi_namespace.hpp"
+
 #include "snap/internal/compat/constexpr.hpp"
 #include "snap/memory/construct_at.hpp"
 #include "snap/type_traits/is_bounded_array.hpp"
@@ -10,10 +12,8 @@
 #include <type_traits> // std::is_array_v, std::is_constructible_v
 #include <utility>	   // std::forward, std::launder, std::addresso
 
-namespace snap
-{
-
-	/*
+SNAP_BEGIN_NAMESPACE
+/*
 	 * inplace_storage
 	 * ---------------
 	 * Purpose: a small, fixed-size, properly aligned buffer to construct/destroy
@@ -125,4 +125,4 @@ namespace snap
 		bool m_engaged = false;
 	};
 
-} // namespace snap
+SNAP_END_NAMESPACE

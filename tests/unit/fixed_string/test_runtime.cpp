@@ -1,9 +1,10 @@
+#include "snap/internal/abi_namespace.hpp"
+
 #include <algorithm>
 
-namespace snap
-{
+SNAP_BEGIN_NAMESPACE
 using std::swap_ranges;
-}
+SNAP_END_NAMESPACE
 
 #include "snap/fixed_string.hpp"
 
@@ -13,7 +14,8 @@ using std::swap_ranges;
 #include <string_view>
 #include <type_traits>
 
-namespace snap::test_cases
+SNAP_BEGIN_NAMESPACE
+namespace test_cases
 {
 
 TEST(FixedStringRuntime, BasicAccessors)
@@ -70,4 +72,5 @@ TEST(FixedStringRuntime, ThrowsWhenIndexOutOfRange)
         SNAP_EXPECT_THROW_MSG((void)fs.at(5), std::out_of_range, "basic_fixed_string::at");
 }
 
-} // namespace snap::test_cases
+} // namespace test_cases
+SNAP_END_NAMESPACE
