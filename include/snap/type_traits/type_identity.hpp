@@ -4,7 +4,7 @@
 
 SNAP_BEGIN_NAMESPACE
 template <typename Type> struct type_identity
-	{
-		using type = Type;
-	};
+{
+	using type = Type;
+};
 SNAP_END_NAMESPACE

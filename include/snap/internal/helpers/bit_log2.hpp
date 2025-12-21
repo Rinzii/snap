@@ -1,8 +1,7 @@
 #pragma once
 
-#include "snap/internal/abi_namespace.hpp"
-
 #include "snap/bit/countl.hpp"
+#include "snap/internal/abi_namespace.hpp"
 #include "snap/type_traits/is_integer.hpp"
 
 #include <limits>

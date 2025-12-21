@@ -80,34 +80,34 @@ Configuration
 
 SNAP_BEGIN_NAMESPACE
 namespace detail
-	{
+{
 
 #if defined(SNAP_ASSUME_LITTLE_ENDIAN)
-		constexpr bool native_is_little = true;
+	constexpr bool native_is_little = true;
 
 #elif defined(SNAP_ASSUME_BIG_ENDIAN)
-		constexpr bool native_is_little = false;
+	constexpr bool native_is_little = false;
 
 #elif defined(_WIN32) || defined(__EMSCRIPTEN__) || defined(__wasm__)
-		constexpr bool native_is_little = true;
+	constexpr bool native_is_little = true;
 
 #elif defined(__BYTE_ORDER__) && defined(__ORDER_LITTLE_ENDIAN__) && defined(__ORDER_BIG_ENDIAN__)
-		constexpr bool native_is_little = (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__);
+	constexpr bool native_is_little = (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__);
 
 #elif defined(BYTE_ORDER) && defined(LITTLE_ENDIAN) && defined(BIG_ENDIAN)
-		constexpr bool native_is_little = (BYTE_ORDER == LITTLE_ENDIAN);
+	constexpr bool native_is_little = (BYTE_ORDER == LITTLE_ENDIAN);
 
 #elif defined(__LITTLE_ENDIAN__) || defined(_LITTLE_ENDIAN) || defined(_LITTLE_ENDIAN__)
-		constexpr bool native_is_little = true;
+	constexpr bool native_is_little = true;
 
 #elif defined(__BIG_ENDIAN__) || defined(_BIG_ENDIAN) || defined(_BIG_ENDIAN__)
-		constexpr bool native_is_little = false;
+	constexpr bool native_is_little = false;
 
 #elif defined(__LITTLEENDIAN__) && !defined(__BIGENDIAN__)
-		constexpr bool native_is_little = true;
+	constexpr bool native_is_little = true;
 
 #elif defined(__BIGENDIAN__) && !defined(__LITTLEENDIAN__)
-		constexpr bool native_is_little = false;
+	constexpr bool native_is_little = false;
 
 #elif !defined(SNAP_DISABLE_ENDIAN_ARCH_HINTS) &&                                                                                                              \
 	(defined(__i386__) || defined(__x86_64__) || defined(_M_IX86) || defined(_M_X64) || defined(__alpha__) || defined(__AVR__) || defined(__bfin__) ||         \
@@ -117,7 +117,7 @@ namespace detail
 	 ((defined(__powerpc__) || defined(__ppc__) || defined(__PPC__)) && defined(__LITTLE_ENDIAN__)) || (defined(__sh__) && defined(__LITTLE_ENDIAN__)) ||      \
 	 defined(__MSP430__) || defined(__RX__) || (defined(__or1k__) && defined(__LITTLE_ENDIAN__)) || defined(__MICROBLAZEEL__) ||                               \
 	 (defined(__arc__) && (defined(__LITTLE_ENDIAN__) || defined(__ARC_LITTLE_ENDIAN__))))
-		constexpr bool native_is_little = true;
+	constexpr bool native_is_little = true;
 
 #elif !defined(SNAP_DISABLE_ENDIAN_ARCH_HINTS) &&                                                                                                              \
 	(defined(__ARMEB__) || defined(__THUMBEB__) || defined(__AARCH64EB__) || (defined(__arm__) && defined(__BYTE_ORDER_BIG_ENDIAN__)) ||                       \
@@ -127,34 +127,34 @@ namespace detail
 	 defined(__nios2_big_endian__) || (defined(__sh__) && defined(__BIG_ENDIAN__)) || (defined(__or1k__) && defined(__BIG_ENDIAN__)) ||                        \
 	 defined(__MICROBLAZEEB__) || (defined(__MICROBLAZE__) && !defined(__MICROBLAZEEL__)) ||                                                                   \
 	 (defined(__arc__) && (defined(__BIG_ENDIAN__) || defined(__ARC_BIG_ENDIAN__))) || defined(__H8300__) || defined(__h8300__))
-		constexpr bool native_is_little = false;
+	constexpr bool native_is_little = false;
 
 #else
 	#error "snap::endian: unable to determine endianness. Define SNAP_ASSUME_LITTLE_ENDIAN or SNAP_ASSUME_BIG_ENDIAN."
 #endif
 
 #if defined(__ORDER_LITTLE_ENDIAN__) && defined(__ORDER_BIG_ENDIAN__)
-		constexpr int little_value = __ORDER_LITTLE_ENDIAN__;
-		constexpr int big_value	   = __ORDER_BIG_ENDIAN__;
+	constexpr int little_value = __ORDER_LITTLE_ENDIAN__;
+	constexpr int big_value	   = __ORDER_BIG_ENDIAN__;
 #else
-		constexpr int little_value = 1234;
-		constexpr int big_value	   = 4321;
+	constexpr int little_value = 1234;
+	constexpr int big_value	   = 4321;
 #endif
 
 #if defined(__BYTE_ORDER__)
-		constexpr int native_value = __BYTE_ORDER__;
+	constexpr int native_value = __BYTE_ORDER__;
 #elif defined(BYTE_ORDER)
-		constexpr int native_value = BYTE_ORDER;
+	constexpr int native_value = BYTE_ORDER;
 #else
-		constexpr int native_value = native_is_little ? little_value : big_value;
+	constexpr int native_value = native_is_little ? little_value : big_value;
 #endif
 
-	} // namespace detail
+} // namespace detail
 
-	enum class endian : int
-	{
-		little = detail::little_value,
-		big	   = detail::big_value,
-		native = detail::native_value
-	};
+enum class endian : int
+{
+	little = detail::little_value,
+	big	   = detail::big_value,
+	native = detail::native_value
+};
 SNAP_END_NAMESPACE

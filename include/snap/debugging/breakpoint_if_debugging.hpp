@@ -10,8 +10,8 @@
 
 SNAP_BEGIN_NAMESPACE
 inline void breakpoint_if_debugging() noexcept
-	{
-		if (is_debugger_present()) { breakpoint(); }
-	}
+{
+	if (is_debugger_present()) { breakpoint(); }
+}
 
 SNAP_END_NAMESPACE

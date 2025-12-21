@@ -40,10 +40,7 @@ inline bool is_debugger_present() noexcept
 	kinfo_proc info{};
 	std::size_t size = sizeof(info);
 
-	if (sysctl(mib.data(), mib.size(), &info, &size, nullptr, 0) != 0 || size == 0)
-	{
-		return false;
-	}
+	if (sysctl(mib.data(), mib.size(), &info, &size, nullptr, 0) != 0 || size == 0) { return false; }
 
 	// The "traced" flag and field names vary by OS. If we cannot prove it, return false.
 
@@ -83,10 +80,7 @@ inline bool is_debugger_present() noexcept
 	// Linux/Android: TracerPid > 0 means a debugger is attached.
 
 	std::FILE* f = std::fopen("/proc/self/status", "r");
-	if (!f)
-	{
-		return false;
-	}
+	if (!f) { return false; }
 
 	std::array<char, 256> line{};
 	bool attached = false;
@@ -99,7 +93,7 @@ inline bool is_debugger_present() noexcept
 			while (*p && std::isspace(static_cast<unsigned char>(*p))) { ++p; }
 
 			const long v = std::strtol(p, nullptr, 10);
-			attached = (v > 0);
+			attached	 = (v > 0);
 			break;
 		}
 	}

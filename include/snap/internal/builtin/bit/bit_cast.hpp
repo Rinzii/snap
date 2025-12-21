@@ -79,19 +79,16 @@ SNAP_BEGIN_NAMESPACE
 namespace builtin
 {
 	inline constexpr bool has_constexpr_bit_cast =
-	#if defined(SNAP_HAS_BUILTIN_BIT_CAST)
+#if defined(SNAP_HAS_BUILTIN_BIT_CAST)
 		true
-	#else
+#else
 		false
-	#endif
-	;
+#endif
+		;
 
-	template<class To, class From>
-	constexpr std::enable_if_t<
-		has_constexpr_bit_cast &&
-		(sizeof(To) == sizeof(From)) &&
-		std::is_trivially_copyable_v<To> &&
-		std::is_trivially_copyable_v<From>, To>
+	template <class To, class From>
+	constexpr std::enable_if_t<has_constexpr_bit_cast && (sizeof(To) == sizeof(From)) && std::is_trivially_copyable_v<To> && std::is_trivially_copyable_v<From>,
+							   To>
 	bit_cast(const From& from) noexcept
 	{
 		return __builtin_bit_cast(To, from);
@@ -100,5 +97,5 @@ namespace builtin
 SNAP_END_NAMESPACE
 
 #ifdef SNAP_HAS_BUILTIN_BIT_CAST
-#undef SNAP_HAS_BUILTIN_BIT_CAST
+	#undef SNAP_HAS_BUILTIN_BIT_CAST
 #endif
