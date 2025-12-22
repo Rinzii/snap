@@ -12,6 +12,7 @@ snap_add_headers(
         is_specialization_of.hpp
         is_unbounded_array.hpp
         is_unsigned_integral.hpp
+        reference_converts_from_temporary.hpp
         remove_cvref.hpp
         type_identity.hpp
         unwrap_reference.hpp

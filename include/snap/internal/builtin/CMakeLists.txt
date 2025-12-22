@@ -1,4 +1,2 @@
-snap_add_headers(
-        bit/bit_cast.hpp
-)
-
+add_subdirectory(bit)
+add_subdirectory(type_traits)
