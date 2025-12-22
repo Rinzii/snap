@@ -19,12 +19,12 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # Intel macOS 13 (x86_64)
-          - { name: clang-debug-x86,   runs_on: macos-13, configurePreset: ninja-clang, buildPreset: build-ninja-clang-debug,   testPreset: test-ninja-clang-debug }
-          - { name: clang-release-x86, runs_on: macos-13, configurePreset: ninja-clang, buildPreset: build-ninja-clang-release, testPreset: test-ninja-clang-release }
-          # Apple Silicon macOS 14 (arm64)
-          - { name: clang-debug-arm64,   runs_on: macos-14, configurePreset: ninja-clang, buildPreset: build-ninja-clang-debug,   testPreset: test-ninja-clang-debug }
-          - { name: clang-release-arm64, runs_on: macos-14, configurePreset: ninja-clang, buildPreset: build-ninja-clang-release, testPreset: test-ninja-clang-release }
+          # Intel macOS (x86_64)
+          - { name: clang-debug-x86,   runs_on: macos-15-intel, configurePreset: ninja-clang, buildPreset: build-ninja-clang-debug,   testPreset: test-ninja-clang-debug }
+          - { name: clang-release-x86, runs_on: macos-15-intel, configurePreset: ninja-clang, buildPreset: build-ninja-clang-release, testPreset: test-ninja-clang-release }
+          # Apple Silicon macOS (arm64)
+          - { name: clang-debug-arm64,   runs_on: macos-latest, configurePreset: ninja-clang, buildPreset: build-ninja-clang-debug,   testPreset: test-ninja-clang-debug }
+          - { name: clang-release-arm64, runs_on: macos-latest, configurePreset: ninja-clang, buildPreset: build-ninja-clang-release, testPreset: test-ninja-clang-release }
 
     steps:
       - name: Harden Runner
