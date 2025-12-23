@@ -36,7 +36,7 @@ template <class T> constexpr auto to_address(const T& p) noexcept
 	else
 	{
 		// Recurse through operator-> until we hit the raw-pointer overload
-		return ::snap::to_address(p.operator->());
+		return ::SNAP_NAMESPACE::to_address(p.operator->());
 	}
 }
 

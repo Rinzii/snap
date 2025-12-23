@@ -8,7 +8,7 @@
 
 TEST(Functional, IdentityReturnsForwardedValue)
 {
-	snap::identity id;
+	SNAP_NAMESPACE::identity id;
 	int value = 7;
 	EXPECT_EQ(id(value), 7);
 	EXPECT_TRUE((std::is_same_v<decltype(id(std::move(value))), int &&>));

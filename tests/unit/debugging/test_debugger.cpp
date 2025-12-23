@@ -5,6 +5,6 @@
 
 TEST(Debugging, BreakpointHelperNoopsWithoutDebugger)
 {
-	EXPECT_FALSE(snap::is_debugger_present());
-	EXPECT_NO_THROW(snap::breakpoint_if_debugging());
+	EXPECT_FALSE(SNAP_NAMESPACE::is_debugger_present());
+	EXPECT_NO_THROW(SNAP_NAMESPACE::breakpoint_if_debugging());
 }

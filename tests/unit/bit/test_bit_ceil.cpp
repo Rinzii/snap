@@ -41,8 +41,8 @@ namespace
 	TYPED_TEST(BitCeilTyped, ZeroAndOne)
 	{
 		using T = TypeParam;
-		EXPECT_EQ(snap::bit_ceil(T{ 0 }), T{ 1 });
-		EXPECT_EQ(snap::bit_ceil(T{ 1 }), T{ 1 });
+		EXPECT_EQ(SNAP_NAMESPACE::bit_ceil(T{ 0 }), T{ 1 });
+		EXPECT_EQ(SNAP_NAMESPACE::bit_ceil(T{ 1 }), T{ 1 });
 	}
 
 	// Powers of two up to the highest representable are fixed points
@@ -52,7 +52,7 @@ namespace
 		for (int k = 0; k < digits_v<T>; ++k)
 		{
 			const T p = T{ 1 } << k;
-			EXPECT_EQ(snap::bit_ceil(p), p) << "k=" << k;
+			EXPECT_EQ(SNAP_NAMESPACE::bit_ceil(p), p) << "k=" << k;
 		}
 	}
 
@@ -61,7 +61,7 @@ namespace
 	{
 		using T	  = TypeParam;
 		const T m = T{ 1 };
-		EXPECT_EQ(snap::bit_ceil(m), T{ 1 });
+		EXPECT_EQ(SNAP_NAMESPACE::bit_ceil(m), T{ 1 });
 	}
 
 	// Just below a power-of-two rounds up (true for k >= 2)
@@ -72,7 +72,7 @@ namespace
 		{
 			const T p = T{ 1 } << k;   // 2^k
 			const T m = T(p - T{ 1 }); // 2^k - 1
-			EXPECT_EQ(snap::bit_ceil(m), p) << "k=" << k;
+			EXPECT_EQ(SNAP_NAMESPACE::bit_ceil(m), p) << "k=" << k;
 		}
 	}
 
@@ -85,7 +85,7 @@ namespace
 			const T p	   = T{ 1 } << k;		// 2^k
 			const T a	   = T(p + T{ 1 });		// 2^k + 1
 			const T expect = T{ 1 } << (k + 1); // 2^(k+1)
-			EXPECT_EQ(snap::bit_ceil(a), expect) << "k=" << k;
+			EXPECT_EQ(SNAP_NAMESPACE::bit_ceil(a), expect) << "k=" << k;
 		}
 	}
 
@@ -98,7 +98,7 @@ namespace
 
 		auto check_props = [&](T x)
 		{
-			const T r = snap::bit_ceil(x);
+			const T r = SNAP_NAMESPACE::bit_ceil(x);
 			if (x == T{ 0 })
 			{
 				EXPECT_EQ(r, T{ 1 });
@@ -147,8 +147,8 @@ namespace
 		}
 
 		// Spot checks near the boundary
-		if (hp2 > T{ 1 }) { EXPECT_EQ(snap::bit_ceil(T(hp2 - T{ 1 })), hp2); }
-		EXPECT_EQ(snap::bit_ceil(hp2), hp2);
+		if (hp2 > T{ 1 }) { EXPECT_EQ(SNAP_NAMESPACE::bit_ceil(T(hp2 - T{ 1 })), hp2); }
+		EXPECT_EQ(SNAP_NAMESPACE::bit_ceil(hp2), hp2);
 	}
 
 	// Monotonic on defined domain (sampled; single increasing pass)
@@ -158,7 +158,7 @@ namespace
 		const T hp2		 = highest_pow2<T>();
 		const int digits = digits_v<T>;
 
-		auto ceilT = [](T x) -> T { return snap::bit_ceil(x); };
+		auto ceilT = [](T x) -> T { return SNAP_NAMESPACE::bit_ceil(x); };
 
 		std::vector<T> xs;
 		xs.reserve(40000); // upper bound; stays small/fast
@@ -228,7 +228,7 @@ namespace
 		for (unsigned v = 0; v <= static_cast<unsigned>(hp2); ++v)
 		{
 			const T x = static_cast<T>(v);
-			const T r = snap::bit_ceil(x);
+			const T r = SNAP_NAMESPACE::bit_ceil(x);
 			if (x == T{ 0 }) { EXPECT_EQ(r, T{ 1 }); }
 			else
 			{
@@ -240,13 +240,13 @@ namespace
 	}
 
 	// Compile-time (well-defined inputs only)
-	static_assert(snap::bit_ceil(std::uint32_t{ 0 }) == 1U);
-	static_assert(snap::bit_ceil(std::uint32_t{ 1 }) == 1U);
-	static_assert(snap::bit_ceil(std::uint32_t{ 2 }) == 2U);
-	static_assert(snap::bit_ceil(std::uint32_t{ 3 }) == 4U);
-	static_assert(snap::bit_ceil(std::uint32_t{ 4 }) == 4U);
-	static_assert(snap::bit_ceil(std::uint32_t{ 5 }) == 8U);
-	static_assert(snap::bit_ceil(std::uint32_t{ 0x80000000U }) == 0x80000000U);
+	static_assert(SNAP_NAMESPACE::bit_ceil(std::uint32_t{ 0 }) == 1U);
+	static_assert(SNAP_NAMESPACE::bit_ceil(std::uint32_t{ 1 }) == 1U);
+	static_assert(SNAP_NAMESPACE::bit_ceil(std::uint32_t{ 2 }) == 2U);
+	static_assert(SNAP_NAMESPACE::bit_ceil(std::uint32_t{ 3 }) == 4U);
+	static_assert(SNAP_NAMESPACE::bit_ceil(std::uint32_t{ 4 }) == 4U);
+	static_assert(SNAP_NAMESPACE::bit_ceil(std::uint32_t{ 5 }) == 8U);
+	static_assert(SNAP_NAMESPACE::bit_ceil(std::uint32_t{ 0x80000000U }) == 0x80000000U);
 // Do not constexpr-test inputs above highest power-of-two; that’s UB by spec.
 
 // Cross-check against std::bit_ceil (sampled for wide types)
@@ -257,7 +257,7 @@ namespace
 		const int digits = digits_v<T>;
 		const T hp2		 = highest_pow2<T>();
 
-		auto check = [&](T x) { EXPECT_EQ(snap::bit_ceil(x), std::bit_ceil(x)) << +x; };
+		auto check = [&](T x) { EXPECT_EQ(SNAP_NAMESPACE::bit_ceil(x), std::bit_ceil(x)) << +x; };
 
 		if constexpr (digits <= 16)
 		{

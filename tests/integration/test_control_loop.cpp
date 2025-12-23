@@ -30,7 +30,7 @@ namespace
 
 	servo_frame compute_frame(const measurement& sample)
 	{
-		const auto midpoint	 = snap::midpoint(sample.current, sample.desired);
+		const auto midpoint	 = SNAP_NAMESPACE::midpoint(sample.current, sample.desired);
 		const int correction = midpoint - sample.current;
 
 		servo_direction direction = servo_direction::hold;
@@ -48,7 +48,7 @@ namespace
 	std::vector<servo_frame> run_control_loop(const std::vector<measurement>& samples)
 	{
 		std::vector<servo_frame> frames;
-		auto sink = snap::bind_front(&append_frame, &frames);
+		auto sink = SNAP_NAMESPACE::bind_front(&append_frame, &frames);
 
 		for (const auto& sample : samples) { sink(compute_frame(sample)); }
 
@@ -65,13 +65,13 @@ TEST(ControlLoopIntegration, classifies_and_accumulates_corrections)
 
 	EXPECT_EQ(servo_direction::up, frames[0].direction);
 	EXPECT_EQ(2, frames[0].correction);
-	EXPECT_EQ(1, snap::to_underlying(frames[0].direction));
+	EXPECT_EQ(1, SNAP_NAMESPACE::to_underlying(frames[0].direction));
 
 	EXPECT_EQ(servo_direction::down, frames[1].direction);
 	EXPECT_EQ(-1, frames[1].correction);
-	EXPECT_EQ(-1, snap::to_underlying(frames[1].direction));
+	EXPECT_EQ(-1, SNAP_NAMESPACE::to_underlying(frames[1].direction));
 
 	EXPECT_EQ(servo_direction::hold, frames[2].direction);
 	EXPECT_EQ(0, frames[2].correction);
-	EXPECT_EQ(0, snap::to_underlying(frames[2].direction));
+	EXPECT_EQ(0, SNAP_NAMESPACE::to_underlying(frames[2].direction));
 }

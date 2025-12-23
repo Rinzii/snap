@@ -7,6 +7,6 @@ int main(int argc, char** argv)
 	::testing::InitGoogleTest(&argc, argv);
 	::testing::GTEST_FLAG(color)			= "yes";
 	::testing::GTEST_FLAG(death_test_style) = "threadsafe";
-	snap::test::InstallGlobalEnvironment();
+	SNAP_NAMESPACE::test::InstallGlobalEnvironment();
 	return RUN_ALL_TESTS();
 }

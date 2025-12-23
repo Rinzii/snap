@@ -16,7 +16,7 @@ namespace
 	{
 	};
 
-	template <class T> struct is_numbers_constant_available<T, std::void_t<decltype(snap::numbers::pi_v<T>)>> : std::true_type
+	template <class T> struct is_numbers_constant_available<T, std::void_t<decltype(SNAP_NAMESPACE::numbers::pi_v<T>)>> : std::true_type
 	{
 	};
 
@@ -34,7 +34,7 @@ namespace numbers
 		};
 
 		using FloatingTypes = ::testing::Types<float, double, long double>;
-		TYPED_TEST_SUITE(NumbersTypedTest, FloatingTypes, snap::test::TypeNameGenerator);
+		TYPED_TEST_SUITE(NumbersTypedTest, FloatingTypes, SNAP_NAMESPACE::test::TypeNameGenerator);
 
 		TYPED_TEST(NumbersTypedTest, VariableTemplatesMatchDoubleSpecializations)
 		{
@@ -72,10 +72,10 @@ namespace numbers
 
 	TEST(NumbersConstants, AreDoublePrecisionByDefault)
 	{
-		static_assert(std::is_same_v<decltype(snap::numbers::pi), const double>);
-		static_assert(std::is_same_v<decltype(snap::numbers::e), const double>);
-		SNAP_EXPECT_NEAR_REL(snap::numbers::pi, snap::numbers::pi_v<double>, 1e-12);
-		SNAP_EXPECT_NEAR_REL(snap::numbers::e, snap::numbers::e_v<double>, 1e-12);
+		static_assert(std::is_same_v<decltype(SNAP_NAMESPACE::numbers::pi), const double>);
+		static_assert(std::is_same_v<decltype(SNAP_NAMESPACE::numbers::e), const double>);
+		SNAP_EXPECT_NEAR_REL(SNAP_NAMESPACE::numbers::pi, SNAP_NAMESPACE::numbers::pi_v<double>, 1e-12);
+		SNAP_EXPECT_NEAR_REL(SNAP_NAMESPACE::numbers::e, SNAP_NAMESPACE::numbers::e_v<double>, 1e-12);
 	}
 
 	TEST(NumbersConstants, RequireFloatingPoint)

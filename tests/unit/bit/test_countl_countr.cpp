@@ -81,7 +81,7 @@ namespace
 			const T max_value = std::numeric_limits<T>::max();
 			for (T value = T{ 0 };; value = T(value + T{ 1 }))
 			{
-				EXPECT_EQ(snap::countl_zero(value), reference_countl_zero(value)) << +value;
+				EXPECT_EQ(SNAP_NAMESPACE::countl_zero(value), reference_countl_zero(value)) << +value;
 				if (value == max_value) break;
 			}
 		}
@@ -90,12 +90,12 @@ namespace
 			for (int bit = 0; bit < digits; ++bit)
 			{
 				const T value = T{ 1 } << bit;
-				EXPECT_EQ(snap::countl_zero(value), reference_countl_zero(value));
-				EXPECT_EQ(snap::countl_zero(T(value - T{ 1 })), reference_countl_zero(T(value - T{ 1 })));
+				EXPECT_EQ(SNAP_NAMESPACE::countl_zero(value), reference_countl_zero(value));
+				EXPECT_EQ(SNAP_NAMESPACE::countl_zero(T(value - T{ 1 })), reference_countl_zero(T(value - T{ 1 })));
 			}
 		}
-		EXPECT_EQ(snap::countl_zero(T{ 0 }), digits_v<T>);
-		EXPECT_EQ(snap::countl_zero(std::numeric_limits<T>::max()), 0);
+		EXPECT_EQ(SNAP_NAMESPACE::countl_zero(T{ 0 }), digits_v<T>);
+		EXPECT_EQ(SNAP_NAMESPACE::countl_zero(std::numeric_limits<T>::max()), 0);
 	}
 
 	TYPED_TEST(CountLeadingTrailingTyped, CountlOneMatchesReference)
@@ -107,7 +107,7 @@ namespace
 			const T max_value = std::numeric_limits<T>::max();
 			for (T value = T{ 0 };; value = T(value + T{ 1 }))
 			{
-				EXPECT_EQ(snap::countl_one(value), reference_countl_one(value)) << +value;
+				EXPECT_EQ(SNAP_NAMESPACE::countl_one(value), reference_countl_one(value)) << +value;
 				if (value == max_value) break;
 			}
 		}
@@ -116,10 +116,10 @@ namespace
 			for (int bit = 0; bit < digits; ++bit)
 			{
 				const T value = T{ 1 } << bit;
-				EXPECT_EQ(snap::countl_one(value), reference_countl_one(value));
-				EXPECT_EQ(snap::countl_one(T(value - T{ 1 })), reference_countl_one(T(value - T{ 1 })));
+				EXPECT_EQ(SNAP_NAMESPACE::countl_one(value), reference_countl_one(value));
+				EXPECT_EQ(SNAP_NAMESPACE::countl_one(T(value - T{ 1 })), reference_countl_one(T(value - T{ 1 })));
 			}
-			EXPECT_EQ(snap::countl_one(std::numeric_limits<T>::max()), digits_v<T>);
+			EXPECT_EQ(SNAP_NAMESPACE::countl_one(std::numeric_limits<T>::max()), digits_v<T>);
 		}
 	}
 
@@ -132,7 +132,7 @@ namespace
 			const T max_value = std::numeric_limits<T>::max();
 			for (T value = T{ 0 };; value = T(value + T{ 1 }))
 			{
-				EXPECT_EQ(snap::countr_zero(value), reference_countr_zero(value)) << +value;
+				EXPECT_EQ(SNAP_NAMESPACE::countr_zero(value), reference_countr_zero(value)) << +value;
 				if (value == max_value) break;
 			}
 		}
@@ -141,12 +141,12 @@ namespace
 			for (int bit = 0; bit < digits; ++bit)
 			{
 				const T value = T{ 1 } << bit;
-				EXPECT_EQ(snap::countr_zero(value), reference_countr_zero(value));
-				EXPECT_EQ(snap::countr_zero(T(value - T{ 1 })), reference_countr_zero(T(value - T{ 1 })));
+				EXPECT_EQ(SNAP_NAMESPACE::countr_zero(value), reference_countr_zero(value));
+				EXPECT_EQ(SNAP_NAMESPACE::countr_zero(T(value - T{ 1 })), reference_countr_zero(T(value - T{ 1 })));
 			}
 		}
-		EXPECT_EQ(snap::countr_zero(T{ 0 }), digits_v<T>);
-		EXPECT_EQ(snap::countr_zero(T{ 1 }), 0);
+		EXPECT_EQ(SNAP_NAMESPACE::countr_zero(T{ 0 }), digits_v<T>);
+		EXPECT_EQ(SNAP_NAMESPACE::countr_zero(T{ 1 }), 0);
 	}
 
 	TYPED_TEST(CountLeadingTrailingTyped, CountrOneMatchesReference)
@@ -158,7 +158,7 @@ namespace
 			const T max_value = std::numeric_limits<T>::max();
 			for (T value = T{ 0 };; value = T(value + T{ 1 }))
 			{
-				EXPECT_EQ(snap::countr_one(value), reference_countr_one(value)) << +value;
+				EXPECT_EQ(SNAP_NAMESPACE::countr_one(value), reference_countr_one(value)) << +value;
 				if (value == max_value) break;
 			}
 		}
@@ -167,10 +167,10 @@ namespace
 			for (int bit = 0; bit < digits; ++bit)
 			{
 				const T value = T{ 1 } << bit;
-				EXPECT_EQ(snap::countr_one(value), reference_countr_one(value));
-				EXPECT_EQ(snap::countr_one(T(value - T{ 1 })), reference_countr_one(T(value - T{ 1 })));
+				EXPECT_EQ(SNAP_NAMESPACE::countr_one(value), reference_countr_one(value));
+				EXPECT_EQ(SNAP_NAMESPACE::countr_one(T(value - T{ 1 })), reference_countr_one(T(value - T{ 1 })));
 			}
-			EXPECT_EQ(snap::countr_one(std::numeric_limits<T>::max()), digits_v<T>);
+			EXPECT_EQ(SNAP_NAMESPACE::countr_one(std::numeric_limits<T>::max()), digits_v<T>);
 		}
 	}
 
@@ -181,10 +181,10 @@ namespace
 		for (int bit = 0; bit < digits_v<T>; ++bit)
 		{
 			const T value = T{ 1 } << bit;
-			EXPECT_EQ(snap::countl_zero(value), std::countl_zero(value));
-			EXPECT_EQ(snap::countr_zero(value), std::countr_zero(value));
-			EXPECT_EQ(snap::countl_one(value), std::countl_one(value));
-			EXPECT_EQ(snap::countr_one(value), std::countr_one(value));
+			EXPECT_EQ(SNAP_NAMESPACE::countl_zero(value), std::countl_zero(value));
+			EXPECT_EQ(SNAP_NAMESPACE::countr_zero(value), std::countr_zero(value));
+			EXPECT_EQ(SNAP_NAMESPACE::countl_one(value), std::countl_one(value));
+			EXPECT_EQ(SNAP_NAMESPACE::countr_one(value), std::countr_one(value));
 		}
 	}
 #endif

@@ -1,7 +1,7 @@
 #pragma once
 
-// C++17 stop state using snap::intrusive_list_view (converted earlier) and
-// snap::atomic_unique_lock. No reserved identifiers.
+// C++17 stop state using SNAP_NAMESPACE::intrusive_list_view (converted earlier) and
+// SNAP_NAMESPACE::atomic_unique_lock. No reserved identifiers.
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"

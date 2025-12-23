@@ -3,6 +3,6 @@
 int main()
 {
 	double d = 1.5;
-	auto r	 = snap::bit_ceil(d);
+	auto r	 = SNAP_NAMESPACE::bit_ceil(d);
 	(void)r;
 }

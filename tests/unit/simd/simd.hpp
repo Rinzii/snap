@@ -463,8 +463,8 @@ namespace simd
 	{
 
 		// Pull in typelist helpers defined elsewhere.
-		using ::snap::simd::detail::tl_cat_t;
-		using ::snap::simd::detail::type_list;
+		using ::SNAP_NAMESPACE::simd::detail::tl_cat_t;
+		using ::SNAP_NAMESPACE::simd::detail::type_list;
 
 		// Flag kind detectors: tell which flag a type is.
 		template <class T> struct is_convert_flag : std::is_same<T, convert_flag>
@@ -553,7 +553,7 @@ namespace simd
 
 		template <class... Ts> struct list_to_flags<type_list<Ts...>>
 		{
-			using type = ::snap::simd::flags<Ts...>;
+			using type = ::SNAP_NAMESPACE::simd::flags<Ts...>;
 		};
 
 	} // namespace detail
@@ -591,16 +591,16 @@ namespace helpers
 	{
 	};
 
-	template <class V> struct is_vec : snap::simd::detail::is_basic_vec<V>
+	template <class V> struct is_vec : SNAP_NAMESPACE::simd::detail::is_basic_vec<V>
 	{
 	};
 
-	template <class V> struct is_mask : snap::simd::detail::is_basic_mask<V>
+	template <class V> struct is_mask : SNAP_NAMESPACE::simd::detail::is_basic_mask<V>
 	{
 	};
 
 	template <class V> struct mask_bits;
-	template <std::size_t Bits, class Abi> struct mask_bits<snap::simd::basic_mask<Bits, Abi>> : std::integral_constant<std::size_t, Bits>
+	template <std::size_t Bits, class Abi> struct mask_bits<SNAP_NAMESPACE::simd::basic_mask<Bits, Abi>> : std::integral_constant<std::size_t, Bits>
 	{
 	};
 
@@ -609,10 +609,10 @@ namespace helpers
 // test types
 namespace test_types
 {
-	using Vf   = snap::simd::basic_vec<float, snap::simd::detail::avx2_tag>;  // lanes 8 on AVX2
-	using Vd   = snap::simd::basic_vec<double, snap::simd::detail::avx2_tag>; // lanes 4 on AVX2
-	using Mm32 = snap::simd::basic_mask<4, snap::simd::detail::avx2_tag>;	  // lanes 8 (256/32)
-	using Mm8  = snap::simd::basic_mask<1, snap::simd::detail::avx2_tag>;	  // lanes 32 (256/8)
+	using Vf   = SNAP_NAMESPACE::simd::basic_vec<float, SNAP_NAMESPACE::simd::detail::avx2_tag>;  // lanes 8 on AVX2
+	using Vd   = SNAP_NAMESPACE::simd::basic_vec<double, SNAP_NAMESPACE::simd::detail::avx2_tag>; // lanes 4 on AVX2
+	using Mm32 = SNAP_NAMESPACE::simd::basic_mask<4, SNAP_NAMESPACE::simd::detail::avx2_tag>;	  // lanes 8 (256/32)
+	using Mm8  = SNAP_NAMESPACE::simd::basic_mask<1, SNAP_NAMESPACE::simd::detail::avx2_tag>;	  // lanes 32 (256/8)
 } // namespace test_types
 
 // main
@@ -620,33 +620,33 @@ int main()
 {
 #if defined(__AVX2__) || defined(_M_AVX2)
 	// rebind(vec): must preserve lane count; succeeds if an ABI supports (T, lanes(V))
-	using Rv_ok = snap::simd::rebind_t<std::int32_t, test_types::Vf>; // int32_t -> 8 lanes on AVX2
+	using Rv_ok = SNAP_NAMESPACE::simd::rebind_t<std::int32_t, test_types::Vf>; // int32_t -> 8 lanes on AVX2
 	static_assert(helpers::is_vec<Rv_ok>::value, "rebind(vec) yields vector");
 	static_assert(Rv_ok::size() == test_types::Vf::size(), "rebind(vec) preserves lanes");
 	static_assert(std::is_same<typename Rv_ok::value_type, std::int32_t>::value, "rebind(vec) sets value_type");
 
 	// Example that must SFINAE-out: double does NOT have 8 lanes on AVX2
-	static_assert(!helpers::has_type<snap::simd::rebind<double, test_types::Vf>>::value, "rebind<double,Vf> must be absent");
+	static_assert(!helpers::has_type<SNAP_NAMESPACE::simd::rebind<double, test_types::Vf>>::value, "rebind<double,Vf> must be absent");
 
 	// rebind(mask): preserve lanes, Bits = sizeof(T)
-	using Rm_ok = snap::simd::rebind_t<unsigned char, test_types::Mm8>; // lanes 32 exist for unsigned char on AVX2
+	using Rm_ok = SNAP_NAMESPACE::simd::rebind_t<unsigned char, test_types::Mm8>; // lanes 32 exist for unsigned char on AVX2
 	static_assert(helpers::is_mask<Rm_ok>::value, "rebind(mask) yields mask");
 	static_assert(Rm_ok::size() == test_types::Mm8::size(), "rebind(mask) preserves lanes");
 	static_assert(helpers::mask_bits<Rm_ok>::value == sizeof(unsigned char), "rebind(mask) Bits = sizeof(T)");
 
 	// resize(vec): set lane count to N
-	using S8f = snap::simd::resize_t<8, test_types::Vf>; // floatx8 exists on AVX2
+	using S8f = SNAP_NAMESPACE::simd::resize_t<8, test_types::Vf>; // floatx8 exists on AVX2
 	static_assert(helpers::is_vec<S8f>::value && S8f::size() == 8, "resize(vec) -> 8 lanes");
 	static_assert(std::is_same<typename S8f::value_type, float>::value, "resize(vec) keeps element type");
 
 	// resize(mask): set lane count to N (Bits preserved)
-	using S8m = snap::simd::resize_t<8, test_types::Mm32>; // Bits=4 -> lanes 8 exist
+	using S8m = SNAP_NAMESPACE::simd::resize_t<8, test_types::Mm32>; // Bits=4 -> lanes 8 exist
 	static_assert(helpers::is_mask<S8m>::value && S8m::size() == 8, "resize(mask) -> 8 lanes");
 	static_assert(helpers::mask_bits<S8m>::value == 4, "resize(mask) keeps Bits");
 
 	// alignment via ABI (AVX2 -> 32)
-	static_assert(snap::simd::alignment_v<S8f, float> == 32, "AVX2 vec alignment");
-	static_assert(snap::simd::alignment_v<test_types::Mm32, bool> == 32, "AVX2 mask alignment");
+	static_assert(SNAP_NAMESPACE::simd::alignment_v<S8f, float> == 32, "AVX2 vec alignment");
+	static_assert(SNAP_NAMESPACE::simd::alignment_v<test_types::Mm32, bool> == 32, "AVX2 mask alignment");
 
 	std::cout << "AVX2 path: All checks passed.\n";
 #else

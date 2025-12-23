@@ -154,8 +154,8 @@ TYPED_TEST(BitCastTyped, RoundTripPreservesBytes)
 
 	for (const auto& f : Samples<From>::values())
 	{
-		To const t		= snap::bit_cast<To>(f);
-		From const back = snap::bit_cast<From>(t);
+		To const t		= SNAP_NAMESPACE::bit_cast<To>(f);
+		From const back = SNAP_NAMESPACE::bit_cast<From>(t);
 		EXPECT_EQ(to_bytes(back), to_bytes(f));
 	}
 }
@@ -170,7 +170,7 @@ TYPED_TEST(BitCastTyped, ByteArrayExactMappingWhenPresent)
 	{
 		for (const auto& arr : Samples<From>::values())
 		{
-			To const t = snap::bit_cast<To>(arr);
+			To const t = SNAP_NAMESPACE::bit_cast<To>(arr);
 			EXPECT_EQ(to_bytes(t), to_bytes(arr));
 		}
 	}
@@ -178,7 +178,7 @@ TYPED_TEST(BitCastTyped, ByteArrayExactMappingWhenPresent)
 	{
 		for (const auto& f : Samples<From>::values())
 		{
-			To const t = snap::bit_cast<To>(f);
+			To const t = SNAP_NAMESPACE::bit_cast<To>(f);
 			EXPECT_EQ(to_bytes(t), to_bytes(f));
 		}
 	}
@@ -189,9 +189,9 @@ TEST(BitCastFloatIEEE, NegativeZeroPreserved)
 {
 	if constexpr (!std::numeric_limits<float>::is_iec559) { GTEST_SKIP() << "Non-IEC559 float"; }
 	constexpr std::uint32_t bits = 0x80000000U;
-	const auto f				 = snap::bit_cast<float>(bits);
+	const auto f				 = SNAP_NAMESPACE::bit_cast<float>(bits);
 	EXPECT_TRUE(std::signbit(f));
-	EXPECT_EQ(snap::bit_cast<std::uint32_t>(f), bits);
+	EXPECT_EQ(SNAP_NAMESPACE::bit_cast<std::uint32_t>(f), bits);
 }
 
 TEST(BitCastFloatIEEE, InfinitiesAndNaNRoundTrip)
@@ -202,14 +202,14 @@ TEST(BitCastFloatIEEE, InfinitiesAndNaNRoundTrip)
 	constexpr double qnan	 = std::numeric_limits<double>::quiet_NaN();
 
 	// We can only assert round-trip bit equality, not value equality (NaN != NaN).
-	const auto b_inf	 = snap::bit_cast<std::uint64_t>(inf);
-	const auto b_neg_inf = snap::bit_cast<std::uint64_t>(neg_inf);
-	const auto b_qnan	 = snap::bit_cast<std::uint64_t>(qnan);
+	const auto b_inf	 = SNAP_NAMESPACE::bit_cast<std::uint64_t>(inf);
+	const auto b_neg_inf = SNAP_NAMESPACE::bit_cast<std::uint64_t>(neg_inf);
+	const auto b_qnan	 = SNAP_NAMESPACE::bit_cast<std::uint64_t>(qnan);
 
-	EXPECT_EQ(snap::bit_cast<double>(b_inf), inf);
-	EXPECT_EQ(snap::bit_cast<double>(b_neg_inf), neg_inf);
+	EXPECT_EQ(SNAP_NAMESPACE::bit_cast<double>(b_inf), inf);
+	EXPECT_EQ(SNAP_NAMESPACE::bit_cast<double>(b_neg_inf), neg_inf);
 	// For NaN, check NaN-ness and exact round-trip bits
-	const auto back = snap::bit_cast<double>(b_qnan);
+	const auto back = SNAP_NAMESPACE::bit_cast<double>(b_qnan);
 	EXPECT_TRUE(std::isnan(back));
-	EXPECT_EQ(snap::bit_cast<std::uint64_t>(back), b_qnan);
+	EXPECT_EQ(SNAP_NAMESPACE::bit_cast<std::uint64_t>(back), b_qnan);
 }

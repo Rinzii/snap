@@ -9,6 +9,6 @@ struct NonTrivial
 int main()
 {
 	std::uint32_t u = 42;
-	auto v			= snap::bit_cast<NonTrivial>(u);
+	auto v			= SNAP_NAMESPACE::bit_cast<NonTrivial>(u);
 	(void)v;
 }

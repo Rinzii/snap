@@ -7,8 +7,8 @@
 TEST(Memory, ToAddressReturnsRawPointer)
 {
 	int value = 42;
-	EXPECT_EQ(snap::to_address(&value), &value);
+	EXPECT_EQ(SNAP_NAMESPACE::to_address(&value), &value);
 
 	std::unique_ptr<int> smart(new int(99));
-	EXPECT_EQ(snap::to_address(smart), smart.get());
+	EXPECT_EQ(SNAP_NAMESPACE::to_address(smart), smart.get());
 }

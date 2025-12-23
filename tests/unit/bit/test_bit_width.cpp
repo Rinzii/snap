@@ -38,7 +38,7 @@ namespace
 	TYPED_TEST(BitWidthTyped, ZeroHasZeroWidth)
 	{
 		using T = TypeParam;
-		EXPECT_EQ(snap::bit_width(T{ 0 }), 0);
+		EXPECT_EQ(SNAP_NAMESPACE::bit_width(T{ 0 }), 0);
 	}
 
 	TYPED_TEST(BitWidthTyped, PowersOfTwo)
@@ -47,7 +47,7 @@ namespace
 		for (int bit = 0; bit < digits_v<T>; ++bit)
 		{
 			const T value = T{ 1 } << bit;
-			EXPECT_EQ(snap::bit_width(value), bit + 1);
+			EXPECT_EQ(SNAP_NAMESPACE::bit_width(value), bit + 1);
 		}
 	}
 
@@ -60,7 +60,7 @@ namespace
 			const T max_value = std::numeric_limits<T>::max();
 			for (T x = T{ 0 };; x = T(x + T{ 1 }))
 			{
-				EXPECT_EQ(snap::bit_width(x), reference_bit_width(x)) << +x;
+				EXPECT_EQ(SNAP_NAMESPACE::bit_width(x), reference_bit_width(x)) << +x;
 				if (x == max_value) break;
 			}
 		}
@@ -69,12 +69,12 @@ namespace
 			for (int bit = 0; bit < digits; ++bit)
 			{
 				const T value = T{ 1 } << bit;
-				EXPECT_EQ(snap::bit_width(value), reference_bit_width(value));
+				EXPECT_EQ(SNAP_NAMESPACE::bit_width(value), reference_bit_width(value));
 				if (bit > 0)
 				{
 					const T prev = T{ 1 } << (bit - 1);
-					EXPECT_EQ(snap::bit_width(T(value - T{ 1 })), reference_bit_width(T(value - T{ 1 })));
-					EXPECT_EQ(snap::bit_width(T(prev + T{ 1 })), reference_bit_width(T(prev + T{ 1 })));
+					EXPECT_EQ(SNAP_NAMESPACE::bit_width(T(value - T{ 1 })), reference_bit_width(T(value - T{ 1 })));
+					EXPECT_EQ(SNAP_NAMESPACE::bit_width(T(prev + T{ 1 })), reference_bit_width(T(prev + T{ 1 })));
 				}
 			}
 
@@ -82,7 +82,7 @@ namespace
 			T sample = T{ 1 };
 			for (int step = 0; step < digits * 4; ++step)
 			{
-				EXPECT_EQ(snap::bit_width(sample), reference_bit_width(sample));
+				EXPECT_EQ(SNAP_NAMESPACE::bit_width(sample), reference_bit_width(sample));
 				sample = T(sample + (sample >> 1) + T{ 1 });
 				if (sample == T{ 0 }) break;
 			}
@@ -97,7 +97,7 @@ namespace
 		for (int bit = 0; bit < digits; ++bit)
 		{
 			const T value	= T{ 1 } << bit;
-			const int width = snap::bit_width(value);
+			const int width = SNAP_NAMESPACE::bit_width(value);
 			EXPECT_GE(width, prev_width);
 			prev_width = width;
 		}
@@ -110,12 +110,12 @@ namespace
 		for (int bit = 0; bit < digits_v<T>; ++bit)
 		{
 			const T value = T{ 1 } << bit;
-			EXPECT_EQ(snap::bit_width(value), std::bit_width(value));
+			EXPECT_EQ(SNAP_NAMESPACE::bit_width(value), std::bit_width(value));
 			if (bit > 0)
 			{
 				const T prev = T{ 1 } << (bit - 1);
-				EXPECT_EQ(snap::bit_width(T(value - T{ 1 })), std::bit_width(T(value - T{ 1 })));
-				EXPECT_EQ(snap::bit_width(T(prev + T{ 1 })), std::bit_width(T(prev + T{ 1 })));
+				EXPECT_EQ(SNAP_NAMESPACE::bit_width(T(value - T{ 1 })), std::bit_width(T(value - T{ 1 })));
+				EXPECT_EQ(SNAP_NAMESPACE::bit_width(T(prev + T{ 1 })), std::bit_width(T(prev + T{ 1 })));
 			}
 		}
 	}

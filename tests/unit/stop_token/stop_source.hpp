@@ -9,7 +9,7 @@ SNAP_BEGIN_NAMESPACE
 class stop_source;						// forward decl (friend)
 template <class T> class stop_callback; // forward decl (friend)
 
-// C++17 stop_token backed by snap::stop_state via intrusive refcounting.
+// C++17 stop_token backed by SNAP_NAMESPACE::stop_state via intrusive refcounting.
 class stop_token
 {
 public:

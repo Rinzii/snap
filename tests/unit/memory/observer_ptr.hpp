@@ -117,11 +117,11 @@ template <class W> inline void swap(observer_ptr<W>& a, observer_ptr<W>& b) noex
 
 SNAP_END_NAMESPACE
 
-// std::hash specialization for snap::observer_ptr
+// std::hash specialization for SNAP_NAMESPACE::observer_ptr
 namespace std
 {
-	template <class T> struct hash<snap::observer_ptr<T>>
+	template <class T> struct hash<SNAP_NAMESPACE::observer_ptr<T>>
 	{
-		size_t operator()(const snap::observer_ptr<T>& p) const noexcept { return std::hash<T*>{}(p.get()); }
+		size_t operator()(const SNAP_NAMESPACE::observer_ptr<T>& p) const noexcept { return std::hash<T*>{}(p.get()); }
 	};
 } // namespace std

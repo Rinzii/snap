@@ -5,6 +5,6 @@
 int main()
 {
 	std::uint16_t s = 7;
-	auto v			= snap::bit_cast<std::uint32_t>(s);
+	auto v			= SNAP_NAMESPACE::bit_cast<std::uint32_t>(s);
 	(void)v;
 }

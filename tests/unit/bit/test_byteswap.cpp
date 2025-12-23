@@ -46,16 +46,16 @@ namespace
 
 		for (T value : samples)
 		{
-			const T swapped = snap::byteswap(value);
+			const T swapped = SNAP_NAMESPACE::byteswap(value);
 			EXPECT_EQ(swapped, reference_byteswap(value)) << +value;
-			EXPECT_EQ(snap::byteswap(swapped), value);
+			EXPECT_EQ(SNAP_NAMESPACE::byteswap(swapped), value);
 		}
 	}
 
 	TEST(Byteswap, DistinguishesBytePatterns)
 	{
 		constexpr std::uint32_t value = 0x01020304U;
-		const auto swapped			  = snap::byteswap(value);
+		const auto swapped			  = SNAP_NAMESPACE::byteswap(value);
 		EXPECT_NE(swapped, value);
 		EXPECT_EQ(swapped, 0x04030201U);
 	}

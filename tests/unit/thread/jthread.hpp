@@ -23,8 +23,8 @@ public:
 		static_assert((std::is_constructible<typename std::decay<Args>::type, Args>::value && ...),
 					  "Each Arg must be constructible from the provided argument");
 		static_assert(std::is_invocable<typename std::decay<Fun>::type, typename std::decay<Args>::type...>::value ||
-						  std::is_invocable<typename std::decay<Fun>::type, snap::stop_token, typename std::decay<Args>::type...>::value,
-					  "Callable must be invocable with (Args...) or (snap::stop_token, Args...)");
+						  std::is_invocable<typename std::decay<Fun>::type, SNAP_NAMESPACE::stop_token, typename std::decay<Args>::type...>::value,
+					  "Callable must be invocable with (Args...) or (SNAP_NAMESPACE::stop_token, Args...)");
 	}
 
 	~jthread()
@@ -73,8 +73,8 @@ public:
 	native_handle_type native_handle() { return thread_.native_handle(); }
 
 	// stop handling
-	snap::stop_source get_stop_source() noexcept { return stop_source_; }
-	snap::stop_token get_stop_token() const noexcept { return stop_source_.get_token(); }
+	SNAP_NAMESPACE::stop_source get_stop_source() noexcept { return stop_source_; }
+	SNAP_NAMESPACE::stop_token get_stop_token() const noexcept { return stop_source_.get_token(); }
 	bool request_stop() noexcept { return stop_source_.request_stop(); }
 
 	friend void swap(jthread& a, jthread& b) noexcept { a.swap(b); }
@@ -82,16 +82,16 @@ public:
 	static unsigned int hardware_concurrency() noexcept { return std::thread::hardware_concurrency(); }
 
 private:
-	template <class Fun, class... Args> static std::thread init_thread(const snap::stop_source& ss, Fun&& fun, Args&&... args)
+	template <class Fun, class... Args> static std::thread init_thread(const SNAP_NAMESPACE::stop_source& ss, Fun&& fun, Args&&... args)
 	{
 		using FunD				   = typename std::decay<Fun>::type;
-		constexpr bool takes_token = std::is_invocable<FunD, snap::stop_token, typename std::decay<Args>::type...>::value;
+		constexpr bool takes_token = std::is_invocable<FunD, SNAP_NAMESPACE::stop_token, typename std::decay<Args>::type...>::value;
 
 		if constexpr (takes_token) { return std::thread(std::forward<Fun>(fun), ss.get_token(), std::forward<Args>(args)...); }
 		else { return std::thread(std::forward<Fun>(fun), std::forward<Args>(args)...); }
 	}
 
-	snap::stop_source stop_source_{};
+	SNAP_NAMESPACE::stop_source stop_source_{};
 	std::thread thread_{};
 };
 

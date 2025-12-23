@@ -7,7 +7,7 @@
 
 SNAP_BEGIN_NAMESPACE
 // A tiny base you can inherit from to get next/prev links.
-// Example: struct Node : snap::intrusive_node_base<Node> { /* ... */ };
+// Example: struct Node : SNAP_NAMESPACE::intrusive_node_base<Node> { /* ... */ };
 template <class Derived> struct intrusive_node_base
 {
 	Derived* next = nullptr;

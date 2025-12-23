@@ -10,6 +10,6 @@ enum class level : unsigned char
 
 TEST(Utility, ToUnderlyingCastsEnums)
 {
-	EXPECT_EQ(snap::to_underlying(level::low), static_cast<unsigned char>(1));
-	EXPECT_EQ(snap::to_underlying(level::high), static_cast<unsigned char>(2));
+	EXPECT_EQ(SNAP_NAMESPACE::to_underlying(level::low), static_cast<unsigned char>(1));
+	EXPECT_EQ(SNAP_NAMESPACE::to_underlying(level::high), static_cast<unsigned char>(2));
 }

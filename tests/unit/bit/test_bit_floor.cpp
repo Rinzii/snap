@@ -26,7 +26,7 @@ namespace
 	TYPED_TEST(BitFloorTyped, ZeroIsZero)
 	{
 		using T = TypeParam;
-		EXPECT_EQ(snap::bit_floor(T{ 0 }), T{ 0 });
+		EXPECT_EQ(SNAP_NAMESPACE::bit_floor(T{ 0 }), T{ 0 });
 	}
 
 	TYPED_TEST(BitFloorTyped, PowersOfTwoAreFixedPoints)
@@ -35,7 +35,7 @@ namespace
 		for (int bit = 0; bit < digits_v<T>; ++bit)
 		{
 			const T value = T{ 1 } << bit;
-			EXPECT_EQ(snap::bit_floor(value), value) << "bit=" << bit;
+			EXPECT_EQ(SNAP_NAMESPACE::bit_floor(value), value) << "bit=" << bit;
 		}
 	}
 
@@ -47,8 +47,8 @@ namespace
 			const T high = T{ 1 } << bit;		// 2^bit
 			const T low	 = T{ 1 } << (bit - 1); // 2^(bit-1)
 			const T mid	 = T(low + (high - low) / 2);
-			EXPECT_EQ(snap::bit_floor(T(high - T{ 1 })), low) << "bit=" << bit;
-			EXPECT_EQ(snap::bit_floor(mid), low) << "bit=" << bit;
+			EXPECT_EQ(SNAP_NAMESPACE::bit_floor(T(high - T{ 1 })), low) << "bit=" << bit;
+			EXPECT_EQ(SNAP_NAMESPACE::bit_floor(mid), low) << "bit=" << bit;
 		}
 	}
 
@@ -57,7 +57,7 @@ namespace
 		using T			  = TypeParam;
 		const T max_value = std::numeric_limits<T>::max();
 		const T expected  = T{ 1 } << (digits_v<T> - 1);
-		EXPECT_EQ(snap::bit_floor(max_value), expected);
+		EXPECT_EQ(SNAP_NAMESPACE::bit_floor(max_value), expected);
 	}
 
 #if SNAP_HAS_CPP20
@@ -67,12 +67,12 @@ namespace
 		for (int bit = 0; bit < digits_v<T>; ++bit)
 		{
 			const T value = T{ 1 } << bit;
-			EXPECT_EQ(snap::bit_floor(value), std::bit_floor(value));
+			EXPECT_EQ(SNAP_NAMESPACE::bit_floor(value), std::bit_floor(value));
 			if (bit > 0)
 			{
 				const T prev = T{ 1 } << (bit - 1);
-				EXPECT_EQ(snap::bit_floor(T(value - T{ 1 })), std::bit_floor(T(value - T{ 1 })));
-				EXPECT_EQ(snap::bit_floor(T(prev + T{ 1 })), std::bit_floor(T(prev + T{ 1 })));
+				EXPECT_EQ(SNAP_NAMESPACE::bit_floor(T(value - T{ 1 })), std::bit_floor(T(value - T{ 1 })));
+				EXPECT_EQ(SNAP_NAMESPACE::bit_floor(T(prev + T{ 1 })), std::bit_floor(T(prev + T{ 1 })));
 			}
 		}
 	}

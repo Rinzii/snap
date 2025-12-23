@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-constexpr std::uint32_t k = snap::bit_ceil(std::uint32_t{ 0x80000001u });
+constexpr std::uint32_t k = SNAP_NAMESPACE::bit_ceil(std::uint32_t{ 0x80000001u });
 
 int main()
 {

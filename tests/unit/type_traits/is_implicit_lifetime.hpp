@@ -5,8 +5,8 @@
  * @brief Portable C++17 trait to detect implicit-lifetime types with a conservative fallback.
  *
  * @details
- * This header provides `snap::is_implicit_lifetime<T>` and the convenience
- * variable `snap::is_implicit_lifetime_v<T>`. When the compiler exposes a
+ * This header provides `SNAP_NAMESPACE::is_implicit_lifetime<T>` and the convenience
+ * variable `SNAP_NAMESPACE::is_implicit_lifetime_v<T>`. When the compiler exposes a
  * builtin (`__builtin_is_implicit_lifetime` or `__is_implicit_lifetime`),
  * the trait is exact. Otherwise it falls back to a conservative rule:
  *

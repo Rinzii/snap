@@ -35,41 +35,41 @@ constexpr std::array<char, 3> arr{ { 'a', 'b', 'c' } };
 auto from_string = []
 {
 	std::string txt = "abc";
-	return snap::fixed_string<3>(std::from_range, txt);
+	return SNAP_NAMESPACE::fixed_string<3>(std::from_range, txt);
 };
 #endif
 
 [[maybe_unused]] auto from_string_iter = []
 {
 	std::string txt = "abc";
-	return snap::fixed_string<3>(txt.begin(), txt.end());
+	return SNAP_NAMESPACE::fixed_string<3>(txt.begin(), txt.end());
 };
 
 // constructions that are constexpr in C++17
-constexpr snap::fixed_string<0> txt0{};
-constexpr snap::basic_fixed_string txt1('a');
-constexpr snap::basic_fixed_string txt2('a', 'b', 'c');
-constexpr snap::basic_fixed_string txt3 = "abc";
-constexpr snap::fixed_string<3> txt4(arr.begin(), arr.end());
+constexpr SNAP_NAMESPACE::fixed_string<0> txt0{};
+constexpr SNAP_NAMESPACE::basic_fixed_string txt1('a');
+constexpr SNAP_NAMESPACE::basic_fixed_string txt2('a', 'b', 'c');
+constexpr SNAP_NAMESPACE::basic_fixed_string txt3 = "abc";
+constexpr SNAP_NAMESPACE::fixed_string<3> txt4(arr.begin(), arr.end());
 
 #if SNAP_HAS_STD_FROM_RANGE
-constexpr snap::basic_fixed_string txt5(std::from_range, arr);
+constexpr SNAP_NAMESPACE::basic_fixed_string txt5(std::from_range, arr);
 #endif
 
 // needs constexpr std::string (C++20) and from_range (C++23)
 #if SNAP_HAS_STD_FROM_RANGE && SNAP_HAS_CONSTEXPR_STRING
-constexpr snap::basic_fixed_string txt6(from_string());
+constexpr SNAP_NAMESPACE::basic_fixed_string txt6(from_string());
 #endif
 
 // needs constexpr std::string (C++20) for iterator construction at CT time
 #if SNAP_HAS_CONSTEXPR_STRING
-constexpr snap::basic_fixed_string txt7(from_string_iter());
+constexpr SNAP_NAMESPACE::basic_fixed_string txt7(from_string_iter());
 #endif
 
 // pointer iterators are fine in C++17 constexpr; reverse_iterator needs C++20 constexpr iterators
-constexpr snap::fixed_string<3> txt8(txt2.begin(), txt2.end());
+constexpr SNAP_NAMESPACE::fixed_string<3> txt8(txt2.begin(), txt2.end());
 #if SNAP_HAS_CONSTEXPR_ITERATOR
-constexpr snap::fixed_string<3> txt9(txt2.rbegin(), txt2.rend());
+constexpr SNAP_NAMESPACE::fixed_string<3> txt9(txt2.rbegin(), txt2.rend());
 #endif
 
 // ---- static assertions ----
@@ -188,41 +188,41 @@ static_assert(txt8 == "abc");
 static_assert(txt9 == "cba");
 #endif
 
-static_assert(txt1 == snap::basic_fixed_string("a"));
-static_assert(txt1 != snap::basic_fixed_string("b"));
-static_assert(txt1 != snap::basic_fixed_string("aa"));
-static_assert(txt1 < snap::basic_fixed_string("b"));
-static_assert(txt1 < snap::basic_fixed_string("aa"));
+static_assert(txt1 == SNAP_NAMESPACE::basic_fixed_string("a"));
+static_assert(txt1 != SNAP_NAMESPACE::basic_fixed_string("b"));
+static_assert(txt1 != SNAP_NAMESPACE::basic_fixed_string("aa"));
+static_assert(txt1 < SNAP_NAMESPACE::basic_fixed_string("b"));
+static_assert(txt1 < SNAP_NAMESPACE::basic_fixed_string("aa"));
 static_assert(txt1 == "a");
 static_assert(txt1 != "b");
 static_assert(txt1 != "aa");
 static_assert(txt1 < "b");
 static_assert(txt1 < "aa");
 
-static_assert(txt1 + snap::basic_fixed_string('b') == "ab");
-static_assert(snap::basic_fixed_string('b') + txt1 == "ba");
-static_assert(txt1 + snap::basic_fixed_string("bc") == "abc");
-static_assert(snap::basic_fixed_string("bc") + txt1 == "bca");
+static_assert(txt1 + SNAP_NAMESPACE::basic_fixed_string('b') == "ab");
+static_assert(SNAP_NAMESPACE::basic_fixed_string('b') + txt1 == "ba");
+static_assert(txt1 + SNAP_NAMESPACE::basic_fixed_string("bc") == "abc");
+static_assert(SNAP_NAMESPACE::basic_fixed_string("bc") + txt1 == "bca");
 static_assert(txt1 + 'b' == "ab");
 static_assert('b' + txt1 == "ba");
 static_assert(txt1 + "bc" == "abc");
 static_assert("bc" + txt1 == "bca");
 
-static_assert(txt2 == snap::basic_fixed_string("abc"));
-static_assert(txt2 != snap::basic_fixed_string("cba"));
-static_assert(txt2 != snap::basic_fixed_string("abcd"));
-static_assert(txt2 < snap::basic_fixed_string("b"));
-static_assert(txt2 > snap::basic_fixed_string("aa"));
+static_assert(txt2 == SNAP_NAMESPACE::basic_fixed_string("abc"));
+static_assert(txt2 != SNAP_NAMESPACE::basic_fixed_string("cba"));
+static_assert(txt2 != SNAP_NAMESPACE::basic_fixed_string("abcd"));
+static_assert(txt2 < SNAP_NAMESPACE::basic_fixed_string("b"));
+static_assert(txt2 > SNAP_NAMESPACE::basic_fixed_string("aa"));
 static_assert(txt2 == "abc");
 static_assert(txt2 != "cba");
 static_assert(txt2 != "abcd");
 static_assert(txt2 < "b");
 static_assert(txt2 > "aa");
 
-static_assert(txt2 + snap::basic_fixed_string('d') == "abcd");
-static_assert(snap::basic_fixed_string('d') + txt2 == "dabc");
-static_assert(txt2 + snap::basic_fixed_string("def") == "abcdef");
-static_assert(snap::basic_fixed_string("def") + txt2 == "defabc");
+static_assert(txt2 + SNAP_NAMESPACE::basic_fixed_string('d') == "abcd");
+static_assert(SNAP_NAMESPACE::basic_fixed_string('d') + txt2 == "dabc");
+static_assert(txt2 + SNAP_NAMESPACE::basic_fixed_string("def") == "abcdef");
+static_assert(SNAP_NAMESPACE::basic_fixed_string("def") + txt2 == "defabc");
 static_assert(txt2 + 'd' == "abcd");
 static_assert('d' + txt2 == "dabc");
 static_assert(txt2 + "def" == "abcdef");

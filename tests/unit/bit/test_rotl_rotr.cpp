@@ -71,7 +71,7 @@ namespace
 			for (int count : counts)
 			{
 				const T expected = reference_rotl(value, count);
-				EXPECT_EQ(snap::rotl(value, count), expected) << +value << ", count=" << count;
+				EXPECT_EQ(SNAP_NAMESPACE::rotl(value, count), expected) << +value << ", count=" << count;
 			}
 		}
 	}
@@ -87,7 +87,7 @@ namespace
 			for (int count : counts)
 			{
 				const T expected = reference_rotr(value, count);
-				EXPECT_EQ(snap::rotr(value, count), expected) << +value << ", count=" << count;
+				EXPECT_EQ(SNAP_NAMESPACE::rotr(value, count), expected) << +value << ", count=" << count;
 			}
 		}
 	}
@@ -101,8 +101,8 @@ namespace
 		{
 			for (T value : samples)
 			{
-				const T rotated = snap::rotl(value, count);
-				EXPECT_EQ(snap::rotr(rotated, count), value);
+				const T rotated = SNAP_NAMESPACE::rotl(value, count);
+				EXPECT_EQ(SNAP_NAMESPACE::rotr(rotated, count), value);
 			}
 		}
 	}
@@ -114,8 +114,8 @@ namespace
 		for (int count = -4; count <= 4; ++count)
 		{
 			const T value = static_cast<T>(0x1234567890ABCDEFull);
-			EXPECT_EQ(snap::rotl(value, count), std::rotl(value, count));
-			EXPECT_EQ(snap::rotr(value, count), std::rotr(value, count));
+			EXPECT_EQ(SNAP_NAMESPACE::rotl(value, count), std::rotl(value, count));
+			EXPECT_EQ(SNAP_NAMESPACE::rotr(value, count), std::rotr(value, count));
 		}
 	}
 #endif

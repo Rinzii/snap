@@ -20,7 +20,7 @@ namespace
 	TYPED_TEST(HasSingleBitTyped, ZeroIsFalse)
 	{
 		using T = TypeParam;
-		EXPECT_FALSE(snap::has_single_bit(T{ 0 }));
+		EXPECT_FALSE(SNAP_NAMESPACE::has_single_bit(T{ 0 }));
 	}
 
 	TYPED_TEST(HasSingleBitTyped, PowersOfTwoAreTrue)
@@ -29,7 +29,7 @@ namespace
 		for (int bit = 0; bit < std::numeric_limits<T>::digits; ++bit)
 		{
 			const T value = T{ 1 } << bit;
-			EXPECT_TRUE(snap::has_single_bit(value));
+			EXPECT_TRUE(SNAP_NAMESPACE::has_single_bit(value));
 		}
 	}
 
@@ -39,15 +39,15 @@ namespace
 		for (int bit = 1; bit < std::numeric_limits<T>::digits; ++bit)
 		{
 			const T value = (T{ 1 } << bit) | T{ 1 };
-			EXPECT_FALSE(snap::has_single_bit(value));
+			EXPECT_FALSE(SNAP_NAMESPACE::has_single_bit(value));
 		}
 	}
 
 	TYPED_TEST(HasSingleBitTyped, MaxValueIsFalseUnlessSingleBit)
 	{
 		using T = TypeParam;
-		if constexpr (std::numeric_limits<T>::digits == 1) { EXPECT_TRUE(snap::has_single_bit(std::numeric_limits<T>::max())); }
-		else { EXPECT_FALSE(snap::has_single_bit(std::numeric_limits<T>::max())); }
+		if constexpr (std::numeric_limits<T>::digits == 1) { EXPECT_TRUE(SNAP_NAMESPACE::has_single_bit(std::numeric_limits<T>::max())); }
+		else { EXPECT_FALSE(SNAP_NAMESPACE::has_single_bit(std::numeric_limits<T>::max())); }
 	}
 
 } // namespace

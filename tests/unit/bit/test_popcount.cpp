@@ -46,7 +46,7 @@ namespace
 			const T max_value = std::numeric_limits<T>::max();
 			for (T value = T{ 0 };; value = T(value + T{ 1 }))
 			{
-				EXPECT_EQ(snap::popcount(value), reference_popcount(value)) << +value;
+				EXPECT_EQ(SNAP_NAMESPACE::popcount(value), reference_popcount(value)) << +value;
 				if (value == max_value) { break; }
 			}
 		}
@@ -55,11 +55,11 @@ namespace
 			for (int bit = 0; bit < digits; ++bit)
 			{
 				const T value = T{ 1 } << bit;
-				EXPECT_EQ(snap::popcount(value), reference_popcount(value));
-				EXPECT_EQ(snap::popcount(T(value - T{ 1 })), reference_popcount(T(value - T{ 1 })));
+				EXPECT_EQ(SNAP_NAMESPACE::popcount(value), reference_popcount(value));
+				EXPECT_EQ(SNAP_NAMESPACE::popcount(T(value - T{ 1 })), reference_popcount(T(value - T{ 1 })));
 			}
-			EXPECT_EQ(snap::popcount(std::numeric_limits<T>::max()), digits_v<T>);
-			EXPECT_EQ(snap::popcount(T{ 0 }), 0);
+			EXPECT_EQ(SNAP_NAMESPACE::popcount(std::numeric_limits<T>::max()), digits_v<T>);
+			EXPECT_EQ(SNAP_NAMESPACE::popcount(T{ 0 }), 0);
 		}
 	}
 
@@ -70,7 +70,7 @@ namespace
 		for (int bit = 0; bit < digits_v<T>; ++bit)
 		{
 			const T value = T{ 1 } << bit;
-			EXPECT_EQ(snap::popcount(value), std::popcount(value));
+			EXPECT_EQ(SNAP_NAMESPACE::popcount(value), std::popcount(value));
 		}
 	}
 #endif

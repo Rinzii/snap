@@ -12,13 +12,13 @@ namespace
 
 TEST(Meta, DetectorFindsMemberTypes)
 {
-	static_assert(snap::is_detected_v<value_type_t, std::vector<int>>);
-	static_assert(!snap::is_detected_v<value_type_t, int>);
+	static_assert(SNAP_NAMESPACE::is_detected_v<value_type_t, std::vector<int>>);
+	static_assert(!SNAP_NAMESPACE::is_detected_v<value_type_t, int>);
 
-	using detected = snap::detected_t<value_type_t, std::vector<int>>;
+	using detected = SNAP_NAMESPACE::detected_t<value_type_t, std::vector<int>>;
 	static_assert(std::is_same_v<detected, int>);
 
-	using fallback = snap::detected_or_t<double, value_type_t, int>;
+	using fallback = SNAP_NAMESPACE::detected_or_t<double, value_type_t, int>;
 	static_assert(std::is_same_v<fallback, double>);
 
 	SUCCEED();

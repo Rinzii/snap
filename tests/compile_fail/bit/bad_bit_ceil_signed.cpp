@@ -3,6 +3,6 @@
 int main()
 {
 	int s  = 7;
-	auto r = snap::bit_ceil(s);
+	auto r = SNAP_NAMESPACE::bit_ceil(s);
 	(void)r;
 }

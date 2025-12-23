@@ -110,7 +110,7 @@ public:
 	template <typename T> constexpr void destruct()
 	{
 		if (!m_engaged) return;		  // idempotent
-		::snap::destroy_at(get<T>()); // array-aware
+		::SNAP_NAMESPACE::destroy_at(get<T>()); // array-aware
 		m_engaged = false;
 	}
 	template <typename T> constexpr void destroy() { destruct<T>(); }

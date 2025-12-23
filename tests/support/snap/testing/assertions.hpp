@@ -154,11 +154,11 @@ namespace test
 } // namespace test
 SNAP_END_NAMESPACE
 
-#define SNAP_EXPECT_RANGE_EQ(actual, expected) EXPECT_TRUE(::snap::test::RangeEqual((actual), (expected)))
-#define SNAP_ASSERT_RANGE_EQ(actual, expected) ASSERT_TRUE(::snap::test::RangeEqual((actual), (expected)))
+#define SNAP_EXPECT_RANGE_EQ(actual, expected) EXPECT_TRUE(::SNAP_NAMESPACE::test::RangeEqual((actual), (expected)))
+#define SNAP_ASSERT_RANGE_EQ(actual, expected) ASSERT_TRUE(::SNAP_NAMESPACE::test::RangeEqual((actual), (expected)))
 
-#define SNAP_EXPECT_NEAR_REL(actual, expected, tolerance) EXPECT_TRUE(::snap::test::NearRelative((actual), (expected), (tolerance)))
-#define SNAP_ASSERT_NEAR_REL(actual, expected, tolerance) ASSERT_TRUE(::snap::test::NearRelative((actual), (expected), (tolerance)))
+#define SNAP_EXPECT_NEAR_REL(actual, expected, tolerance) EXPECT_TRUE(::SNAP_NAMESPACE::test::NearRelative((actual), (expected), (tolerance)))
+#define SNAP_ASSERT_NEAR_REL(actual, expected, tolerance) ASSERT_TRUE(::SNAP_NAMESPACE::test::NearRelative((actual), (expected), (tolerance)))
 
-#define SNAP_EXPECT_THROW_MSG(statement, exception, message) EXPECT_TRUE(::snap::test::ThrowsWithMessage<exception>([&] { statement; }, (message)))
-#define SNAP_ASSERT_THROW_MSG(statement, exception, message) ASSERT_TRUE(::snap::test::ThrowsWithMessage<exception>([&] { statement; }, (message)))
+#define SNAP_EXPECT_THROW_MSG(statement, exception, message) EXPECT_TRUE(::SNAP_NAMESPACE::test::ThrowsWithMessage<exception>([&] { statement; }, (message)))
+#define SNAP_ASSERT_THROW_MSG(statement, exception, message) ASSERT_TRUE(::SNAP_NAMESPACE::test::ThrowsWithMessage<exception>([&] { statement; }, (message)))
