@@ -13,6 +13,9 @@
 		#define NOMINMAX
 	#endif
 	#include <windows.h>
+	#if defined(_MSC_VER)
+		#pragma comment(lib, "Synchronization") // need WaitOnAddress/WakeByAddress* when linking snap.lib
+	#endif
 #elif defined(__APPLE__)
 	#if __has_include(<sys/ulock.h>)
 		#include <sys/ulock.h>

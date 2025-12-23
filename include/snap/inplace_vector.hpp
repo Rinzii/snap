@@ -10,6 +10,7 @@
 #include <cstddef>
 #include <initializer_list>
 #include <iterator>
+#include <memory>	 // std::unique_ptr
 #include <new>		 // std::launder, placement new
 #include <stdexcept> // std::bad_alloc, std::out_of_range
 #include <type_traits>
@@ -662,8 +663,9 @@ template <class T, std::size_t N> struct inplace_vector
 		// collect into temp up to avail; throw if more
 		size_type avail = N - m_size;
 		using tmp_t		= internal::raw_storage_for<T>;
-		tmp_t tmp[(avail > 0) ? avail : 1];
-		T* buf			= std::launder(reinterpret_cast<T*>(tmp));
+		const size_type temp_cap = (avail > 0) ? avail : 1;
+		auto tmp				 = std::make_unique<tmp_t[]>(temp_cap);
+		T* buf					 = std::launder(reinterpret_cast<T*>(tmp.get()));
 		size_type built = 0;
 		try
 		{
