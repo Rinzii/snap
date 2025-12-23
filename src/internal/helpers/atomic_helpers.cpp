@@ -88,6 +88,39 @@ namespace internal::detail
 			const auto v = reinterpret_cast<std::uintptr_t>(p); // NOLINT(*-pro-type-reinterpret-cast)
 			return (v & (align - 1)) == 0;
 		}
+
+#if defined(_WIN32)
+		using wait_on_address_fn		  = BOOL(WINAPI*)(volatile void*, void*, SIZE_T, DWORD);
+		using wake_by_address_single_fn = VOID(WINAPI*)(void*);
+		using wake_by_address_all_fn	  = VOID(WINAPI*)(void*);
+
+		wait_on_address_fn g_wait_on_address			  = nullptr;
+		wake_by_address_single_fn g_wake_by_address_single = nullptr;
+		wake_by_address_all_fn g_wake_by_address_all		  = nullptr;
+
+		std::once_flag g_wait_address_once;
+		bool g_wait_address_available = false;
+
+		void init_wait_address_functions() noexcept
+		{
+			const HMODULE kernel = ::GetModuleHandleW(L"kernel32.dll");
+			if (kernel == nullptr) { return; }
+
+			g_wait_on_address = reinterpret_cast<wait_on_address_fn>(::GetProcAddress(kernel, "WaitOnAddress"));
+			g_wake_by_address_single =
+				reinterpret_cast<wake_by_address_single_fn>(::GetProcAddress(kernel, "WakeByAddressSingle"));
+			g_wake_by_address_all = reinterpret_cast<wake_by_address_all_fn>(::GetProcAddress(kernel, "WakeByAddressAll"));
+
+			g_wait_address_available =
+				g_wait_on_address != nullptr && g_wake_by_address_single != nullptr && g_wake_by_address_all != nullptr;
+		}
+
+		bool win32_wait_functions_available() noexcept
+		{
+			std::call_once(g_wait_address_once, init_wait_address_functions);
+			return g_wait_address_available;
+		}
+#endif
 	} // namespace
 
 	void cpu_relax() noexcept
@@ -128,7 +161,8 @@ namespace internal::detail
 #if defined(_WIN32)
 		if (size != 1 && size != 2 && size != 4 && size != 8) { return false; }
 		if (!aligned_for(size, addr)) { return false; }
-		[[maybe_unused]] const auto rc = ::WaitOnAddress(const_cast<void*>(addr), const_cast<void*>(expected), size, INFINITE);
+		if (!win32_wait_functions_available()) { return false; }
+		[[maybe_unused]] const auto rc = g_wait_on_address(const_cast<void*>(addr), const_cast<void*>(expected), size, INFINITE);
 		return rc != 0;
 #elif defined(__APPLE__) && SNAP_HAS_APPLE_ULOCK
 		if (size != 4) { return false; }
@@ -204,7 +238,8 @@ namespace internal::detail
 	bool native_notify_one(const void* addr) noexcept
 	{
 #if defined(_WIN32)
-		::WakeByAddressSingle(const_cast<void*>(addr));
+		if (!win32_wait_functions_available()) { return false; }
+		g_wake_by_address_single(const_cast<void*>(addr));
 		return true;
 #elif defined(__APPLE__) && SNAP_HAS_APPLE_ULOCK
 		[[maybe_unused]] const int rc = __ulock_wake(UL_COMPARE_AND_WAIT, const_cast<void*>(addr), 0);
@@ -234,7 +269,8 @@ namespace internal::detail
 	bool native_notify_all(const void* addr) noexcept
 	{
 #if defined(_WIN32)
-		::WakeByAddressAll(const_cast<void*>(addr));
+		if (!win32_wait_functions_available()) { return false; }
+		g_wake_by_address_all(const_cast<void*>(addr));
 		return true;
 #elif defined(__APPLE__) && SNAP_HAS_APPLE_ULOCK
 		[[maybe_unused]] const int rc = __ulock_wake(UL_COMPARE_AND_WAIT | ULF_WAKE_ALL, const_cast<void*>(addr), 0);
@@ -283,9 +319,12 @@ namespace internal::detail
 		void wait_u32(bucket& b, std::uint32_t expected) noexcept
 		{
 #if defined(_WIN32)
-			[[maybe_unused]] const auto rc =
-				::WaitOnAddress(const_cast<void*>(reinterpret_cast<const void*>(std::addressof(b.gen))), std::addressof(expected), sizeof(expected), INFINITE);
-			return;
+			if (win32_wait_functions_available())
+			{
+				[[maybe_unused]] const auto rc = g_wait_on_address(
+					const_cast<void*>(reinterpret_cast<const void*>(std::addressof(b.gen))), std::addressof(expected), sizeof(expected), INFINITE);
+				return;
+			}
 #elif defined(__APPLE__) && SNAP_HAS_APPLE_ULOCK
 			[[maybe_unused]] const int rc =
 				__ulock_wait(UL_COMPARE_AND_WAIT, reinterpret_cast<void*>(std::addressof(b.gen)), static_cast<std::uint64_t>(expected), 0);
@@ -330,56 +369,71 @@ namespace internal::detail
 				if (errno == EINTR) { continue; }
 				return;
 			}
-#else
+#endif
 			std::unique_lock lk(b.m);
 			b.cv.wait(lk, [&] { return atomic_load_u32_relaxed(std::addressof(b.gen)) != expected; });
-#endif
 		}
 
 		void wake_one_u32(bucket& b) noexcept
 		{
 #if defined(_WIN32)
-			::WakeByAddressSingle(reinterpret_cast<void*>(std::addressof(b.gen)));
+			if (win32_wait_functions_available())
+			{
+				g_wake_by_address_single(reinterpret_cast<void*>(std::addressof(b.gen)));
+				return;
+			}
 #elif defined(__APPLE__) && SNAP_HAS_APPLE_ULOCK
 			[[maybe_unused]] const int rc = __ulock_wake(UL_COMPARE_AND_WAIT, reinterpret_cast<void*>(std::addressof(b.gen)), 0);
+			return;
 #elif defined(__linux__) || defined(__ANDROID__)
 			auto* p						   = reinterpret_cast<std::uint32_t*>(std::addressof(b.gen)); // NOLINT(*-pro-type-reinterpret-cast)
 			[[maybe_unused]] const long rc = ::syscall(SYS_futex, p, FUTEX_WAKE | FUTEX_PRIVATE_FLAG, 1, nullptr, nullptr, 0);
+			return;
 #elif defined(__FreeBSD__)
 			void* p						  = reinterpret_cast<void*>(std::addressof(b.gen));
 			[[maybe_unused]] const int rc = _umtx_op(p, UMTX_OP_WAKE, 1, nullptr, nullptr);
+			return;
 #elif defined(__OpenBSD__)
 			auto* p						  = reinterpret_cast<volatile std::uint32_t*>(std::addressof(b.gen)); // NOLINT(*-pro-type-reinterpret-cast)
 			[[maybe_unused]] const int rc = ::futex(p, FUTEX_WAKE, 1, nullptr, nullptr);
+			return;
 #elif defined(__NetBSD__)
 			auto* p						   = reinterpret_cast<std::uint32_t*>(std::addressof(b.gen)); // NOLINT(*-pro-type-reinterpret-cast)
 			[[maybe_unused]] const long rc = ::syscall(SYS___futex, p, FUTEX_WAKE | FUTEX_PRIVATE_FLAG, 1, nullptr, nullptr, 0, 0);
-#else
-			b.cv.notify_one();
+			return;
 #endif
+			b.cv.notify_one();
 		}
 
 		void wake_all_u32(bucket& b) noexcept
 		{
 #if defined(_WIN32)
-			::WakeByAddressAll(reinterpret_cast<void*>(std::addressof(b.gen)));
+			if (win32_wait_functions_available())
+			{
+				g_wake_by_address_all(reinterpret_cast<void*>(std::addressof(b.gen)));
+				return;
+			}
 #elif defined(__APPLE__) && SNAP_HAS_APPLE_ULOCK
 			[[maybe_unused]] const int rc = __ulock_wake(UL_COMPARE_AND_WAIT | ULF_WAKE_ALL, reinterpret_cast<void*>(std::addressof(b.gen)), 0);
+			return;
 #elif defined(__linux__) || defined(__ANDROID__)
 			auto* p						   = reinterpret_cast<std::uint32_t*>(std::addressof(b.gen)); // NOLINT(*-pro-type-reinterpret-cast)
 			[[maybe_unused]] const long rc = ::syscall(SYS_futex, p, FUTEX_WAKE | FUTEX_PRIVATE_FLAG, INT_MAX, nullptr, nullptr, 0);
+			return;
 #elif defined(__FreeBSD__)
 			void* p						  = reinterpret_cast<void*>(std::addressof(b.gen));
 			[[maybe_unused]] const int rc = _umtx_op(p, UMTX_OP_WAKE, INT_MAX, nullptr, nullptr);
+			return;
 #elif defined(__OpenBSD__)
 			auto* p						  = reinterpret_cast<volatile std::uint32_t*>(std::addressof(b.gen)); // NOLINT(*-pro-type-reinterpret-cast)
 			[[maybe_unused]] const int rc = ::futex(p, FUTEX_WAKE, INT_MAX, nullptr, nullptr);
+			return;
 #elif defined(__NetBSD__)
 			auto* p						   = reinterpret_cast<std::uint32_t*>(std::addressof(b.gen)); // NOLINT(*-pro-type-reinterpret-cast)
 			[[maybe_unused]] const long rc = ::syscall(SYS___futex, p, FUTEX_WAKE | FUTEX_PRIVATE_FLAG, INT_MAX, nullptr, nullptr, 0, 0);
-#else
-			b.cv.notify_all();
+			return;
 #endif
+			b.cv.notify_all();
 		}
 	} // namespace
 
