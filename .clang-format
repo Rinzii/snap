@@ -73,7 +73,7 @@ SpaceAfterTemplateKeyword: true
 SpaceBeforeParens: ControlStatements
 SpaceInEmptyParentheses: false
 SpacesInParentheses: false
-Standard: c++17
+Standard: c++20
 TabWidth: 4
 UseTab: Always
 WhitespaceSensitiveMacros:

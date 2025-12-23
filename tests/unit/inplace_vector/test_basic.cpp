@@ -10,6 +10,7 @@
 #include <array>
 #include <initializer_list>
 #include <iterator>
+#include <limits>
 #include <new>
 #include <stdexcept>
 #include <vector>
@@ -81,6 +82,7 @@ namespace
 	struct ThrowOnCopy
 	{
 		static inline int copy_budget = 0;
+		static inline int move_budget = std::numeric_limits<int>::max();
 
 		int value = 0;
 
@@ -92,7 +94,10 @@ namespace
 			if (--copy_budget < 0) throw std::runtime_error("copy budget exceeded");
 		}
 
-		ThrowOnCopy(ThrowOnCopy&& other) noexcept : value(other.value) {}
+		ThrowOnCopy(ThrowOnCopy&& other) : value(other.value)
+		{
+			if (--move_budget < 0) throw std::runtime_error("move budget exceeded");
+		}
 
 		ThrowOnCopy& operator=(const ThrowOnCopy& other)
 		{
@@ -101,9 +106,10 @@ namespace
 			return *this;
 		}
 
-		ThrowOnCopy& operator=(ThrowOnCopy&& other) noexcept
+		ThrowOnCopy& operator=(ThrowOnCopy&& other)
 		{
 			value = other.value;
+			if (--move_budget < 0) throw std::runtime_error("move assign budget exceeded");
 			return *this;
 		}
 	};
@@ -218,11 +224,12 @@ namespace test_cases
 		values.push_back(ThrowOnCopy{ 1 });
 		values.push_back(ThrowOnCopy{ 2 });
 
-		ThrowOnCopy::copy_budget = 1; // allow copying first element only
+		ThrowOnCopy::copy_budget = std::numeric_limits<int>::max();
+		ThrowOnCopy::move_budget = 0; // force exception during tail relocation
 		EXPECT_THROW(values.insert(values.begin() + 1, ThrowOnCopy{ 3 }), std::runtime_error);
 
 		// Container should remain unchanged
-		EXPECT_EQ(2u, values.size());
+		EXPECT_EQ(2U, values.size());
 		EXPECT_EQ(1, values[0].value);
 		EXPECT_EQ(2, values[1].value);
 	}
@@ -238,7 +245,7 @@ namespace test_cases
 			SNAP_NAMESPACE::test::ExpectRangeEq(values_of(values), std::vector<int>{ 1, 2, 3 });
 
 			values.erase(values.begin() + 1);
-			EXPECT_EQ(2u, values.size());
+			EXPECT_EQ(2U, values.size());
 		}
 		EXPECT_EQ(0, Tracking::alive);
 		EXPECT_EQ(Tracking::constructions, Tracking::destructions);

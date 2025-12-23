@@ -478,11 +478,8 @@ snap_add_unit_tests(
 # fixed_string (unit tests)
 # test file lives directly under tests/unit/
 # ==================================================================
-option(SNAP_ENABLE_FIXED_STRING_CXX20_TESTS "Enable C++20 builds of fixed_string tests" OFF)
 set(_snap_fixed_string_standards 17)
-if (SNAP_ENABLE_FIXED_STRING_CXX20_TESTS)
-    list(APPEND _snap_fixed_string_standards 20)
-endif ()
+list(APPEND _snap_fixed_string_standards 20)
 
 snap_add_unit_tests(
         NAME fixed_string
@@ -628,15 +625,13 @@ snap_add_unit_tests(
         smoke/test_core.cpp
 )
 
-option(SNAP_ENABLE_INPLACE_VECTOR_TESTS "Enable experimental inplace_vector tests" ON)
-if (SNAP_ENABLE_INPLACE_VECTOR_TESTS)
-    snap_add_unit_tests(
-            NAME inplace_vector
-            STANDARDS 17
-            SOURCES
-            inplace_vector/test_basic.cpp
-    )
-endif ()
+snap_add_unit_tests(
+        NAME inplace_vector
+        STANDARDS 17
+        SOURCES
+        inplace_vector/test_basic.cpp
+)
+
 
 # ==================================================================
 # Compile-fail examples for bit

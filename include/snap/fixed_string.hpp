@@ -12,9 +12,8 @@
 #include <type_traits>
 #include <utility>
 
-#if __has_include(<version>)
-	#include <version>
-#endif
+// ReSharper disable once CppUnusedIncludeDirective
+#include "snap/version.hpp"
 
 #if defined(__cpp_lib_three_way_comparison) && (__cpp_lib_three_way_comparison >= 201907L)
 	#include <compare>
@@ -239,15 +238,15 @@ public:
 	}
 
 #if defined(__cpp_impl_three_way_comparison) || defined(__cpp_lib_three_way_comparison)
-	template <std::size_t N2> [[nodiscard]] friend constexpr auto operator<= > (const basic_fixed_string& lhs, const basic_fixed_string<CharT, N2>& rhs)
+	template <std::size_t N2> [[nodiscard]] friend constexpr auto operator<=>(const basic_fixed_string& lhs, const basic_fixed_string<CharT, N2>& rhs)
 	{
-		return lhs.view() <= > rhs.view();
+		return lhs.view() <=> rhs.view();
 	}
 
-	template <std::size_t N2> [[nodiscard]] friend SNAP_CONSTEVAL auto operator<= > (const basic_fixed_string& lhs, const CharT (&rhs)[N2])
+	template <std::size_t N2> [[nodiscard]] friend SNAP_CONSTEVAL auto operator<=>(const basic_fixed_string& lhs, const CharT (&rhs)[N2])
 	{
 		assert(rhs[N2 - 1] == CharT{});
-		return lhs.view() <= > std::basic_string_view<CharT>(std::cbegin(rhs), std::cend(rhs) - 1);
+		return lhs.view() <=> std::basic_string_view<CharT>(std::cbegin(rhs), std::cend(rhs) - 1);
 	}
 
 #else
@@ -326,7 +325,6 @@ SNAP_END_NAMESPACE
 
 // std::hash
 #include <functional>
-#include <string_view>
 
 template <std::size_t N> struct std::hash<SNAP_NAMESPACE::fixed_string<N>> : std::hash<std::string_view>
 {

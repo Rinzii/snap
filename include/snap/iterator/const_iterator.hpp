@@ -74,7 +74,8 @@ public:
 	{
 	}
 
-	template <class U, class = std::enable_if_t<std::is_convertible_v<Iter, U> && SNAP_NAMESPACE::details::is_const_lvalue_deref_v<U>>> constexpr operator U() const
+	template <class U, class = std::enable_if_t<std::is_convertible_v<Iter, U> && SNAP_NAMESPACE::details::is_const_lvalue_deref_v<U>>>
+	constexpr operator U() const
 	{
 		return static_cast<U>(m_current);
 	}

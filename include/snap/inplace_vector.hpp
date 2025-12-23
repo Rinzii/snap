@@ -4,6 +4,7 @@
 #include "snap/internal/abi_namespace.hpp"
 
 #include "snap/internal/compat/constexpr.hpp"
+#include "snap/internal/helpers/raw_storage.hpp"
 
 #include <algorithm> // std::move, std::move_backward, std::lexicographical_compare
 #include <cstddef>
@@ -292,7 +293,7 @@ template <class T, std::size_t N> struct inplace_vector
 	{
 		// collect into a local temp buffer up to N without heap
 		size_type collected = 0;
-		using tmp_t			= typename std::aligned_storage<sizeof(T), alignof(T)>::type;
+		using tmp_t			= internal::raw_storage_for<T>;
 		tmp_t tmp[N];
 		T* buf = std::launder(reinterpret_cast<T*>(tmp));
 		try
@@ -568,7 +569,7 @@ template <class T, std::size_t N> struct inplace_vector
 			if (cnt == 0) return const_cast<iterator>(pos);
 			if (m_size + cnt > N) throw std::bad_alloc();
 			// collect into temp buffer (no heap), then insert(count, values...)
-			using tmp_t = typename std::aligned_storage<sizeof(T), alignof(T)>::type;
+			using tmp_t = internal::raw_storage_for<T>;
 			tmp_t tmpbuf[cnt > 0 ? cnt : 1]; // VLA not allowed; cnt>0 here
 			T* tmp			= std::launder(reinterpret_cast<T*>(tmpbuf));
 			size_type built = 0;
@@ -660,7 +661,7 @@ template <class T, std::size_t N> struct inplace_vector
 	{
 		// collect into temp up to avail; throw if more
 		size_type avail = N - m_size;
-		using tmp_t		= typename std::aligned_storage<sizeof(T), alignof(T)>::type;
+		using tmp_t		= internal::raw_storage_for<T>;
 		tmp_t tmp[(avail > 0) ? avail : 1];
 		T* buf			= std::launder(reinterpret_cast<T*>(tmp));
 		size_type built = 0;
@@ -815,8 +816,8 @@ template <class T, std::size_t N> struct inplace_vector
 
 private:
 	// aligned storage
-	using storage_t = typename std::aligned_storage<sizeof(T), alignof(T)>::type;
-	storage_t m_storage[N]{ nullptr };
+	using storage_t = internal::raw_storage_for<T>;
+	storage_t m_storage[N]{};
 	size_type m_size = 0;
 
 	// raw base pointer (independent of m_size)

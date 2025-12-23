@@ -35,10 +35,7 @@ public:
 		if (m_ptr) { increment_ref_count(*m_ptr); }
 	}
 
-	intrusive_shared_ptr(intrusive_shared_ptr&& other) noexcept : m_ptr(other.m_ptr)
-	{
-		other.m_ptr = nullptr;
-	}
+	intrusive_shared_ptr(intrusive_shared_ptr&& other) noexcept : m_ptr(other.m_ptr) { other.m_ptr = nullptr; }
 
 	intrusive_shared_ptr& operator=(const intrusive_shared_ptr& other) noexcept
 	{
@@ -85,10 +82,7 @@ public:
 private:
 	T* m_ptr = nullptr;
 
-	static void increment_ref_count(T& obj) noexcept
-	{
-		get_atomic_ref_count(obj).fetch_add(1, std::memory_order_relaxed);
-	}
+	static void increment_ref_count(T& obj) noexcept { get_atomic_ref_count(obj).fetch_add(1, std::memory_order_relaxed); }
 
 	static void decrement_ref_count(T& obj) noexcept
 	{
