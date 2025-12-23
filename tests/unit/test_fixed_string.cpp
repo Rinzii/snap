@@ -20,6 +20,12 @@
 	#endif
 #endif
 
+#if defined(_MSC_VER) && !defined(__clang__)
+	// MSVC's lib still misses constexpr iterators for std::string despite the feature-test macro
+	#undef SNAP_HAS_CONSTEXPR_STRING
+	#define SNAP_HAS_CONSTEXPR_STRING 0
+#endif
+
 #ifndef SNAP_HAS_CONSTEXPR_ITERATOR
 	#if defined(__cpp_lib_constexpr_iterator) && __cpp_lib_constexpr_iterator >= 201811L
 		#define SNAP_HAS_CONSTEXPR_ITERATOR 1
