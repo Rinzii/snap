@@ -1,6 +1,6 @@
 # snap
 
-A performance-minded library (with a tiny compiled core) that brings newer C++ standard library facilities to C++17.
+A performance-minded library that brings newer C++ standard library facilities to C++17.
 
 Snap’s goal is straightforward: if a feature landed in later C++ standards, and it can be implemented well in C++17,
 snap
@@ -9,11 +9,7 @@ adopted incrementally and to stay out of your way.
 
 ## Scope
 
-snap focuses on "missing pieces" from post-C++17 standards, especially:
-
-- Library facilities that are widely useful in real projects
-- Low-level utilities (type traits, memory helpers, debugging helpers)
-- Components that benefit from careful implementation details and good tests
+Snap focuses on backporting features from post-C++17 standards.
 
 Snap does not try to replace strong reference implementations where that would be redundant. For example:
 
