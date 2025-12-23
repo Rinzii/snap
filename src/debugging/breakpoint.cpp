@@ -17,6 +17,14 @@
 	#define SNAP_HAS_BUILTIN(x) 0
 #endif
 
+#if defined(_WIN32)
+extern "C" __declspec(dllimport) void __stdcall RaiseException(
+	unsigned long,
+	unsigned long,
+	unsigned long,
+	const void *);
+#endif
+
 SNAP_BEGIN_NAMESPACE
 
 void breakpoint() noexcept
@@ -39,7 +47,6 @@ void breakpoint() noexcept
 #endif
 
 #if defined(_WIN32)
-	extern "C" __declspec(dllimport) void __stdcall RaiseException(unsigned long, unsigned long, unsigned long, const void *);
 	constexpr unsigned long EXCEPTION_BREAKPOINT = 0x80000003ul;
 	RaiseException(EXCEPTION_BREAKPOINT, 0, 0, nullptr);
 	return;
