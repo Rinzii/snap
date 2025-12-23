@@ -8,6 +8,8 @@
 
 #include <array>
 #include <atomic>
+// ReSharper disable once CppUnusedIncludeDirective
+#include <cstdint>
 #include <cstring>
 #include <type_traits>
 #include <utility>
