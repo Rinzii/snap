@@ -8,11 +8,13 @@
 
 SNAP_BEGIN_NAMESPACE
 
-[[noreturn]] inline void unreachable() noexcept
+[[noreturn]] void unreachable() noexcept
 {
 #if defined(_MSC_VER) && !defined(__clang__)
 	__fastfail(0u);
+#endif
 	std::abort();
+#if defined(_MSC_VER) && !defined(__clang__)
 	__assume(0);
 #else
 	__builtin_unreachable();
