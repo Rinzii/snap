@@ -5,6 +5,6 @@
 
 SNAP_BEGIN_NAMESPACE
 
-[[noreturn]] void unreachable();
+[[noreturn]] void unreachable() noexcept;
 
 SNAP_END_NAMESPACE
