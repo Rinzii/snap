@@ -403,29 +403,34 @@ template <class T, std::size_t N> struct inplace_vector
 		::new (static_cast<void*>(base() + m_size)) T(v);
 		++m_size;
 	}
+
 	void push_back(T&& v)
 	{
 		if (m_size == N) throw std::bad_alloc();
 		::new (static_cast<void*>(base() + m_size)) T(std::move(v));
 		++m_size;
 	}
+
 	pointer try_push_back(const T& v)
 	{
 		if (m_size == N) return nullptr;
 		::new (static_cast<void*>(base() + m_size)) T(v);
 		return base() + (m_size++);
 	}
+
 	pointer try_push_back(T&& v)
 	{
 		if (m_size == N) return nullptr;
 		::new (static_cast<void*>(base() + m_size)) T(std::move(v));
 		return base() + (m_size++);
 	}
+
 	reference unchecked_push_back(const T& v)
 	{
 		::new (static_cast<void*>(base() + m_size)) T(v);
 		return base()[m_size++];
 	}
+
 	reference unchecked_push_back(T&& v)
 	{
 		::new (static_cast<void*>(base() + m_size)) T(std::move(v));
@@ -439,12 +444,14 @@ template <class T, std::size_t N> struct inplace_vector
 		::new (static_cast<void*>(base() + m_size)) T(std::forward<Args>(args)...);
 		return base()[m_size++];
 	}
+
 	template <class... Args> pointer try_emplace_back(Args&&... args)
 	{
 		if (m_size == N) return nullptr;
 		::new (static_cast<void*>(base() + m_size)) T(std::forward<Args>(args)...);
 		return base() + (m_size++);
 	}
+
 	template <class... Args> reference unchecked_emplace_back(Args&&... args)
 	{
 		::new (static_cast<void*>(base() + m_size)) T(std::forward<Args>(args)...);
@@ -478,6 +485,7 @@ template <class T, std::size_t N> struct inplace_vector
 			while (m_size > count) pop_back();
 		}
 	}
+
 	void resize(size_type count, const T& value)
 	{
 		if (count > N) throw std::bad_alloc();
@@ -810,7 +818,9 @@ template <class T, std::size_t N> struct inplace_vector
 			if (!(a.base()[i] == b.base()[i])) return false;
 		return true;
 	}
+
 	friend bool operator!=(const inplace_vector& a, const inplace_vector& b) { return !(a == b); }
+
 	friend bool operator<(const inplace_vector& a, const inplace_vector& b) { return std::lexicographical_compare(a.begin(), a.end(), b.begin(), b.end()); }
 
 	// friend ADL swap
@@ -886,15 +896,18 @@ template <class T> struct inplace_vector<T, 0>
 	{
 		if (count) throw std::bad_alloc();
 	}
+
 	inplace_vector(size_type, const T&) { throw std::bad_alloc(); }
 	template <class It, class = std::enable_if_t<!std::is_integral<It>::value>> inplace_vector(It first, It last)
 	{
 		if (first != last) throw std::bad_alloc();
 	}
+
 	template <class R, class B = decltype(std::begin(std::declval<R&>())), class E = decltype(std::end(std::declval<R&>()))> explicit inplace_vector(R&& rg)
 	{
 		if (std::begin(rg) != std::end(rg)) throw std::bad_alloc();
 	}
+
 	inplace_vector(std::initializer_list<T> il)
 	{
 		if (il.size()) throw std::bad_alloc();
@@ -911,10 +924,12 @@ template <class T> struct inplace_vector<T, 0>
 	{
 		if (count) throw std::bad_alloc();
 	}
+
 	template <class It, class = std::enable_if_t<!std::is_integral<It>::value>> void assign(It first, It last)
 	{
 		if (first != last) throw std::bad_alloc();
 	}
+
 	template <class R, class B = decltype(std::begin(std::declval<R&>())), class E = decltype(std::end(std::declval<R&>()))> void assign_range(R&& rg)
 	{
 		if (std::begin(rg) != std::end(rg)) throw std::bad_alloc();
@@ -966,6 +981,7 @@ template <class T> struct inplace_vector<T, 0>
 	{
 		if (count) throw std::bad_alloc();
 	}
+
 	void resize(size_type count, const T&)
 	{
 		if (count) throw std::bad_alloc();
@@ -975,6 +991,7 @@ template <class T> struct inplace_vector<T, 0>
 	{
 		if (first != last) throw std::bad_alloc();
 	}
+
 	template <class R, class B = decltype(std::begin(std::declval<R&>())), class E = decltype(std::end(std::declval<R&>()))> void append_range(R&& rg)
 	{
 		if (std::begin(rg) != std::end(rg)) throw std::bad_alloc();
@@ -998,11 +1015,13 @@ template <class T> struct inplace_vector<T, 0>
 		(void)pos;
 		throw std::bad_alloc();
 	}
+
 	iterator insert(const_iterator pos, T&&)
 	{
 		(void)pos;
 		throw std::bad_alloc();
 	}
+
 	iterator insert(const_iterator pos, size_type count, const T&)
 	{
 		(void)pos;
@@ -1030,6 +1049,7 @@ template <class T> struct inplace_vector<T, 0>
 		(void)pos;
 		return nullptr;
 	}
+
 	iterator erase(const_iterator first, const_iterator) { return const_cast<iterator>(first); }
 
 	void swap(inplace_vector&) noexcept {}

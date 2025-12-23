@@ -9,9 +9,10 @@
 #include <utility> // declval
 
 SNAP_BEGIN_NAMESPACE
-template <class T, class = void> struct is_equality_comparable : std::false_type
+template <class, class = void> struct is_equality_comparable : std::false_type
 {
 };
+
 template <class T> struct is_equality_comparable<
 	T,
 	std::void_t<decltype(std::declval<const T &>() == std::declval<const T &>()), decltype(std::declval<const T &>() != std::declval<const T &>())>>
@@ -22,9 +23,10 @@ template <class T> struct is_equality_comparable<
 
 template <class T> inline constexpr bool is_equality_comparable_v = is_equality_comparable<T>::value;
 
-template <class T, class U, class = void> struct is_equality_comparable_with : std::false_type
+template <class, class, class = void> struct is_equality_comparable_with : std::false_type
 {
 };
+
 template <class T, class U> struct is_equality_comparable_with<T,
 															   U,
 															   std::void_t<decltype(std::declval<const T &>() == std::declval<const U &>()),

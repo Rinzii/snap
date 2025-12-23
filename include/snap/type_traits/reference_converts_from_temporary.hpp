@@ -79,8 +79,8 @@ namespace internal
 		else { return true; }
 	}();
 
-	template <class T, class U, bool UseBuiltin = builtin::has_any_reference_temporary_builtin> struct reference_converts_from_temporary_dispatch
-		: std::bool_constant<internal::reference_converts_from_temporary_fallback_v<T, U>>
+	template <class T, class U, bool = builtin::has_any_reference_temporary_builtin> struct reference_converts_from_temporary_dispatch
+		: std::bool_constant<reference_converts_from_temporary_fallback_v<T, U>>
 	{
 	};
 

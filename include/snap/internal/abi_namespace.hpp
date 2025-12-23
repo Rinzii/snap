@@ -23,7 +23,7 @@
 			inline namespace SNAP_ABI_NAMESPACE                                                                                                                \
 			{
 	#define SNAP_END_NAMESPACE                                                                                                                                 \
-		}                                                                                                                                                      \
+			}                                                                                                                                                      \
 		} // namespace SNAP_NAMESPACE
 #else
 	#define SNAP_BEGIN_NAMESPACE                                                                                                                               \

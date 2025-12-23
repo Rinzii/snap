@@ -41,7 +41,7 @@ inline constexpr from_range_t from_range{};
 namespace details
 {
 
-	template <class T, class U, class = void> struct is_neq_comparable : std::false_type
+	template <class, class, class = void> struct is_neq_comparable : std::false_type
 	{
 	};
 	template <class T, class U> struct is_neq_comparable<T, U, std::void_t<decltype(std::declval<const T&>() != std::declval<const U&>())>> : std::true_type

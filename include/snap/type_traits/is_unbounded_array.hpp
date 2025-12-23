@@ -6,7 +6,7 @@
 #include <type_traits>
 
 SNAP_BEGIN_NAMESPACE
-template <class T> struct is_unbounded_array : std::false_type
+template <class> struct is_unbounded_array : std::false_type
 {
 };
 

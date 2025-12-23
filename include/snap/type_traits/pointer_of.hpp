@@ -13,7 +13,7 @@ template <class T> using pointer_member_t			   = typename T::pointer;
 template <class T> using element_type_member_t		   = typename T::element_type;
 template <class T> using pointer_traits_element_type_t = typename std::pointer_traits<T>::element_type;
 
-template <class T, class Enable = void> struct pointer_of
+template <class, class = void> struct pointer_of
 {
 };
 

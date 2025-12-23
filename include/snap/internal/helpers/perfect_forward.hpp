@@ -40,6 +40,7 @@ namespace internal
 		{
 			return Op{}(std::get<I>(bound_args_)..., std::forward<Args>(args)...);
 		}
+
 		template <class... Args, class = std::enable_if_t<!std::is_invocable_v<Op, BoundArgs&..., Args...>>> auto operator()(Args&&...) & = delete;
 
 		// const& overload
@@ -49,6 +50,7 @@ namespace internal
 		{
 			return Op{}(std::get<I>(bound_args_)..., std::forward<Args>(args)...);
 		}
+
 		template <class... Args, class = std::enable_if_t<!std::is_invocable_v<Op, const BoundArgs&..., Args...>>> auto operator()(Args&&...) const& = delete;
 
 		// && overload
@@ -58,6 +60,7 @@ namespace internal
 		{
 			return Op{}(std::get<I>(std::move(bound_args_))..., std::forward<Args>(args)...);
 		}
+
 		template <class... Args, class = std::enable_if_t<!std::is_invocable_v<Op, BoundArgs..., Args...>>> auto operator()(Args&&...) && = delete;
 
 		// const&& overload
@@ -67,6 +70,7 @@ namespace internal
 		{
 			return Op{}(std::get<I>(std::move(bound_args_))..., std::forward<Args>(args)...);
 		}
+
 		template <class... Args, class = std::enable_if_t<!std::is_invocable_v<Op, const BoundArgs..., Args...>>> auto operator()(Args&&...) const&& = delete;
 	};
 

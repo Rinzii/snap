@@ -16,27 +16,33 @@ namespace details
 	template <class I, class = void> struct deref_type
 	{
 	};
+
 	template <class I> struct deref_type<I, std::void_t<decltype(*std::declval<I&>())>>
 	{
 		using type = decltype(*std::declval<I&>());
 	};
+
 	template <class I> using iter_ref_t = typename deref_type<I>::type;
 
 	template <class I, class = void> struct is_const_lvalue_deref : std::false_type
 	{
 	};
+
 	template <class I> struct is_const_lvalue_deref<I, std::void_t<iter_ref_t<I>>>
 		: std::integral_constant<bool, std::is_lvalue_reference_v<iter_ref_t<I>> && std::is_const_v<std::remove_reference_t<iter_ref_t<I>>>>
 	{
 	};
+
 	template <class I> constexpr bool is_const_lvalue_deref_v = is_const_lvalue_deref<I>::value;
 
 	template <class T, class = void> struct is_iterator_like : std::false_type
 	{
 	};
+
 	template <class T> struct is_iterator_like<T, std::void_t<typename std::iterator_traits<T>::value_type>> : std::true_type
 	{
 	};
+
 	template <class T> constexpr bool is_iterator_like_v = is_iterator_like<T>::value;
 
 	template <class I> using is_random_access_like					 = category_is_random_access<I>;
@@ -100,6 +106,7 @@ public:
 		++m_current;
 		return *this;
 	}
+
 	constexpr basic_const_iterator operator++(int)
 	{
 		basic_const_iterator tmp(*this);
@@ -112,6 +119,7 @@ public:
 		--m_current;
 		return *this;
 	}
+
 	template <class I2 = Iter, class = std::enable_if_t<details::is_bidirectional_like_v<I2>, int>> constexpr basic_const_iterator operator--(int)
 	{
 		basic_const_iterator tmp(*this);
@@ -125,12 +133,14 @@ public:
 		m_current += n;
 		return *this;
 	}
+
 	template <class I2 = Iter, class = std::enable_if_t<details::is_random_access_like_v<I2>, int>>
 	constexpr basic_const_iterator& operator-=(difference_type n)
 	{
 		m_current -= n;
 		return *this;
 	}
+
 	template <class I2 = Iter, class = std::enable_if_t<details::is_random_access_like_v<I2>, int>> constexpr reference operator[](difference_type n) const
 	{
 		return *(*this + n);
@@ -147,6 +157,7 @@ template <class I> constexpr bool operator==(const basic_const_iterator<I>& a, c
 {
 	return a.m_current == b.m_current;
 }
+
 template <class I> constexpr bool operator!=(const basic_const_iterator<I>& a, const basic_const_iterator<I>& b)
 {
 	return !(a == b);
@@ -157,6 +168,7 @@ constexpr bool operator==(const basic_const_iterator<I>& a, const basic_const_it
 {
 	return a.base() == b.base();
 }
+
 template <class I, class J, class = std::enable_if_t<details::either_convertible<I, J>::value, int>>
 constexpr bool operator!=(const basic_const_iterator<I>& a, const basic_const_iterator<J>& b)
 {
@@ -167,14 +179,17 @@ template <class I> constexpr bool operator==(const basic_const_iterator<I>& a, c
 {
 	return a.base() == b;
 }
+
 template <class I> constexpr bool operator==(const I& a, const basic_const_iterator<I>& b)
 {
 	return a == b.base();
 }
+
 template <class I> constexpr bool operator!=(const basic_const_iterator<I>& a, const I& b)
 {
 	return !(a == b);
 }
+
 template <class I> constexpr bool operator!=(const I& a, const basic_const_iterator<I>& b)
 {
 	return !(a == b);
@@ -185,16 +200,19 @@ constexpr bool operator<(const basic_const_iterator<I>& a, const basic_const_ite
 {
 	return a.base() < b.base();
 }
+
 template <class I, class = std::enable_if_t<details::is_random_access_like_v<I>, int>>
 constexpr bool operator>(const basic_const_iterator<I>& a, const basic_const_iterator<I>& b)
 {
 	return b < a;
 }
+
 template <class I, class = std::enable_if_t<details::is_random_access_like_v<I>, int>>
 constexpr bool operator<=(const basic_const_iterator<I>& a, const basic_const_iterator<I>& b)
 {
 	return !(b < a);
 }
+
 template <class I, class = std::enable_if_t<details::is_random_access_like_v<I>, int>>
 constexpr bool operator>=(const basic_const_iterator<I>& a, const basic_const_iterator<I>& b)
 {
@@ -208,6 +226,7 @@ constexpr bool operator<(const basic_const_iterator<I>& a, const basic_const_ite
 {
 	return a.base() < b.base();
 }
+
 template <class I,
 		  class J,
 		  class = std::enable_if_t<details::either_convertible<I, J>::value && details::is_random_access_like_v<I> && details::is_random_access_like_v<J>, int>>
@@ -215,6 +234,7 @@ constexpr bool operator>(const basic_const_iterator<I>& a, const basic_const_ite
 {
 	return b < a;
 }
+
 template <class I,
 		  class J,
 		  class = std::enable_if_t<details::either_convertible<I, J>::value && details::is_random_access_like_v<I> && details::is_random_access_like_v<J>, int>>
@@ -222,6 +242,7 @@ constexpr bool operator<=(const basic_const_iterator<I>& a, const basic_const_it
 {
 	return !(b < a);
 }
+
 template <class I,
 		  class J,
 		  class = std::enable_if_t<details::either_convertible<I, J>::value && details::is_random_access_like_v<I> && details::is_random_access_like_v<J>, int>>
@@ -234,30 +255,37 @@ template <class I, class = std::enable_if_t<details::is_random_access_like_v<I>,
 {
 	return a.base() < b;
 }
+
 template <class I, class = std::enable_if_t<details::is_random_access_like_v<I>, int>> constexpr bool operator<(const I& a, const basic_const_iterator<I>& b)
 {
 	return a < b.base();
 }
+
 template <class I, class = std::enable_if_t<details::is_random_access_like_v<I>, int>> constexpr bool operator>(const basic_const_iterator<I>& a, const I& b)
 {
 	return b < a;
 }
+
 template <class I, class = std::enable_if_t<details::is_random_access_like_v<I>, int>> constexpr bool operator>(const I& a, const basic_const_iterator<I>& b)
 {
 	return b < a;
 }
+
 template <class I, class = std::enable_if_t<details::is_random_access_like_v<I>, int>> constexpr bool operator<=(const basic_const_iterator<I>& a, const I& b)
 {
 	return !(b < a);
 }
+
 template <class I, class = std::enable_if_t<details::is_random_access_like_v<I>, int>> constexpr bool operator<=(const I& a, const basic_const_iterator<I>& b)
 {
 	return !(a < b);
 }
+
 template <class I, class = std::enable_if_t<details::is_random_access_like_v<I>, int>> constexpr bool operator>=(const basic_const_iterator<I>& a, const I& b)
 {
 	return !(a < b);
 }
+
 template <class I, class = std::enable_if_t<details::is_random_access_like_v<I>, int>> constexpr bool operator>=(const I& a, const basic_const_iterator<I>& b)
 {
 	return !(a < b);
@@ -297,6 +325,7 @@ constexpr typename std::iterator_traits<I>::difference_type operator-(const basi
 {
 	return a.base() - b;
 }
+
 template <class I, class = std::enable_if_t<details::is_random_access_like_v<I>, int>>
 constexpr typename std::iterator_traits<I>::difference_type operator-(const I& a, const basic_const_iterator<I>& b)
 {
@@ -308,11 +337,13 @@ constexpr basic_const_iterator<I> operator+(const basic_const_iterator<I>& it, t
 {
 	return basic_const_iterator<I>(it.base() + n);
 }
+
 template <class I, class = std::enable_if_t<details::is_random_access_like_v<I>, int>>
 constexpr basic_const_iterator<I> operator+(typename std::iterator_traits<I>::difference_type n, const basic_const_iterator<I>& it)
 {
 	return it + n;
 }
+
 template <class I, class = std::enable_if_t<details::is_random_access_like_v<I>, int>>
 constexpr basic_const_iterator<I> operator-(const basic_const_iterator<I>& it, typename std::iterator_traits<I>::difference_type n)
 {
@@ -339,6 +370,7 @@ template <class I> constexpr const_iterator<I> make_const_iterator(I it)
 {
 	return const_iterator<I>(it);
 }
+
 template <class S> constexpr const_sentinel<S> make_const_sentinel(S s)
 {
 	return const_sentinel<S>(s);

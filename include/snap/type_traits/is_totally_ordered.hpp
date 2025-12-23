@@ -9,7 +9,7 @@
 #include <utility> // declval
 
 SNAP_BEGIN_NAMESPACE
-template <class T, class = void> struct is_totally_ordered : std::false_type
+template <class, class = void> struct is_totally_ordered : std::false_type
 {
 };
 
@@ -27,7 +27,7 @@ template <class T> struct is_totally_ordered<T,
 
 template <class T> inline constexpr bool is_totally_ordered_v = is_totally_ordered<T>::value;
 
-template <class T, class U, class = void> struct is_totally_ordered_with : std::false_type
+template <class, class, class = void> struct is_totally_ordered_with : std::false_type
 {
 };
 

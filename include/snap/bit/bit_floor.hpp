@@ -16,7 +16,7 @@ namespace detail
 																																	char,
 #if defined(__cpp_char8_t)
 																																	char8_t,
-#endif
+#endif // __cpp_char8_t
 																																	char16_t,
 																																	char32_t,
 																																	wchar_t>;

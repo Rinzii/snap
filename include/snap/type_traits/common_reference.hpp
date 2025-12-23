@@ -49,6 +49,7 @@ namespace internal
 	{
 		using type = T &;
 	};
+
 	template <typename T> struct common_ref_impl<T &, T &&, T, T>
 	{
 		using type = T &;
@@ -92,6 +93,7 @@ namespace internal
 	template <class, class = void> struct has_type_member : std::false_type
 	{
 	};
+
 	template <class T> struct has_type_member<T, std::void_t<typename T::type>> : std::true_type
 	{
 	};
@@ -101,6 +103,7 @@ namespace internal
 template <int N> struct priority_tag : priority_tag<N - 1>
 {
 };
+
 template <> struct priority_tag<0>
 {
 };

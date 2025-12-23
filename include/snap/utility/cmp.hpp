@@ -19,21 +19,27 @@ namespace detail
 	template <> struct is_forbidden_char_base<char> : std::true_type
 	{
 	};
+
 	template <> struct is_forbidden_char_base<signed char> : std::true_type
 	{
 	};
+
 	template <> struct is_forbidden_char_base<unsigned char> : std::true_type
 	{
 	};
+
 	template <> struct is_forbidden_char_base<wchar_t> : std::true_type
 	{
 	};
+
 	template <> struct is_forbidden_char_base<char16_t> : std::true_type
 	{
 	};
+
 	template <> struct is_forbidden_char_base<char32_t> : std::true_type
 	{
 	};
+
 #if defined(__cpp_char8_t)
 	template <> struct is_forbidden_char_base<char8_t> : std::true_type
 	{

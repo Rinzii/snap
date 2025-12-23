@@ -6,7 +6,6 @@
 #include "snap/bit/rotr.hpp"
 
 #include <cstdint> // For std::uint64_t
-#include <limits>
 #include <type_traits>
 
 SNAP_BEGIN_NAMESPACE

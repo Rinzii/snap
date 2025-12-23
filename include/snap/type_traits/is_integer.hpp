@@ -14,15 +14,19 @@ template <class T> struct is_signed_integer : std::false_type
 template <> struct is_signed_integer<signed char> : std::true_type
 {
 };
+
 template <> struct is_signed_integer<signed short> : std::true_type
 {
 };
+
 template <> struct is_signed_integer<signed int> : std::true_type
 {
 };
+
 template <> struct is_signed_integer<signed long> : std::true_type
 {
 };
+
 template <> struct is_signed_integer<signed long long> : std::true_type
 {
 };
@@ -36,22 +40,26 @@ template <> struct is_signed_integer<__int128_t> : std::true_type
 template <class T> inline constexpr bool is_signed_integer_v = is_signed_integer<T>::value;
 
 // is_unsigned_integer
-template <class T> struct is_unsigned_integer : std::false_type
+template <class> struct is_unsigned_integer : std::false_type
 {
 };
 
 template <> struct is_unsigned_integer<unsigned char> : std::true_type
 {
 };
+
 template <> struct is_unsigned_integer<unsigned short> : std::true_type
 {
 };
+
 template <> struct is_unsigned_integer<unsigned int> : std::true_type
 {
 };
+
 template <> struct is_unsigned_integer<unsigned long> : std::true_type
 {
 };
+
 template <> struct is_unsigned_integer<unsigned long long> : std::true_type
 {
 };

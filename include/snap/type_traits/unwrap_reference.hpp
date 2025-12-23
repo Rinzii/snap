@@ -11,6 +11,7 @@ template <class T> struct unwrap_reference
 {
 	using type = T;
 };
+
 template <class U> struct unwrap_reference<std::reference_wrapper<U>>
 {
 	using type = U &;

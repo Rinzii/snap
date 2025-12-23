@@ -11,24 +11,31 @@ namespace detail
 	template <class> struct is_char_impl : std::false_type
 	{
 	};
+
 	template <> struct is_char_impl<char> : std::true_type
 	{
 	};
+
 	template <> struct is_char_impl<signed char> : std::true_type
 	{
 	};
+
 	template <> struct is_char_impl<unsigned char> : std::true_type
 	{
 	};
+
 	template <> struct is_char_impl<wchar_t> : std::true_type
 	{
 	};
+
 	template <> struct is_char_impl<char16_t> : std::true_type
 	{
 	};
+
 	template <> struct is_char_impl<char32_t> : std::true_type
 	{
 	};
+
 #if defined(__cpp_char8_t)
 	template <> struct is_char_impl<char8_t> : std::true_type
 	{
