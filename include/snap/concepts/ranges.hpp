@@ -1,6 +1,8 @@
 #pragma once
 
+// Must be included first
 #include "snap/internal/abi_namespace.hpp"
+
 #include "snap/internal/compat/std.hpp"
 
 #if SNAP_HAS_CPP20

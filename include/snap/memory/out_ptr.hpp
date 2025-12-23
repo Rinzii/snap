@@ -1,8 +1,10 @@
 #pragma once
 
+// Must be included first
 #include "snap/internal/abi_namespace.hpp"
-#include "snap/memory/pointer_of.hpp"
+
 #include "snap/memory/ptr_traits.hpp"
+#include "snap/type_traits/pointer_of.hpp"
 
 #include <memory>
 #include <tuple>
@@ -12,8 +14,8 @@
 SNAP_BEGIN_NAMESPACE
 template <class Smart, class Pointer, class... Args> class out_ptr_t
 {
-	static_assert(!snap::is_specialization_of_v<Smart, std::shared_ptr> || sizeof...(Args) > 0,
-				  "Using std::shared_ptr<> without a deleter in snap::out_ptr is not supported.");
+	static_assert(!SNAP_NAMESPACE::is_specialization_of_v<Smart, std::shared_ptr> || sizeof...(Args) > 0,
+				  "Using std::shared_ptr<> without a deleter in SNAP_NAMESPACE::out_ptr is not supported.");
 
 public:
 	explicit out_ptr_t(Smart& smart, Args... args) noexcept : m_smart(smart), m_args(std::forward<Args>(args)...), m_ptr()

@@ -1,11 +1,15 @@
 #pragma once
 
+// Must be included first
 #include "snap/internal/abi_namespace.hpp"
+
 #include "snap/type_traits/type_identity.hpp"
+
+#include <type_traits>
 
 SNAP_BEGIN_NAMESPACE
 // Primary: expression is ill-formed -> yields fallback type T and false
-template <class T, class, template <class...> class, class...> struct detector : type_identity<T>
+template <class T, class, template <class...> class, class...> struct detector : ::SNAP_NAMESPACE::type_identity<T>
 {
 	using value_t = std::false_type;
 };

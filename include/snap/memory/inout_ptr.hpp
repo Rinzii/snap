@@ -1,8 +1,11 @@
 #pragma once
 
+// Must be included first
 #include "snap/internal/abi_namespace.hpp"
-#include "snap/memory/pointer_of.hpp"
+
 #include "snap/memory/ptr_traits.hpp"
+#include "snap/type_traits/is_specialization_of.hpp"
+#include "snap/type_traits/pointer_of.hpp"
 
 #include <memory>
 #include <tuple>
@@ -12,7 +15,7 @@
 SNAP_BEGIN_NAMESPACE
 template <class Smart, class Pointer, class... Args> class inout_ptr_t
 {
-	static_assert(!is_specialization_of_v<Smart, std::shared_ptr>, "Using std::shared_ptr<> without a deleter in snap::inout_ptr is not supported.");
+	static_assert(!is_specialization_of_v<Smart, std::shared_ptr>, "Using std::shared_ptr<> without a deleter in SNAP_NAMESPACE::inout_ptr is not supported.");
 
 public:
 	explicit inout_ptr_t(Smart& smart, Args&&... args)
@@ -39,14 +42,14 @@ public:
 			if (!m_ptr) { return; }
 		}
 
-		using SmartPtr = snap::pointer_of_or_t<Smart, Pointer>;
+		using SmartPtr = pointer_of_or_t<Smart, Pointer>;
 
 		if constexpr (std::is_pointer_v<Smart>)
 		{
 			// Raw-pointer target: just store the produced pointer
 			m_smart = static_cast<SmartPtr>(m_ptr);
 		}
-		else if constexpr (snap::is_resettable_smart_pointer_with_args_v<Smart, Pointer, Args...>)
+		else if constexpr (SNAP_NAMESPACE::is_resettable_smart_pointer_with_args_v<Smart, Pointer, Args...>)
 		{
 			// Smart pointer supports reset(ptr, args...)
 			std::apply([&](auto&&... a) { m_smart.reset(static_cast<SmartPtr>(m_ptr), std::forward<decltype(a)>(a)...); }, std::move(m_args));

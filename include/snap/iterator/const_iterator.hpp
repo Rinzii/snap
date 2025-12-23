@@ -1,6 +1,14 @@
 #pragma once
 
+// Must be included first
 #include "snap/internal/abi_namespace.hpp"
+
+#include "snap/iterator/is_contiguous_iterator.hpp"
+
+#include <iterator>
+#include <memory>
+#include <type_traits>
+#include <utility>
 
 SNAP_BEGIN_NAMESPACE
 namespace details
@@ -48,8 +56,8 @@ public:
 	using difference_type	= typename std::iterator_traits<Iter>::difference_type;
 	using iterator_category = typename std::iterator_traits<Iter>::iterator_category;
 	using iterator_concept	= std::conditional_t<
-		 snap::is_contiguous_iterator_v<Iter>,
-		 snap::contiguous_iterator_tag,
+		 SNAP_NAMESPACE::is_contiguous_iterator_v<Iter>,
+		 SNAP_NAMESPACE::contiguous_iterator_tag,
 		 std::conditional_t<details::is_random_access_like_v<Iter>,
 							std::random_access_iterator_tag,
 							std::conditional_t<details::is_bidirectional_like_v<Iter>, std::bidirectional_iterator_tag, std::forward_iterator_tag>>>;
@@ -66,14 +74,14 @@ public:
 	{
 	}
 
-	template <class U, class = std::enable_if_t<std::is_convertible_v<Iter, U> && snap::details::is_const_lvalue_deref_v<U>>> constexpr operator U() const
+	template <class U, class = std::enable_if_t<std::is_convertible_v<Iter, U> && SNAP_NAMESPACE::details::is_const_lvalue_deref_v<U>>> constexpr operator U() const
 	{
 		return static_cast<U>(m_current);
 	}
 
-	template <class U, class = std::enable_if_t<std::is_convertible_v<Iter, U>>> constexpr operator snap::basic_const_iterator<U>() const
+	template <class U, class = std::enable_if_t<std::is_convertible_v<Iter, U>>> constexpr operator SNAP_NAMESPACE::basic_const_iterator<U>() const
 	{
-		return snap::basic_const_iterator<U>(static_cast<U>(m_current));
+		return SNAP_NAMESPACE::basic_const_iterator<U>(static_cast<U>(m_current));
 	}
 
 	constexpr const Iter& base() const& { return m_current; }

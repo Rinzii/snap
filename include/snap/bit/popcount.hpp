@@ -1,8 +1,11 @@
 #pragma once
 
-#include "snap/bit/countl.hpp"
+// Must be included first
 #include "snap/internal/abi_namespace.hpp"
+
 #include "snap/internal/pp/has_builtin.hpp"
+// ReSharper disable once CppUnusedIncludeDirective
+#include "snap/bit/countl.hpp"
 
 #include <cstdint>
 #include <limits>

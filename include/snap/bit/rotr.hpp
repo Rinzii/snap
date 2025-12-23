@@ -1,5 +1,6 @@
 #pragma once
 
+// Must be included first
 #include "snap/internal/abi_namespace.hpp"
 
 #include <cstdint> // For std::uint64_t

@@ -1,8 +1,9 @@
 #pragma once
 
+// Must be included first
 #include "snap/internal/abi_namespace.hpp"
 
-#include <cstddef>	   // std::nullm_ptrt
+#include <cstddef>	   // std::nullptr_t
 #include <functional>  // std::hash, std::less
 #include <type_traits> // std::is_reference_v, std::enable_if_t, std::is_convertible_v, std::add_lvalue_reference_t
 #include <utility>	   // std::swap
@@ -17,7 +18,7 @@ public:
 
 	// constructors
 	constexpr observer_ptr() noexcept = default;
-	constexpr observer_ptr(std::nullm_ptrt) noexcept : m_ptr(nullptr) {}
+	constexpr observer_ptr(std::nullptr_t) noexcept : m_ptr(nullptr) {}
 	constexpr explicit observer_ptr(element_type* p) noexcept : m_ptr(p) {}
 
 	template <class W2, class = std::enable_if_t<std::is_convertible_v<W2*, element_type*>>> constexpr observer_ptr(observer_ptr<W2> other) noexcept
@@ -65,62 +66,59 @@ template <class W> constexpr observer_ptr<W> make_observer(W* p) noexcept
 }
 
 // comparisons with other observer_ptr
-template <class W1, class W2> inline bool operator==(const observer_ptr<W1>& a, const observer_ptr<W2>& b)
+template <class W1, class W2> bool operator==(const observer_ptr<W1>& a, const observer_ptr<W2>& b)
 {
 	return a.get() == b.get();
 }
-template <class W1, class W2> inline bool operator!=(const observer_ptr<W1>& a, const observer_ptr<W2>& b)
+template <class W1, class W2> bool operator!=(const observer_ptr<W1>& a, const observer_ptr<W2>& b)
 {
 	return !(a == b);
 }
-template <class W1, class W2> inline bool operator<(const observer_ptr<W1>& a, const observer_ptr<W2>& b)
+template <class W1, class W2> bool operator<(const observer_ptr<W1>& a, const observer_ptr<W2>& b)
 {
 	return std::less<>{}(a.get(), b.get());
 }
-template <class W1, class W2> inline bool operator>(const observer_ptr<W1>& a, const observer_ptr<W2>& b)
+template <class W1, class W2> bool operator>(const observer_ptr<W1>& a, const observer_ptr<W2>& b)
 {
 	return b < a;
 }
-template <class W1, class W2> inline bool operator<=(const observer_ptr<W1>& a, const observer_ptr<W2>& b)
+template <class W1, class W2> bool operator<=(const observer_ptr<W1>& a, const observer_ptr<W2>& b)
 {
 	return !(b < a);
 }
-template <class W1, class W2> inline bool operator>=(const observer_ptr<W1>& a, const observer_ptr<W2>& b)
+template <class W1, class W2> bool operator>=(const observer_ptr<W1>& a, const observer_ptr<W2>& b)
 {
 	return !(a < b);
 }
 
 // comparisons with nullptr
-template <class W> inline bool operator==(const observer_ptr<W>& p, std::nullm_ptrt) noexcept
+template <class W> bool operator==(const observer_ptr<W>& p, std::nullptr_t) noexcept
 {
 	return !p;
 }
-template <class W> inline bool operator==(std::nullm_ptrt, const observer_ptr<W>& p) noexcept
+template <class W> bool operator==(std::nullptr_t, const observer_ptr<W>& p) noexcept
 {
 	return !p;
 }
-template <class W> inline bool operator!=(const observer_ptr<W>& p, std::nullm_ptrt) noexcept
+template <class W> bool operator!=(const observer_ptr<W>& p, std::nullptr_t) noexcept
 {
 	return static_cast<bool>(p);
 }
-template <class W> inline bool operator!=(std::nullm_ptrt, const observer_ptr<W>& p) noexcept
+template <class W> bool operator!=(std::nullptr_t, const observer_ptr<W>& p) noexcept
 {
 	return static_cast<bool>(p);
 }
 
 // free swap (ADL)
-template <class W> inline void swap(observer_ptr<W>& a, observer_ptr<W>& b) noexcept
+template <class W> void swap(observer_ptr<W>& a, observer_ptr<W>& b) noexcept
 {
 	a.swap(b);
 }
 
 SNAP_END_NAMESPACE
 
-// std::hash specialization for snap::observer_ptr
-namespace std
+// std::hash specialization for SNAP_NAMESPACE::observer_ptr
+template <class T> struct std::hash<SNAP_NAMESPACE::observer_ptr<T>>
 {
-	template <class T> struct hash<snap::observer_ptr<T>>
-	{
-		size_t operator()(const snap::observer_ptr<T>& p) const noexcept { return std::hash<T*>{}(p.get()); }
-	};
-} // namespace std
+	size_t operator()(const SNAP_NAMESPACE::observer_ptr<T>& p) const noexcept { return std::hash<T*>{}(p.get()); }
+}; // namespace std

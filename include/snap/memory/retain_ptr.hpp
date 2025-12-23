@@ -1,6 +1,8 @@
 #pragma once
 
+// Must be included first
 #include "snap/internal/abi_namespace.hpp"
+
 #include "snap/internal/compat/constexpr.hpp"
 #include "snap/meta/detector.hpp"
 
@@ -29,8 +31,8 @@ namespace impl
 
 } // namespace impl
 
-using meta::detected_or_t;
-using meta::is_detected;
+using SNAP_NAMESPACE::detected_or_t;
+using SNAP_NAMESPACE::is_detected;
 
 template <class> struct retain_traits;
 
@@ -216,9 +218,9 @@ template <class To, class From, class R> constexpr retain_ptr<To, R> dynamic_ret
 SNAP_END_NAMESPACE
 
 // hash support
-template <class T, class R> struct std::hash<snap::retain_ptr<T, R>>
+template <class T, class R> struct std::hash<SNAP_NAMESPACE::retain_ptr<T, R>>
 {
-	std::size_t operator()(const snap::retain_ptr<T, R> &p) const noexcept { return std::hash<typename snap::retain_ptr<T, R>::pointer>()(p.get()); }
+	std::size_t operator()(const SNAP_NAMESPACE::retain_ptr<T, R> &p) const noexcept { return std::hash<typename SNAP_NAMESPACE::retain_ptr<T, R>::pointer>()(p.get()); }
 };
 
 SNAP_BEGIN_NAMESPACE

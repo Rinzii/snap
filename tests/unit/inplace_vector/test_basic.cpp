@@ -1,9 +1,10 @@
 // NOTE: These tests are gated behind SNAP_ENABLE_INPLACE_VECTOR_TESTS because
 // the current inplace_vector implementation requires additional fixes to build
 // cleanly across all supported compilers.
-#include "snap/inplace_vector.hpp"
+// Must be included first
 #include "snap/internal/abi_namespace.hpp"
 
+#include "snap/inplace_vector.hpp"
 #include "snap/testing/assertions.hpp"
 
 #include <array>
@@ -16,99 +17,96 @@
 namespace
 {
 
-struct Tracking
-{
-        static inline int alive      = 0;
-        static inline int constructions = 0;
-        static inline int destructions  = 0;
-        static inline int copies         = 0;
-        static inline int moves          = 0;
+	struct Tracking
+	{
+		static inline int alive			= 0;
+		static inline int constructions = 0;
+		static inline int destructions	= 0;
+		static inline int copies		= 0;
+		static inline int moves			= 0;
 
-        int value = 0;
+		int value = 0;
 
-        Tracking() : value(0)
-        {
-                ++alive;
-                ++constructions;
-        }
+		Tracking() : value(0)
+		{
+			++alive;
+			++constructions;
+		}
 
-        explicit Tracking(int v) : value(v)
-        {
-                ++alive;
-                ++constructions;
-        }
+		explicit Tracking(int v) : value(v)
+		{
+			++alive;
+			++constructions;
+		}
 
-        Tracking(const Tracking& other) : value(other.value)
-        {
-                ++alive;
-                ++constructions;
-                ++copies;
-        }
+		Tracking(const Tracking& other) : value(other.value)
+		{
+			++alive;
+			++constructions;
+			++copies;
+		}
 
-        Tracking(Tracking&& other) noexcept : value(other.value)
-        {
-                ++alive;
-                ++constructions;
-                ++moves;
-        }
+		Tracking(Tracking&& other) noexcept : value(other.value)
+		{
+			++alive;
+			++constructions;
+			++moves;
+		}
 
-        Tracking& operator=(const Tracking& other)
-        {
-                value = other.value;
-                ++copies;
-                return *this;
-        }
+		Tracking& operator=(const Tracking& other)
+		{
+			value = other.value;
+			++copies;
+			return *this;
+		}
 
-        Tracking& operator=(Tracking&& other) noexcept
-        {
-                value = other.value;
-                ++moves;
-                return *this;
-        }
+		Tracking& operator=(Tracking&& other) noexcept
+		{
+			value = other.value;
+			++moves;
+			return *this;
+		}
 
-        ~Tracking()
-        {
-                ++destructions;
-                --alive;
-        }
+		~Tracking()
+		{
+			++destructions;
+			--alive;
+		}
 
-        static void reset()
-        {
-                alive = constructions = destructions = copies = moves = 0;
-        }
+		static void reset() { alive = constructions = destructions = copies = moves = 0; }
 
-        friend bool operator==(const Tracking& lhs, const Tracking& rhs) { return lhs.value == rhs.value; }
-};
+		friend bool operator==(const Tracking& lhs, const Tracking& rhs) { return lhs.value == rhs.value; }
+	};
 
-struct ThrowOnCopy
-{
-        static inline int copy_budget = 0;
+	struct ThrowOnCopy
+	{
+		static inline int copy_budget = 0;
 
-        int value = 0;
+		int value = 0;
 
-        ThrowOnCopy() = default;
-        explicit ThrowOnCopy(int v) : value(v) {}
+		ThrowOnCopy() = default;
+		explicit ThrowOnCopy(int v) : value(v) {}
 
-        ThrowOnCopy(const ThrowOnCopy& other) : value(other.value)
-        {
-                if (--copy_budget < 0) throw std::runtime_error("copy budget exceeded");
-        }
+		ThrowOnCopy(const ThrowOnCopy& other) : value(other.value)
+		{
+			if (--copy_budget < 0) throw std::runtime_error("copy budget exceeded");
+		}
 
-        ThrowOnCopy(ThrowOnCopy&& other) noexcept : value(other.value) {}
+		ThrowOnCopy(ThrowOnCopy&& other) noexcept : value(other.value) {}
 
-        ThrowOnCopy& operator=(const ThrowOnCopy& other)
-        {
-                if (--copy_budget < 0) throw std::runtime_error("copy assign budget exceeded");
-                value = other.value;
-                return *this;
-        }
+		ThrowOnCopy& operator=(const ThrowOnCopy& other)
+		{
+			if (--copy_budget < 0) throw std::runtime_error("copy assign budget exceeded");
+			value = other.value;
+			return *this;
+		}
 
-        ThrowOnCopy& operator=(ThrowOnCopy&& other) noexcept
-        {
-                value = other.value;
-                return *this;
-        }
-};
+		ThrowOnCopy& operator=(ThrowOnCopy&& other) noexcept
+		{
+			value = other.value;
+			return *this;
+		}
+	};
 
 } // namespace
 
@@ -116,136 +114,135 @@ SNAP_BEGIN_NAMESPACE
 namespace test_cases
 {
 
-template <class Container>
-std::vector<int> values_of(const Container& container)
-{
-        std::vector<int> result;
-        result.reserve(container.size());
-        for (const auto& element : container) result.push_back(element.value);
-        return result;
-}
+	template <class Container> std::vector<int> values_of(const Container& container)
+	{
+		std::vector<int> result;
+		result.reserve(container.size());
+		for (const auto& element : container) result.push_back(element.value);
+		return result;
+	}
 
-TEST(InplaceVector, DefaultConstructionAndCapacity)
-{
-        snap::inplace_vector<int, 4> values;
+	TEST(InplaceVector, DefaultConstructionAndCapacity)
+	{
+		snap::inplace_vector<int, 4> values;
 
-        EXPECT_TRUE(values.empty());
-        EXPECT_EQ(0u, values.size());
-        EXPECT_EQ(nullptr, values.data());
-        EXPECT_EQ(4u, values.capacity());
-}
+		EXPECT_TRUE(values.empty());
+		EXPECT_EQ(0u, values.size());
+		EXPECT_EQ(nullptr, values.data());
+		EXPECT_EQ(4u, values.capacity());
+	}
 
-TEST(InplaceVector, PushBackPopBackAndIterators)
-{
-        snap::inplace_vector<int, 4> values;
-        values.push_back(1);
-        values.push_back(2);
-        values.push_back(3);
+	TEST(InplaceVector, PushBackPopBackAndIterators)
+	{
+		snap::inplace_vector<int, 4> values;
+		values.push_back(1);
+		values.push_back(2);
+		values.push_back(3);
 
-        snap::test::ExpectRangeEq(values, std::vector<int>{ 1, 2, 3 });
-        EXPECT_EQ(3u, values.size());
-        EXPECT_EQ(3, values.back());
-        EXPECT_EQ(1, values.front());
+		snap::test::ExpectRangeEq(values, std::vector<int>{ 1, 2, 3 });
+		EXPECT_EQ(3u, values.size());
+		EXPECT_EQ(3, values.back());
+		EXPECT_EQ(1, values.front());
 
-        values.pop_back();
-        snap::test::ExpectRangeEq(values, std::vector<int>{ 1, 2 });
-        EXPECT_EQ(2u, std::distance(values.begin(), values.end()));
-}
+		values.pop_back();
+		snap::test::ExpectRangeEq(values, std::vector<int>{ 1, 2 });
+		EXPECT_EQ(2u, std::distance(values.begin(), values.end()));
+	}
 
-TEST(InplaceVector, TryPushBackRespectCapacity)
-{
-        snap::inplace_vector<int, 2> values;
+	TEST(InplaceVector, TryPushBackRespectCapacity)
+	{
+		snap::inplace_vector<int, 2> values;
 
-        auto* first = values.try_push_back(1);
-        ASSERT_NE(nullptr, first);
-        EXPECT_EQ(1, *first);
+		auto* first = values.try_push_back(1);
+		ASSERT_NE(nullptr, first);
+		EXPECT_EQ(1, *first);
 
-        auto* second = values.try_push_back(2);
-        ASSERT_NE(nullptr, second);
-        EXPECT_EQ(2, *second);
+		auto* second = values.try_push_back(2);
+		ASSERT_NE(nullptr, second);
+		EXPECT_EQ(2, *second);
 
-        auto* overflow = values.try_push_back(3);
-        EXPECT_EQ(nullptr, overflow);
-        snap::test::ExpectRangeEq(values, std::vector<int>{ 1, 2 });
-}
+		auto* overflow = values.try_push_back(3);
+		EXPECT_EQ(nullptr, overflow);
+		snap::test::ExpectRangeEq(values, std::vector<int>{ 1, 2 });
+	}
 
-TEST(InplaceVector, ResizeAndAssignRange)
-{
-        snap::inplace_vector<int, 6> values;
-        values.resize(3, 7);
-        snap::test::ExpectRangeEq(values, std::vector<int>{ 7, 7, 7 });
+	TEST(InplaceVector, ResizeAndAssignRange)
+	{
+		snap::inplace_vector<int, 6> values;
+		values.resize(3, 7);
+		snap::test::ExpectRangeEq(values, std::vector<int>{ 7, 7, 7 });
 
-        const std::array<int, 2> replacements{ { 42, 100 } };
-        values.assign(replacements.begin(), replacements.end());
-        snap::test::ExpectRangeEq(values, std::vector<int>{ 42, 100 });
+		const std::array<int, 2> replacements{ { 42, 100 } };
+		values.assign(replacements.begin(), replacements.end());
+		snap::test::ExpectRangeEq(values, std::vector<int>{ 42, 100 });
 
-        values.resize(5, -1);
-        snap::test::ExpectRangeEq(values, std::vector<int>{ 42, 100, -1, -1, -1 });
+		values.resize(5, -1);
+		snap::test::ExpectRangeEq(values, std::vector<int>{ 42, 100, -1, -1, -1 });
 
-        values.resize(2);
-        snap::test::ExpectRangeEq(values, std::vector<int>{ 42, 100 });
-}
+		values.resize(2);
+		snap::test::ExpectRangeEq(values, std::vector<int>{ 42, 100 });
+	}
 
-TEST(InplaceVector, InsertEraseAndAppendRange)
-{
-        snap::inplace_vector<int, 8> values;
-        values.append_range(std::initializer_list<int>{ 1, 4, 5 });
+	TEST(InplaceVector, InsertEraseAndAppendRange)
+	{
+		snap::inplace_vector<int, 8> values;
+		values.append_range(std::initializer_list<int>{ 1, 4, 5 });
 
-        auto it = values.insert(values.begin() + 1, 2);
-        EXPECT_EQ(values.begin() + 1, it);
-        values.insert(values.begin() + 2, 3);
-        snap::test::ExpectRangeEq(values, std::vector<int>{ 1, 2, 3, 4, 5 });
+		auto it = values.insert(values.begin() + 1, 2);
+		EXPECT_EQ(values.begin() + 1, it);
+		values.insert(values.begin() + 2, 3);
+		snap::test::ExpectRangeEq(values, std::vector<int>{ 1, 2, 3, 4, 5 });
 
-        std::vector<int> tail{ 6, 7 };
-        auto appended_end = values.try_append_range(tail.begin(), tail.end());
-        EXPECT_EQ(tail.end(), appended_end);
-        snap::test::ExpectRangeEq(values, std::vector<int>{ 1, 2, 3, 4, 5, 6, 7 });
+		std::vector<int> tail{ 6, 7 };
+		auto appended_end = values.try_append_range(tail.begin(), tail.end());
+		EXPECT_EQ(tail.end(), appended_end);
+		snap::test::ExpectRangeEq(values, std::vector<int>{ 1, 2, 3, 4, 5, 6, 7 });
 
-        auto erase_it = values.erase(values.begin() + 1, values.begin() + 3);
-        EXPECT_EQ(values.begin() + 1, erase_it);
-        snap::test::ExpectRangeEq(values, std::vector<int>{ 1, 4, 5, 6, 7 });
-}
+		auto erase_it = values.erase(values.begin() + 1, values.begin() + 3);
+		EXPECT_EQ(values.begin() + 1, erase_it);
+		snap::test::ExpectRangeEq(values, std::vector<int>{ 1, 4, 5, 6, 7 });
+	}
 
-TEST(InplaceVector, ZeroCapacitySpecializationBehaves)
-{
-        snap::inplace_vector<int, 0> values;
-        EXPECT_TRUE(values.empty());
-        EXPECT_EQ(0u, values.capacity());
-        EXPECT_THROW(values.push_back(1), std::bad_alloc);
-        EXPECT_EQ(nullptr, values.try_push_back(2));
-}
+	TEST(InplaceVector, ZeroCapacitySpecializationBehaves)
+	{
+		snap::inplace_vector<int, 0> values;
+		EXPECT_TRUE(values.empty());
+		EXPECT_EQ(0u, values.capacity());
+		EXPECT_THROW(values.push_back(1), std::bad_alloc);
+		EXPECT_EQ(nullptr, values.try_push_back(2));
+	}
 
-TEST(InplaceVector, StrongExceptionGuaranteeDuringInsert)
-{
-        snap::inplace_vector<ThrowOnCopy, 4> values;
-        values.push_back(ThrowOnCopy{ 1 });
-        values.push_back(ThrowOnCopy{ 2 });
+	TEST(InplaceVector, StrongExceptionGuaranteeDuringInsert)
+	{
+		snap::inplace_vector<ThrowOnCopy, 4> values;
+		values.push_back(ThrowOnCopy{ 1 });
+		values.push_back(ThrowOnCopy{ 2 });
 
-        ThrowOnCopy::copy_budget = 1; // allow copying first element only
-        EXPECT_THROW(values.insert(values.begin() + 1, ThrowOnCopy{ 3 }), std::runtime_error);
+		ThrowOnCopy::copy_budget = 1; // allow copying first element only
+		EXPECT_THROW(values.insert(values.begin() + 1, ThrowOnCopy{ 3 }), std::runtime_error);
 
-        // Container should remain unchanged
-        EXPECT_EQ(2u, values.size());
-        EXPECT_EQ(1, values[0].value);
-        EXPECT_EQ(2, values[1].value);
-}
+		// Container should remain unchanged
+		EXPECT_EQ(2u, values.size());
+		EXPECT_EQ(1, values[0].value);
+		EXPECT_EQ(2, values[1].value);
+	}
 
-TEST(InplaceVector, TracksLifetimeCorrectly)
-{
-        Tracking::reset();
-        {
-                snap::inplace_vector<Tracking, 4> values;
-                values.emplace_back(1);
-                values.emplace_back(2);
-                values.emplace_back(3);
-                snap::test::ExpectRangeEq(values_of(values), std::vector<int>{ 1, 2, 3 });
+	TEST(InplaceVector, TracksLifetimeCorrectly)
+	{
+		Tracking::reset();
+		{
+			snap::inplace_vector<Tracking, 4> values;
+			values.emplace_back(1);
+			values.emplace_back(2);
+			values.emplace_back(3);
+			snap::test::ExpectRangeEq(values_of(values), std::vector<int>{ 1, 2, 3 });
 
-                values.erase(values.begin() + 1);
-                EXPECT_EQ(2u, values.size());
-        }
-        EXPECT_EQ(0, Tracking::alive);
-        EXPECT_EQ(Tracking::constructions, Tracking::destructions);
-}
+			values.erase(values.begin() + 1);
+			EXPECT_EQ(2u, values.size());
+		}
+		EXPECT_EQ(0, Tracking::alive);
+		EXPECT_EQ(Tracking::constructions, Tracking::destructions);
+	}
 
 } // namespace test_cases
 SNAP_END_NAMESPACE

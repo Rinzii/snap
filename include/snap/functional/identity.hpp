@@ -1,5 +1,6 @@
 #pragma once
 
+// Must be included first
 #include "snap/internal/abi_namespace.hpp"
 
 #include <functional>
@@ -11,11 +12,11 @@ struct identity
 	using is_transparent = void;
 };
 
-template <class T> struct is_identity : std::is_same<typename std::remove_cv<T>::type, ::snap::identity>
+template <class T> struct is_identity : std::is_same<std::remove_cv_t<T>, identity>
 {
 };
 
-template <class U> struct is_identity<std::reference_wrapper<U>> : std::is_same<typename std::remove_cv<U>::type, ::snap::identity>
+template <class U> struct is_identity<std::reference_wrapper<U>> : std::is_same<std::remove_cv_t<U>, identity>
 {
 };
 

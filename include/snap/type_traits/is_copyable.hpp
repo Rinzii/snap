@@ -1,7 +1,10 @@
 #pragma once
 
+// Must be included first
 #include "snap/internal/abi_namespace.hpp"
+
 #include "snap/type_traits/is_assignable_from.hpp"
+#include "snap/type_traits/is_movable.hpp"
 
 #include <type_traits>
 

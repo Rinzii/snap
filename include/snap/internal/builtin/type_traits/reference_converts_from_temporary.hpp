@@ -1,5 +1,6 @@
 #pragma once
 
+// Must be included first
 #include "snap/internal/abi_namespace.hpp"
 
 #include <type_traits>
@@ -30,38 +31,33 @@
 	#endif
 #endif
 
-#define INTERNAL_SNAP_HAS_ANY_REFERENCE_TEMPORARY_BUILTIN \
+#define INTERNAL_SNAP_HAS_ANY_REFERENCE_TEMPORARY_BUILTIN                                                                                                      \
 	(INTERNAL_SNAP_HAS_BUILTIN_REFERENCE_CONVERTS_FROM_TEMPORARY || INTERNAL_SNAP_HAS_BUILTIN_REFERENCE_BINDS_TO_TEMPORARY)
 
 SNAP_BEGIN_NAMESPACE
 namespace builtin
 {
-	template <class U, class = void>
-	struct adjust_ref_binding_source_impl
+	template <class U, class = void> struct adjust_ref_binding_source_impl
 	{
 		using type = U;
 	};
 
-	template <class U>
-	struct adjust_ref_binding_source_impl<U, std::enable_if_t<!std::is_reference_v<U> && !std::is_function_v<U>>>
+	template <class U> struct adjust_ref_binding_source_impl<U, std::enable_if_t<!std::is_reference_v<U> && !std::is_function_v<U>>>
 	{
 		using type = std::remove_cv_t<U>;
 	};
 
-	template <class U>
-	struct adjust_ref_binding_source_impl<U, std::enable_if_t<std::is_function_v<U> && std::is_same_v<void, std::void_t<U&>>>>
+	template <class U> struct adjust_ref_binding_source_impl<U, std::enable_if_t<std::is_function_v<U> && std::is_same_v<void, std::void_t<U &>>>>
 	{
-		using type = U&;
+		using type = U &;
 	};
 
-	template <class U>
-	struct adjust_ref_binding_source
+	template <class U> struct adjust_ref_binding_source
 	{
 		using type = typename adjust_ref_binding_source_impl<U>::type;
 	};
 
-	template <class U>
-	using adjust_ref_binding_source_t = typename adjust_ref_binding_source<U>::type;
+	template <class U> using adjust_ref_binding_source_t = typename adjust_ref_binding_source<U>::type;
 
 	inline constexpr bool has_reference_converts_from_temporary =
 #if INTERNAL_SNAP_HAS_BUILTIN_REFERENCE_CONVERTS_FROM_TEMPORARY
@@ -87,27 +83,24 @@ namespace builtin
 #endif
 		;
 
-	template <class T, class U, class Enable = void>
-	struct reference_converts_from_temporary_impl : std::false_type
+	template <class T, class U, class Enable = void> struct reference_converts_from_temporary_impl : std::false_type
 	{
 	};
 
 #if INTERNAL_SNAP_HAS_ANY_REFERENCE_TEMPORARY_BUILTIN
-	template <class T, class U>
-	struct reference_converts_from_temporary_impl<T, U, std::enable_if_t<std::is_reference_v<T>>>
+	template <class T, class U> struct reference_converts_from_temporary_impl<T, U, std::enable_if_t<std::is_reference_v<T>>>
 		: std::bool_constant<
 	#if INTERNAL_SNAP_HAS_BUILTIN_REFERENCE_CONVERTS_FROM_TEMPORARY
 			  __reference_converts_from_temporary(T, adjust_ref_binding_source_t<U>)
 	#else
 			  __reference_binds_to_temporary(T, adjust_ref_binding_source_t<U>)
 	#endif
-		  >
+			  >
 	{
 	};
 #endif // INTERNAL_SNAP_HAS_ANY_REFERENCE_TEMPORARY_BUILTIN
 
-	template <class T, class U>
-	inline constexpr bool reference_converts_from_temporary_v = reference_converts_from_temporary_impl<T, U>::value;
+	template <class T, class U> inline constexpr bool reference_converts_from_temporary_v = reference_converts_from_temporary_impl<T, U>::value;
 
 } // namespace builtin
 SNAP_END_NAMESPACE

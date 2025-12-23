@@ -1,5 +1,6 @@
 #pragma once
 
+// Must be included first
 #include "snap/internal/abi_namespace.hpp"
 
 #if defined(__has_builtin)
@@ -20,13 +21,13 @@
 
 SNAP_BEGIN_NAMESPACE
 constexpr bool is_constant_evaluated() noexcept
-	{
+{
 #if defined(SNAP_HAS_BUILTIN_IS_CONSTANT_EVALUATED)
-		return __builtin_is_constant_evaluated();
+	return __builtin_is_constant_evaluated();
 #else
-		return false;
+	return false;
 #endif
-	}
+}
 SNAP_END_NAMESPACE
 
 #undef SNAP_HAS_BUILTIN_IS_CONSTANT_EVALUATED

@@ -1,7 +1,5 @@
 #pragma once
 
-#include "snap/internal/abi_namespace.hpp"
-
 /// SNAP_HAS_BUILTIN_BIT_CAST
 /// Defined if the compiler has __builtin_bit_cast
 ///
@@ -15,6 +13,9 @@
 /// - MSVC 19.25+
 
 #if !defined(SNAP_HAS_BUILTIN_IS_CONSTANT_EVALUATED)
+	// Must be included first
+	#include "snap/internal/abi_namespace.hpp"
+
 	#if defined(__GNUC__) && (__GNUC__ > 9 || (__GNUC__ == 9 && __GNUC_MINOR__ >= 1)) && !defined(__clang__) && !defined(__NVCOMPILER) &&                      \
 		!defined(__NVCOMPILER_LLVM__) && !defined(__CUDACC__)
 		#define SNAP_HAS_BUILTIN_IS_CONSTANT_EVALUATED

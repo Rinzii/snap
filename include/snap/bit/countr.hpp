@@ -1,6 +1,8 @@
 #pragma once
 
+// Must be included first
 #include "snap/internal/abi_namespace.hpp"
+
 #include "snap/internal/pp/has_builtin.hpp"
 
 #include <limits>
@@ -71,6 +73,6 @@ INTERNAL_SNP_ADD_CTZ_SPECIALIZATION(countr_zero, unsigned long long, __builtin_c
 
 template <typename T> [[nodiscard]] constexpr std::enable_if_t<std::is_unsigned_v<T>, int> countr_one(T value)
 {
-	return snap::countr_zero<T>(~value);
+	return SNAP_NAMESPACE::countr_zero<T>(~value);
 }
 SNAP_END_NAMESPACE

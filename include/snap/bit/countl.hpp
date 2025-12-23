@@ -1,6 +1,8 @@
 #pragma once
 
+// Must be included first
 #include "snap/internal/abi_namespace.hpp"
+
 #include "snap/internal/pp/has_builtin.hpp"
 #include "snap/type_traits/is_integer.hpp"
 
@@ -57,6 +59,6 @@ INTERNAL_SNP_ADD_CTZ_SPECIALIZATION(countl_zero, unsigned long long, __builtin_c
 template <typename T, std::enable_if_t<is_unsigned_integer_v<T>, bool> = true>
 [[nodiscard]] constexpr std::enable_if_t<std::is_unsigned_v<T>, int> countl_one(T value)
 {
-	return value != std::numeric_limits<T>::max() ? snap::countl_zero(static_cast<T>(~value)) : std::numeric_limits<T>::digits;
+	return value != std::numeric_limits<T>::max() ? SNAP_NAMESPACE::countl_zero(static_cast<T>(~value)) : std::numeric_limits<T>::digits;
 }
 SNAP_END_NAMESPACE

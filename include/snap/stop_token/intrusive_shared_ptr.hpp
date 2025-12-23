@@ -1,5 +1,6 @@
 #pragma once
 
+// Must be included first
 #include "snap/internal/abi_namespace.hpp"
 
 #include <atomic>
@@ -9,6 +10,7 @@
 #include <utility> // std::swap, std::move
 
 SNAP_BEGIN_NAMESPACE
+
 // Users must specialize this for their type T:
 //   struct MyType { std::atomic<unsigned> refcnt{0}; ... };
 //   template<> struct intrusive_shared_ptr_traits<MyType> {
@@ -21,7 +23,7 @@ template <class T> struct intrusive_shared_ptr_traits;
 template <class T> class intrusive_shared_ptr
 {
 public:
-	intrusive_shared_ptr() = default;
+	intrusive_shared_ptr() noexcept = default;
 
 	explicit intrusive_shared_ptr(T* ptr) noexcept : m_ptr(ptr)
 	{
@@ -35,7 +37,7 @@ public:
 
 	intrusive_shared_ptr(intrusive_shared_ptr&& other) noexcept : m_ptr(other.m_ptr)
 	{
-		other.m_ptr = nullptr; // Take ownership, leave other empty
+		other.m_ptr = nullptr;
 	}
 
 	intrusive_shared_ptr& operator=(const intrusive_shared_ptr& other) noexcept
@@ -61,9 +63,7 @@ public:
 	}
 
 	T* operator->() const noexcept { return m_ptr; }
-
 	T& operator*() const noexcept { return *m_ptr; }
-
 	explicit operator bool() const noexcept { return m_ptr != nullptr; }
 
 	void swap(intrusive_shared_ptr& other) noexcept
@@ -74,24 +74,31 @@ public:
 
 	friend void swap(intrusive_shared_ptr& lhs, intrusive_shared_ptr& rhs) noexcept { lhs.swap(rhs); }
 
-	friend constexpr bool operator==(const intrusive_shared_ptr& lhs, const intrusive_shared_ptr& rhs) = default;
+	friend bool operator==(const intrusive_shared_ptr& a, const intrusive_shared_ptr& b) noexcept { return a.m_ptr == b.m_ptr; }
+	friend bool operator!=(const intrusive_shared_ptr& a, const intrusive_shared_ptr& b) noexcept { return a.m_ptr != b.m_ptr; }
 
-	friend constexpr bool operator==(const intrusive_shared_ptr& ptr, std::nullptr_t) noexcept { return !ptr.m_ptr; }
+	friend bool operator==(const intrusive_shared_ptr& p, std::nullptr_t) noexcept { return p.m_ptr == nullptr; }
+	friend bool operator!=(const intrusive_shared_ptr& p, std::nullptr_t) noexcept { return p.m_ptr != nullptr; }
+	friend bool operator==(std::nullptr_t, const intrusive_shared_ptr& p) noexcept { return p.m_ptr == nullptr; }
+	friend bool operator!=(std::nullptr_t, const intrusive_shared_ptr& p) noexcept { return p.m_ptr != nullptr; }
 
 private:
 	T* m_ptr = nullptr;
 
-	static void increment_ref_count(T& obj) { get_atomic_ref_count(obj).fetch_add(1, std::memory_order_relaxed); }
+	static void increment_ref_count(T& obj) noexcept
+	{
+		get_atomic_ref_count(obj).fetch_add(1, std::memory_order_relaxed);
+	}
 
-	static void decrement_ref_count(T& obj)
+	static void decrement_ref_count(T& obj) noexcept
 	{
 		if (get_atomic_ref_count(obj).fetch_sub(1, std::memory_order_acq_rel) == 1) { delete std::addressof(obj); }
 	}
 
-	static decltype(auto) get_atomic_ref_count(T& obj)
+	static decltype(auto) get_atomic_ref_count(T& obj) noexcept
 	{
 		using return_type = decltype(intrusive_shared_ptr_traits<T>::get_atomic_ref_count(obj));
-		static_assert(std::is_reference_v<return_type>, "intrusive_shared_ptr_traits<T>::get_atomic_ref_count must return a reference to std::atomic");
+		static_assert(std::is_reference<return_type>::value, "intrusive_shared_ptr_traits<T>::get_atomic_ref_count must return a reference to std::atomic");
 		return intrusive_shared_ptr_traits<T>::get_atomic_ref_count(obj);
 	}
 };

@@ -1,6 +1,8 @@
 #pragma once
 
+// Must be included first
 #include "snap/internal/abi_namespace.hpp"
+
 #include <cassert>
 #include <iostream>
 #include <iterator>
@@ -46,13 +48,13 @@
 
 SNAP_BEGIN_NAMESPACE
 constexpr bool is_constant_evaluated() noexcept
-	{
+{
 #if defined(SNAP_HAS_BUILTIN_IS_CONSTANT_EVALUATED)
-		return __builtin_is_constant_evaluated();
+	return __builtin_is_constant_evaluated();
 #else
-		return false;
+	return false;
 #endif
-	}
+}
 SNAP_END_NAMESPACE
 
 #undef SNAP_HAS_BUILTIN_IS_CONSTANT_EVALUATED
@@ -61,49 +63,49 @@ SNAP_END_NAMESPACE
 
 SNAP_BEGIN_NAMESPACE
 namespace detail
-	{
-		template <class> struct is_char_impl : std::false_type
-		{
-		};
-		template <> struct is_char_impl<char> : std::true_type
-		{
-		};
-		template <> struct is_char_impl<signed char> : std::true_type
-		{
-		};
-		template <> struct is_char_impl<unsigned char> : std::true_type
-		{
-		};
-		template <> struct is_char_impl<wchar_t> : std::true_type
-		{
-		};
-		template <> struct is_char_impl<char16_t> : std::true_type
-		{
-		};
-		template <> struct is_char_impl<char32_t> : std::true_type
-		{
-		};
-#if defined(__cpp_char8_t)
-		template <> struct is_char_impl<char8_t> : std::true_type
-		{
-		};
-#endif
-	} // namespace detail
-
-	template <class T> struct is_char : detail::is_char_impl<typename std::remove_cv<typename std::remove_reference<T>::type>::type>
+{
+	template <class> struct is_char_impl : std::false_type
 	{
 	};
+	template <> struct is_char_impl<char> : std::true_type
+	{
+	};
+	template <> struct is_char_impl<signed char> : std::true_type
+	{
+	};
+	template <> struct is_char_impl<unsigned char> : std::true_type
+	{
+	};
+	template <> struct is_char_impl<wchar_t> : std::true_type
+	{
+	};
+	template <> struct is_char_impl<char16_t> : std::true_type
+	{
+	};
+	template <> struct is_char_impl<char32_t> : std::true_type
+	{
+	};
+#if defined(__cpp_char8_t)
+	template <> struct is_char_impl<char8_t> : std::true_type
+	{
+	};
+#endif
+} // namespace detail
 
-	template <class T> inline constexpr bool is_char_v = is_char<T>::value;
+template <class T> struct is_char : detail::is_char_impl<typename std::remove_cv<typename std::remove_reference<T>::type>::type>
+{
+};
+
+template <class T> inline constexpr bool is_char_v = is_char<T>::value;
 
 SNAP_END_NAMESPACE
 
 SNAP_BEGIN_NAMESPACE
 template <class T, std::enable_if_t<std::is_integral_v<T> && std::is_unsigned_v<T> && !is_char_v<T> && !std::is_same_v<T, bool>, bool> = true>
-	constexpr bool has_single_bit(T x) noexcept
-	{
-		return x && !(x & (x - 1));
-	}
+constexpr bool has_single_bit(T x) noexcept
+{
+	return x && !(x & (x - 1));
+}
 SNAP_END_NAMESPACE
 
 #include <cstddef>

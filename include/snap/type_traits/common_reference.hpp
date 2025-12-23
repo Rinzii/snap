@@ -1,6 +1,8 @@
 #pragma once
 
+// Must be included first
 #include "snap/internal/abi_namespace.hpp"
+
 #include "snap/type_traits/remove_cvref.hpp"
 
 #include <type_traits>
@@ -126,8 +128,8 @@ private:
 	// 2. basic_common_reference is well-formed
 	template <class X	  = T,
 			  class Y	  = U,
-			  class Basic = typename basic_common_reference<snap::remove_cvref_t<X>,
-															snap::remove_cvref_t<Y>,
+			  class Basic = typename basic_common_reference<SNAP_NAMESPACE::remove_cvref_t<X>,
+															SNAP_NAMESPACE::remove_cvref_t<Y>,
 															internal::xref<X>::template apply,
 															internal::xref<Y>::template apply>::type>
 	static Basic test(priority_tag<3>);

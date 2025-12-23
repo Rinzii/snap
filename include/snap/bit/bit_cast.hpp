@@ -1,6 +1,8 @@
 #pragma once
 
+// Must be included first
 #include "snap/internal/abi_namespace.hpp"
+
 #include "snap/internal/builtin/bit/bit_cast.hpp"
 
 #include <cstring>

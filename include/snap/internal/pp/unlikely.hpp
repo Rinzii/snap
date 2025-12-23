@@ -1,5 +1,7 @@
 #pragma once
 
+#include "snap/internal/abi_namespace.hpp"
+
 /// \file unlikely.hpp
 /// \brief Provides the SNAP_UNLIKELY macro and SNAP_UNLIKELY_ATTR attribute for branch prediction hints.
 /// \ingroup SNAP_branch_prediction
@@ -11,7 +13,7 @@
 /// \param x Boolean condition expected to be false.
 /// \note Internally enforces that the parameter is a boolean condition (see expects_bool_condition).
 #ifndef SNAP_UNLIKELY
-	#define SNAP_UNLIKELY(x) snap::internal::expects_bool_condition((x), false)
+	#define SNAP_UNLIKELY(x) SNAP_NAMESPACE::internal::expects_bool_condition((x), false)
 #endif // SNAP_UNLIKELY
 
 /// \def SNAP_UNLIKELY_ATTR

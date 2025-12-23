@@ -1,7 +1,9 @@
 #pragma once
 
-#include "snap/functional/is_reference_wrapper.hpp"
+// Must be included first
 #include "snap/internal/abi_namespace.hpp"
+
+#include "snap/functional/is_reference_wrapper.hpp"
 
 SNAP_BEGIN_NAMESPACE
 namespace internal

@@ -1,10 +1,12 @@
 #pragma once
 
+// Must be included first
 #include "snap/internal/abi_namespace.hpp"
+
 #include "snap/meta/detector.hpp"
 
+#include <memory>
 #include <type_traits>
-#include <utility>
 
 SNAP_BEGIN_NAMESPACE
 template <class T> using pointer_member_t			   = typename T::pointer;

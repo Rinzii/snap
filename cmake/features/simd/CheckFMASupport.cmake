@@ -9,5 +9,5 @@ check_cxx_source_compiles("
     " CCMATH_SIMD_HAS_FMA_SUPPORT)
 
 if (CCMATH_SIMD_HAS_FMA_SUPPORT)
-  add_compile_definitions(CCM_CONFIG_RT_SIMD_HAS_FMA)
+    add_compile_definitions(CCM_CONFIG_RT_SIMD_HAS_FMA)
 endif ()

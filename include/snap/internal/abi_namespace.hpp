@@ -11,20 +11,23 @@
 	#ifndef SNAP_ABI_NAMESPACE
 		#define SNAP_ABI_NAMESPACE abi_v1
 	#endif
+	#ifndef SNAP_NAMESPACE
+		#define SNAP_NAMESPACE snap
+	#endif
 #endif
 
 #if SNAP_ENABLE_ABI_NAMESPACE
 	#define SNAP_BEGIN_NAMESPACE                                                                                                                               \
-		namespace snap                                                                                                                                         \
+		namespace SNAP_NAMESPACE                                                                                                                               \
 		{                                                                                                                                                      \
 			inline namespace SNAP_ABI_NAMESPACE                                                                                                                \
 			{
 	#define SNAP_END_NAMESPACE                                                                                                                                 \
 		}                                                                                                                                                      \
-		} // namespace snap
+		} // namespace SNAP_NAMESPACE
 #else
 	#define SNAP_BEGIN_NAMESPACE                                                                                                                               \
-		namespace snap                                                                                                                                         \
+		namespace SNAP_NAMESPACE                                                                                                                               \
 		{
-	#define SNAP_END_NAMESPACE } // namespace snap
+	#define SNAP_END_NAMESPACE } // namespace SNAP_NAMESPACE
 #endif

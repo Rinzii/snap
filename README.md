@@ -1,6 +1,6 @@
 # snap
 
-A header-only, performance-minded library that brings newer C++ standard library facilities to C++17.
+A performance-minded library (with a tiny compiled core) that brings newer C++ standard library facilities to C++17.
 
 Snap’s goal is straightforward: if a feature landed in later C++ standards, and it can be implemented well in C++17,
 snap
@@ -17,9 +17,10 @@ snap focuses on "missing pieces" from post-C++17 standards, especially:
 
 Snap does not try to replace strong reference implementations where that would be redundant. For example:
 
-* [`std::format`](https://en.cppreference.com/w/cpp/utility/format) is intentionally not implemented (use [`{fmt}`](https://fmt.dev/) instead)
-* [`std::ranges`](https://en.cppreference.com/w/cpp/ranges) is also intentionally not implemented (use [`range-v3`](https://ericniebler.github.io/range-v3/) instead)
-
+* [`std::format`](https://en.cppreference.com/w/cpp/utility/format) is intentionally not implemented (use [
+  `{fmt}`](https://fmt.dev/) instead)
+* [`std::ranges`](https://en.cppreference.com/w/cpp/ranges) is also intentionally not implemented (use [
+  `range-v3`](https://ericniebler.github.io/range-v3/) instead)
 
 ## Compatibility philosophy
 

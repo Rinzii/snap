@@ -1,17 +1,30 @@
 snap_add_headers(
         common_reference.hpp
         dependent_type.hpp
+        is_assignable_from.hpp
+        is_boolean_testable.hpp
         is_bounded_array.hpp
         is_brace_constructible.hpp
         is_char.hpp
         is_constant_evaluated.hpp
+        is_copyable.hpp
+        is_derived_from.hpp
+        is_destructible.hpp
+        is_equality_comparable.hpp
+        is_equivalence_relation.hpp
         is_implicit_lifetime.hpp
         is_integer.hpp
         is_neither.hpp
+        is_predicate.hpp
+        is_regular.hpp
+        is_relation.hpp
+        is_semiregular.hpp
         is_signed_integral.hpp
         is_specialization_of.hpp
+        is_strict_weak_order.hpp
         is_unbounded_array.hpp
         is_unsigned_integral.hpp
+        pointer_of.hpp
         reference_converts_from_temporary.hpp
         remove_cvref.hpp
         type_identity.hpp

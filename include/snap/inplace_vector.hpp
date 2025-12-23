@@ -1,6 +1,8 @@
 #pragma once
 
+// Must be included first
 #include "snap/internal/abi_namespace.hpp"
+
 #include "snap/internal/compat/constexpr.hpp"
 
 #include <algorithm> // std::move, std::move_backward, std::lexicographical_compare

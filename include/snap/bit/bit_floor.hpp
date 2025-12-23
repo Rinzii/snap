@@ -1,7 +1,9 @@
 #pragma once
 
-#include "snap/bit/bit_width.hpp"
+// Must be included first
 #include "snap/internal/abi_namespace.hpp"
+
+#include "snap/bit/bit_width.hpp"
 #include "snap/type_traits/is_neither.hpp"
 
 #include <type_traits>

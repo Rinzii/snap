@@ -1,6 +1,8 @@
 #pragma once
 
+// Must be included first
 #include "snap/internal/abi_namespace.hpp"
+
 #include "snap/internal/helpers/bit_log2.hpp"
 #include "snap/type_traits/is_integer.hpp"
 

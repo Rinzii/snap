@@ -1,5 +1,7 @@
 #pragma once
 
+#include "snap/internal/abi_namespace.hpp"
+
 #include "snap/internal/helpers/expects_bool_condition.hpp"
 
 /// \file likely.hpp
@@ -8,10 +10,10 @@
 
 /// \def SNAP_LIKELY(x)
 /// \brief Macro to indicate that a boolean expression is likely true, for branch prediction.
-/// \note Uses snap::internal::expects_bool_condition to implement the likely hint portably in code.
+/// \note Uses SNAP_NAMESPACE::internal::expects_bool_condition to implement the likely hint portably in code.
 
 #ifndef SNAP_LIKELY
-	#define SNAP_LIKELY(x) snap::internal::expects_bool_condition((x), true)
+	#define SNAP_LIKELY(x) SNAP_NAMESPACE::internal::expects_bool_condition((x), true)
 #endif // SNAP_LIKELY
 
 /// \def SNAP_LIKELY_ATTR

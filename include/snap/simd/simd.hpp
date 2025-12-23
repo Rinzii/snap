@@ -1,10 +1,11 @@
 #pragma once
 
+// Must be included first
 #include "snap/internal/abi_namespace.hpp"
 
-#include "snap/type_traits/is_constant_evaluated.hpp"
 #include "snap/bit/has_single_bit.hpp"
 #include "snap/type_traits/is_char.hpp"
+#include "snap/type_traits/is_constant_evaluated.hpp"
 
 #include <cstddef>
 #include <cstdint>
@@ -290,7 +291,6 @@ namespace simd
 		static constexpr std::size_t size() { return Abi::template lanes_for_mask<Bits>(); }
 	};
 
-
 	template <class T, class V, class Enable = void> struct rebind
 	{
 	};
@@ -349,8 +349,8 @@ namespace simd
 	{
 
 		// Pull in typelist helpers defined elsewhere.
-		using ::snap::simd::detail::tl_cat_t;
-		using ::snap::simd::detail::type_list;
+		using ::SNAP_NAMESPACE::simd::detail::tl_cat_t;
+		using ::SNAP_NAMESPACE::simd::detail::type_list;
 
 		// Flag kind detectors: tell which flag a type is.
 		template <class T> struct is_convert_flag : std::is_same<T, convert_flag>
@@ -439,7 +439,7 @@ namespace simd
 
 		template <class... Ts> struct list_to_flags<type_list<Ts...>>
 		{
-			using type = ::snap::simd::flags<Ts...>;
+			using type = ::SNAP_NAMESPACE::simd::flags<Ts...>;
 		};
 
 	} // namespace detail

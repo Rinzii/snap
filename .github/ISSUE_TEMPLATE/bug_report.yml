@@ -1,7 +1,7 @@
 name: Bug Report
 description: Create a report to help improve snap
 title: "[BUG]: "
-labels: ["bug"]
+labels: [ "bug" ]
 body:
   - type: checkboxes
     attributes:

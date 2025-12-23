@@ -51,6 +51,7 @@ Configuration
 
 #pragma once
 
+// Must be included first
 #include "snap/internal/abi_namespace.hpp"
 
 #if defined(__has_include)
@@ -130,7 +131,7 @@ namespace detail
 	constexpr bool native_is_little = false;
 
 #else
-	#error "snap::endian: unable to determine endianness. Define SNAP_ASSUME_LITTLE_ENDIAN or SNAP_ASSUME_BIG_ENDIAN."
+	#error "SNAP_NAMESPACE::endian: unable to determine endianness. Define SNAP_ASSUME_LITTLE_ENDIAN or SNAP_ASSUME_BIG_ENDIAN."
 #endif
 
 #if defined(__ORDER_LITTLE_ENDIAN__) && defined(__ORDER_BIG_ENDIAN__)

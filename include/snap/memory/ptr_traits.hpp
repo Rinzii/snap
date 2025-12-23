@@ -1,8 +1,10 @@
 #pragma once
 
+// Must be included first
 #include "snap/internal/abi_namespace.hpp"
-#include "snap/memory/pointer_of.hpp"
+
 #include "snap/meta/detector.hpp"
+#include "snap/type_traits/pointer_of.hpp"
 
 #include <type_traits>
 #include <utility>

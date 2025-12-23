@@ -1,7 +1,9 @@
 #pragma once
 
-#include "snap/bit/rotr.hpp"
+// Must be included first
 #include "snap/internal/abi_namespace.hpp"
+
+#include "snap/bit/rotr.hpp"
 
 #include <cstdint> // For std::uint64_t
 #include <limits>

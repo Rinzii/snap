@@ -1,4 +1,4 @@
-# -- Internal variables used by CCMath --
+# -- Internal variables used by snap --
 
 set(SNAP_DESIRED_CXX_STANDARD cxx_std_17 CACHE STRING "")
 mark_as_advanced(SNAP_DESIRED_CXX_STANDARD)

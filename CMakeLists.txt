@@ -21,6 +21,7 @@ include(cmake/config/ProjectOptions.cmake)
 
 option(SNAP_ENABLE_ABI_NAMESPACE "Enable inline ABI namespace for snap symbols" ON)
 set(SNAP_ABI_NAMESPACE "abi_v1" CACHE STRING "Inline ABI namespace nested inside snap")
+set(SNAP_NAMESPACE "snap" CACHE STRING "Namespace of the snap library")
 
 set(_snap_abi_namespace_pattern "^[A-Za-z_][A-Za-z0-9_]*$")
 if (NOT SNAP_ABI_NAMESPACE MATCHES "${_snap_abi_namespace_pattern}")
@@ -113,36 +114,29 @@ endif ()
 # ----------------------------------------------------------------------
 # Library Definition
 # ----------------------------------------------------------------------
-add_library(${SNAP_TARGET_NAME} INTERFACE)
+add_library(${SNAP_TARGET_NAME})
 add_library(${SNAP_TARGET_NAME}::${SNAP_TARGET_NAME} ALIAS ${SNAP_TARGET_NAME})
 
-# Collect all header files for installation or packaging
-include(cmake/helpers/SnapAddHeaders.cmake) # Helper for adding headers to interface
+# Collect source and header files for installation or packaging
+include(cmake/helpers/SnapAddTargetSources.cmake)
 add_subdirectory(include/snap)
+add_subdirectory(src)
 
 # Detect supported compiler features
 include(cmake/features/GetAllSupportedFeatures.cmake)
 
-target_include_directories(${SNAP_TARGET_NAME} INTERFACE
+target_include_directories(${SNAP_TARGET_NAME} PUBLIC
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>"
         "$<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include/>"
         "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
 )
 
 # Specify minimum C++ standard for library (likely C++17)
-target_compile_features(
-        ${SNAP_TARGET_NAME}
-        INTERFACE
-        ${SNAP_DESIRED_CXX_STANDARD}
-)
+target_compile_features(${SNAP_TARGET_NAME} PUBLIC ${SNAP_DESIRED_CXX_STANDARD})
 
 # Enable aggressive warning options only if requested
 if (SNAP_ENABLE_AGGRESSIVE_WARNINGS)
-    target_compile_options(
-            ${SNAP_TARGET_NAME}
-            INTERFACE
-            ${SNAP_warning_options}
-    )
+    target_compile_options(${SNAP_TARGET_NAME} PUBLIC ${SNAP_warning_options})
 endif ()
 
 # Enable AddressSanitizer if requested

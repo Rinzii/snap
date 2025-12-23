@@ -1,9 +1,10 @@
 #pragma once
 
+// Must be included first
 #include "snap/internal/abi_namespace.hpp"
+
 #include "snap/internal/compat/constexpr.hpp"
 #include "snap/memory/construct_at.hpp"
-#include "snap/type_traits/is_bounded_array.hpp"
 
 #include <cstddef>	   // std::byte, std::max_align_t
 #include <memory>	   // std::addressof
@@ -108,7 +109,7 @@ public:
 	template <typename T> constexpr void destruct()
 	{
 		if (!m_engaged) return;		  // idempotent
-		::snap::destroy_at(get<T>()); // array-aware
+		::SNAP_NAMESPACE::destroy_at(get<T>()); // array-aware
 		m_engaged = false;
 	}
 	template <typename T> constexpr void destroy() { destruct<T>(); }

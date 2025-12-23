@@ -1,104 +1,357 @@
 {
-	"version": 2,
-	"configurePresets": [
-		{
-			"name": "base",
-			"generator": "Ninja Multi-Config",
-			"hidden": true,
-			"binaryDir": "${sourceDir}/out/build/ninja/${presetName}",
-			"cacheVariables": {
-				"CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
-				"CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
-				"CMAKE_CONFIGURATION_TYPES": "Debug;Release;RelWithDebInfo;MinSizeRel",
-				"CMAKE_CXX_STANDARD": "17",
-				"SNAP_TEST_GROUPED": "OFF",
-				"SNAP_TEST_ENABLE_ASAN": "OFF",
-				"SNAP_TEST_ENABLE_TSAN": "OFF",
-				"SNAP_TEST_WERROR": "OFF"
-			}
-		},
-		{
-			"name": "base-vs22",
-			"generator": "Visual Studio 17 2022",
-			"hidden": true,
-			"binaryDir": "${sourceDir}/out/build/vs22/${presetName}",
-			"architecture": { "value": "x64", "strategy": "external" },
-			"cacheVariables": {
-				"CMAKE_CXX_STANDARD": "17",
-				"SNAP_TEST_GROUPED": "OFF",
-				"SNAP_TEST_ENABLE_ASAN": "OFF",
-				"SNAP_TEST_ENABLE_TSAN": "OFF",
-				"SNAP_TEST_WERROR": "OFF"
-			}
-		},
-
-		{ "name": "gcc", "hidden": true, "cacheVariables": { "CMAKE_C_COMPILER": "gcc", "CMAKE_CXX_COMPILER": "g++" } },
-		{ "name": "clang", "hidden": true, "cacheVariables": { "CMAKE_C_COMPILER": "clang", "CMAKE_CXX_COMPILER": "clang++" } },
-		{ "name": "msvc-clang", "hidden": true, "cacheVariables": { "CMAKE_C_COMPILER": "clang-cl", "CMAKE_CXX_COMPILER": "clang-cl" } },
-
-		{ "name": "ninja-gcc", "inherits": ["base","gcc"], "description": "Ninja Multi-config + GCC" },
-		{ "name": "ninja-clang", "inherits": ["base","clang"], "description": "Ninja Multi-config + Clang" },
-		{ "name": "vs22", "inherits": ["base-vs22"], "description": "VS2022" },
-
-		{ "name": "vs22-grouped", "inherits": ["vs22"], "cacheVariables": { "SNAP_TEST_GROUPED": "ON" } },
-		{ "name": "vs22-asan", "inherits": ["vs22"], "cacheVariables": { "SNAP_TEST_ENABLE_ASAN": "ON" } },
-		{ "name": "vs22-werror", "inherits": ["vs22"], "cacheVariables": { "SNAP_TEST_WERROR": "ON" } },
-
-		{ "name": "ninja-clang-asan", "inherits": ["ninja-clang"], "cacheVariables": { "SNAP_TEST_ENABLE_ASAN": "ON" } },
-
-		{
-			"name": "base-ninja",
-			"generator": "Ninja",
-			"hidden": true,
-			"binaryDir": "${sourceDir}/out/build/ninja-single/${presetName}",
-			"cacheVariables": {
-				"CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
-				"CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
-				"CMAKE_CXX_STANDARD": "17"
-			}
-		},
-		{ "name": "ninja-gcc-Debug", "inherits": ["base-ninja","gcc"], "cacheVariables": { "CMAKE_BUILD_TYPE": "Debug" } },
-		{ "name": "ninja-gcc-Release", "inherits": ["base-ninja","gcc"], "cacheVariables": { "CMAKE_BUILD_TYPE": "Release" } },
-		{ "name": "ninja-clang-Debug", "inherits": ["base-ninja","clang"], "cacheVariables": { "CMAKE_BUILD_TYPE": "Debug" } },
-		{ "name": "ninja-clang-Release", "inherits": ["base-ninja","clang"], "cacheVariables": { "CMAKE_BUILD_TYPE": "Release" } }
-
-	],
-
-	"buildPresets": [
-		{ "name": "build-vs22-debug", "configurePreset": "vs22", "configuration": "Debug", "targets": ["ALL_BUILD"], "jobs": 0 },
-		{ "name": "build-vs22-release", "configurePreset": "vs22", "configuration": "Release", "targets": ["ALL_BUILD"], "jobs": 0 },
-
-		{ "name": "build-vs22-grouped-debug", "configurePreset": "vs22-grouped", "configuration": "Debug", "targets": ["ALL_BUILD"], "jobs": 0 },
-		{ "name": "build-vs22-asan-debug", "configurePreset": "vs22-asan", "configuration": "Debug", "targets": ["ALL_BUILD"], "jobs": 0 },
-		{ "name": "build-vs22-werror-release", "configurePreset": "vs22-werror", "configuration": "Release", "targets": ["ALL_BUILD"], "jobs": 0 },
-
-		{ "name": "build-ninja-gcc-debug", "configurePreset": "ninja-gcc", "configuration": "Debug", "targets": ["all"], "jobs": 0 },
-		{ "name": "build-ninja-gcc-release", "configurePreset": "ninja-gcc", "configuration": "Release", "targets": ["all"], "jobs": 0 },
-		{ "name": "build-ninja-clang-debug", "configurePreset": "ninja-clang", "configuration": "Debug", "targets": ["all"], "jobs": 0 },
-		{ "name": "build-ninja-clang-release", "configurePreset": "ninja-clang", "configuration": "Debug", "targets": ["all"], "jobs": 0 },
-
-
-		{ "name": "build-ninja-gcc-single-debug", "configurePreset": "ninja-gcc-Debug", "targets": ["all"], "jobs": 0 },
-		{ "name": "build-ninja-gcc-single-release", "configurePreset": "ninja-gcc-Release", "targets": ["all"], "jobs": 0 },
-		{ "name": "build-ninja-clang-single-debug", "configurePreset": "ninja-clang-Debug", "targets": ["all"], "jobs": 0 },
-		{ "name": "build-ninja-clang-single-release", "configurePreset": "ninja-clang-Release", "targets": ["all"], "jobs": 0 }
-	],
-
-	"testPresets": [
-		{ "name": "test-vs22-debug", "configurePreset": "vs22", "configuration": "Debug", "inheritConfigureEnvironment": true },
-		{ "name": "test-vs22-release", "configurePreset": "vs22", "configuration": "Release", "inheritConfigureEnvironment": true },
-
-		{ "name": "test-vs22-grouped-debug", "configurePreset": "vs22-grouped", "configuration": "Debug", "inheritConfigureEnvironment": true },
-		{ "name": "test-vs22-asan-debug", "configurePreset": "vs22-asan", "configuration": "Debug", "inheritConfigureEnvironment": true },
-
-		{ "name": "test-ninja-gcc-debug", "configurePreset": "ninja-gcc", "configuration": "Debug", "inheritConfigureEnvironment": true },
-		{ "name": "test-ninja-gcc-release", "configurePreset": "ninja-gcc", "configuration": "Release", "inheritConfigureEnvironment": true },
-		{ "name": "test-ninja-clang-debug", "configurePreset": "ninja-clang", "configuration": "Debug", "inheritConfigureEnvironment": true },
-		{ "name": "test-ninja-clang-release", "configurePreset": "ninja-clang", "configuration": "Release", "inheritConfigureEnvironment": true },
-
-		{ "name": "test-ninja-gcc-single-debug", "configurePreset": "ninja-gcc-Debug", "inheritConfigureEnvironment": true },
-		{ "name": "test-ninja-gcc-single-release", "configurePreset": "ninja-gcc-Release", "inheritConfigureEnvironment": true },
-		{ "name": "test-ninja-clang-single-debug", "configurePreset": "ninja-clang-Debug", "inheritConfigureEnvironment": true },
-		{ "name": "test-ninja-clang-single-release", "configurePreset": "ninja-clang-Release", "inheritConfigureEnvironment": true }
-	]
+  "version": 2,
+  "configurePresets": [
+    {
+      "name": "base",
+      "generator": "Ninja Multi-Config",
+      "hidden": true,
+      "binaryDir": "${sourceDir}/out/build/ninja/${presetName}",
+      "cacheVariables": {
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+        "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
+        "CMAKE_CONFIGURATION_TYPES": "Debug;Release;RelWithDebInfo;MinSizeRel",
+        "CMAKE_CXX_STANDARD": "17",
+        "SNAP_TEST_GROUPED": "OFF",
+        "SNAP_TEST_ENABLE_ASAN": "OFF",
+        "SNAP_TEST_ENABLE_TSAN": "OFF",
+        "SNAP_TEST_WERROR": "OFF"
+      }
+    },
+    {
+      "name": "base-vs22",
+      "generator": "Visual Studio 17 2022",
+      "hidden": true,
+      "binaryDir": "${sourceDir}/out/build/vs22/${presetName}",
+      "architecture": {
+        "value": "x64",
+        "strategy": "external"
+      },
+      "cacheVariables": {
+        "CMAKE_CXX_STANDARD": "17",
+        "SNAP_TEST_GROUPED": "OFF",
+        "SNAP_TEST_ENABLE_ASAN": "OFF",
+        "SNAP_TEST_ENABLE_TSAN": "OFF",
+        "SNAP_TEST_WERROR": "OFF"
+      }
+    },
+    {
+      "name": "gcc",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "gcc",
+        "CMAKE_CXX_COMPILER": "g++"
+      }
+    },
+    {
+      "name": "clang",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang",
+        "CMAKE_CXX_COMPILER": "clang++"
+      }
+    },
+    {
+      "name": "msvc-clang",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang-cl",
+        "CMAKE_CXX_COMPILER": "clang-cl"
+      }
+    },
+    {
+      "name": "ninja-gcc",
+      "inherits": [
+        "base",
+        "gcc"
+      ],
+      "description": "Ninja Multi-config + GCC"
+    },
+    {
+      "name": "ninja-clang",
+      "inherits": [
+        "base",
+        "clang"
+      ],
+      "description": "Ninja Multi-config + Clang"
+    },
+    {
+      "name": "vs22",
+      "inherits": [
+        "base-vs22"
+      ],
+      "description": "VS2022"
+    },
+    {
+      "name": "vs22-grouped",
+      "inherits": [
+        "vs22"
+      ],
+      "cacheVariables": {
+        "SNAP_TEST_GROUPED": "ON"
+      }
+    },
+    {
+      "name": "vs22-asan",
+      "inherits": [
+        "vs22"
+      ],
+      "cacheVariables": {
+        "SNAP_TEST_ENABLE_ASAN": "ON"
+      }
+    },
+    {
+      "name": "vs22-werror",
+      "inherits": [
+        "vs22"
+      ],
+      "cacheVariables": {
+        "SNAP_TEST_WERROR": "ON"
+      }
+    },
+    {
+      "name": "ninja-clang-asan",
+      "inherits": [
+        "ninja-clang"
+      ],
+      "cacheVariables": {
+        "SNAP_TEST_ENABLE_ASAN": "ON"
+      }
+    },
+    {
+      "name": "base-ninja",
+      "generator": "Ninja",
+      "hidden": true,
+      "binaryDir": "${sourceDir}/out/build/ninja-single/${presetName}",
+      "cacheVariables": {
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+        "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
+        "CMAKE_CXX_STANDARD": "17"
+      }
+    },
+    {
+      "name": "ninja-gcc-Debug",
+      "inherits": [
+        "base-ninja",
+        "gcc"
+      ],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "ninja-gcc-Release",
+      "inherits": [
+        "base-ninja",
+        "gcc"
+      ],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "ninja-clang-Debug",
+      "inherits": [
+        "base-ninja",
+        "clang"
+      ],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "ninja-clang-Release",
+      "inherits": [
+        "base-ninja",
+        "clang"
+      ],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "build-vs22-debug",
+      "configurePreset": "vs22",
+      "configuration": "Debug",
+      "targets": [
+        "ALL_BUILD"
+      ],
+      "jobs": 0
+    },
+    {
+      "name": "build-vs22-release",
+      "configurePreset": "vs22",
+      "configuration": "Release",
+      "targets": [
+        "ALL_BUILD"
+      ],
+      "jobs": 0
+    },
+    {
+      "name": "build-vs22-grouped-debug",
+      "configurePreset": "vs22-grouped",
+      "configuration": "Debug",
+      "targets": [
+        "ALL_BUILD"
+      ],
+      "jobs": 0
+    },
+    {
+      "name": "build-vs22-asan-debug",
+      "configurePreset": "vs22-asan",
+      "configuration": "Debug",
+      "targets": [
+        "ALL_BUILD"
+      ],
+      "jobs": 0
+    },
+    {
+      "name": "build-vs22-werror-release",
+      "configurePreset": "vs22-werror",
+      "configuration": "Release",
+      "targets": [
+        "ALL_BUILD"
+      ],
+      "jobs": 0
+    },
+    {
+      "name": "build-ninja-gcc-debug",
+      "configurePreset": "ninja-gcc",
+      "configuration": "Debug",
+      "targets": [
+        "all"
+      ],
+      "jobs": 0
+    },
+    {
+      "name": "build-ninja-gcc-release",
+      "configurePreset": "ninja-gcc",
+      "configuration": "Release",
+      "targets": [
+        "all"
+      ],
+      "jobs": 0
+    },
+    {
+      "name": "build-ninja-clang-debug",
+      "configurePreset": "ninja-clang",
+      "configuration": "Debug",
+      "targets": [
+        "all"
+      ],
+      "jobs": 0
+    },
+    {
+      "name": "build-ninja-clang-release",
+      "configurePreset": "ninja-clang",
+      "configuration": "Debug",
+      "targets": [
+        "all"
+      ],
+      "jobs": 0
+    },
+    {
+      "name": "build-ninja-gcc-single-debug",
+      "configurePreset": "ninja-gcc-Debug",
+      "targets": [
+        "all"
+      ],
+      "jobs": 0
+    },
+    {
+      "name": "build-ninja-gcc-single-release",
+      "configurePreset": "ninja-gcc-Release",
+      "targets": [
+        "all"
+      ],
+      "jobs": 0
+    },
+    {
+      "name": "build-ninja-clang-single-debug",
+      "configurePreset": "ninja-clang-Debug",
+      "targets": [
+        "all"
+      ],
+      "jobs": 0
+    },
+    {
+      "name": "build-ninja-clang-single-release",
+      "configurePreset": "ninja-clang-Release",
+      "targets": [
+        "all"
+      ],
+      "jobs": 0
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "test-vs22-debug",
+      "configurePreset": "vs22",
+      "configuration": "Debug",
+      "inheritConfigureEnvironment": true
+    },
+    {
+      "name": "test-vs22-release",
+      "configurePreset": "vs22",
+      "configuration": "Release",
+      "inheritConfigureEnvironment": true
+    },
+    {
+      "name": "test-vs22-grouped-debug",
+      "configurePreset": "vs22-grouped",
+      "configuration": "Debug",
+      "inheritConfigureEnvironment": true
+    },
+    {
+      "name": "test-vs22-asan-debug",
+      "configurePreset": "vs22-asan",
+      "configuration": "Debug",
+      "inheritConfigureEnvironment": true
+    },
+    {
+      "name": "test-ninja-gcc-debug",
+      "configurePreset": "ninja-gcc",
+      "configuration": "Debug",
+      "inheritConfigureEnvironment": true
+    },
+    {
+      "name": "test-ninja-gcc-release",
+      "configurePreset": "ninja-gcc",
+      "configuration": "Release",
+      "inheritConfigureEnvironment": true
+    },
+    {
+      "name": "test-ninja-clang-debug",
+      "configurePreset": "ninja-clang",
+      "configuration": "Debug",
+      "inheritConfigureEnvironment": true
+    },
+    {
+      "name": "test-ninja-clang-release",
+      "configurePreset": "ninja-clang",
+      "configuration": "Release",
+      "inheritConfigureEnvironment": true
+    },
+    {
+      "name": "test-ninja-gcc-single-debug",
+      "configurePreset": "ninja-gcc-Debug",
+      "inheritConfigureEnvironment": true
+    },
+    {
+      "name": "test-ninja-gcc-single-release",
+      "configurePreset": "ninja-gcc-Release",
+      "inheritConfigureEnvironment": true
+    },
+    {
+      "name": "test-ninja-clang-single-debug",
+      "configurePreset": "ninja-clang-Debug",
+      "inheritConfigureEnvironment": true
+    },
+    {
+      "name": "test-ninja-clang-single-release",
+      "configurePreset": "ninja-clang-Release",
+      "inheritConfigureEnvironment": true
+    }
+  ]
 }

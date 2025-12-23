@@ -1,10 +1,15 @@
 #pragma once
 
+// Must be included first
 #include "snap/internal/abi_namespace.hpp"
 
 SNAP_BEGIN_NAMESPACE
-template <typename Type> struct type_identity
+
+template <class Type> struct type_identity
 {
 	using type = Type;
 };
+
+template <class Type> using type_identity_t = typename type_identity<Type>::type;
+
 SNAP_END_NAMESPACE

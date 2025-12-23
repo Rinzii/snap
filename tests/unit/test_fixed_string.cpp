@@ -7,48 +7,50 @@
 #include <utility>
 
 #if defined(__cpp_lib_containers_ranges) && (__cpp_lib_containers_ranges >= 202202L)
-#  define SNAP_HAS_STD_FROM_RANGE 1
+	#define SNAP_HAS_STD_FROM_RANGE 1
 #else
-#  define SNAP_HAS_STD_FROM_RANGE 0
+	#define SNAP_HAS_STD_FROM_RANGE 0
 #endif
 
 #ifndef SNAP_HAS_CONSTEXPR_STRING
-#  if defined(__cpp_lib_constexpr_string) && __cpp_lib_constexpr_string >= 201907L
-#    define SNAP_HAS_CONSTEXPR_STRING 1
-#  else
-#    define SNAP_HAS_CONSTEXPR_STRING 0
-#  endif
+	#if defined(__cpp_lib_constexpr_string) && __cpp_lib_constexpr_string >= 201907L
+		#define SNAP_HAS_CONSTEXPR_STRING 1
+	#else
+		#define SNAP_HAS_CONSTEXPR_STRING 0
+	#endif
 #endif
 
 #ifndef SNAP_HAS_CONSTEXPR_ITERATOR
-#  if defined(__cpp_lib_constexpr_iterator) && __cpp_lib_constexpr_iterator >= 201811L
-#    define SNAP_HAS_CONSTEXPR_ITERATOR 1
-#  else
-#    define SNAP_HAS_CONSTEXPR_ITERATOR 0
-#  endif
+	#if defined(__cpp_lib_constexpr_iterator) && __cpp_lib_constexpr_iterator >= 201811L
+		#define SNAP_HAS_CONSTEXPR_ITERATOR 1
+	#else
+		#define SNAP_HAS_CONSTEXPR_ITERATOR 0
+	#endif
 #endif
 
 // test inputs
-constexpr std::array<char, 3> arr{{'a','b','c'}};
+constexpr std::array<char, 3> arr{ { 'a', 'b', 'c' } };
 
 #if SNAP_HAS_STD_FROM_RANGE
-auto from_string = [] {
-    std::string txt = "abc";
-    return snap::fixed_string<3>(std::from_range, txt);
+auto from_string = []
+{
+	std::string txt = "abc";
+	return snap::fixed_string<3>(std::from_range, txt);
 };
 #endif
 
-[[maybe_unused]] auto from_string_iter = [] {
-    std::string txt = "abc";
-    return snap::fixed_string<3>(txt.begin(), txt.end());
+[[maybe_unused]] auto from_string_iter = []
+{
+	std::string txt = "abc";
+	return snap::fixed_string<3>(txt.begin(), txt.end());
 };
 
 // constructions that are constexpr in C++17
 constexpr snap::fixed_string<0> txt0{};
 constexpr snap::basic_fixed_string txt1('a');
-constexpr snap::basic_fixed_string txt2('a','b','c');
+constexpr snap::basic_fixed_string txt2('a', 'b', 'c');
 constexpr snap::basic_fixed_string txt3 = "abc";
-constexpr snap::fixed_string<3>   txt4(arr.begin(), arr.end());
+constexpr snap::fixed_string<3> txt4(arr.begin(), arr.end());
 
 #if SNAP_HAS_STD_FROM_RANGE
 constexpr snap::basic_fixed_string txt5(std::from_range, arr);
@@ -98,7 +100,7 @@ static_assert(txt0.max_size() == 0); // NOLINT
 static_assert(txt1.max_size() == 1); // NOLINT
 static_assert(txt2.max_size() == 3); // NOLINT
 
-static_assert(txt0.empty()); // NOLINT
+static_assert(txt0.empty());  // NOLINT
 static_assert(!txt1.empty()); // NOLINT
 static_assert(!txt2.empty()); // NOLINT
 static_assert(!txt3.empty()); // NOLINT
@@ -138,29 +140,29 @@ static_assert(txt9.at(2) == 'a');
 #endif
 
 static_assert(txt1.front() == 'a');
-static_assert(txt1.back()  == 'a');
+static_assert(txt1.back() == 'a');
 static_assert(txt2.front() == 'a');
-static_assert(txt2.back()  == 'c');
+static_assert(txt2.back() == 'c');
 #if SNAP_HAS_STD_FROM_RANGE
 static_assert(txt5.front() == 'a');
-static_assert(txt5.back()  == 'c');
+static_assert(txt5.back() == 'c');
 #endif
 #if SNAP_HAS_STD_FROM_RANGE && SNAP_HAS_CONSTEXPR_STRING
 static_assert(txt6.front() == 'a');
-static_assert(txt6.back()  == 'c');
+static_assert(txt6.back() == 'c');
 #endif
 #if SNAP_HAS_CONSTEXPR_STRING
 static_assert(txt7.front() == 'a');
-static_assert(txt7.back()  == 'c');
+static_assert(txt7.back() == 'c');
 #endif
 static_assert(txt8.front() == 'a');
-static_assert(txt8.back()  == 'c');
+static_assert(txt8.back() == 'c');
 #if SNAP_HAS_CONSTEXPR_ITERATOR
 static_assert(txt9.front() == 'c');
-static_assert(txt9.back()  == 'a');
+static_assert(txt9.back() == 'a');
 #endif
 
-static_assert(std::string_view(txt0.data()) == ""); // NOLINT
+static_assert(std::string_view(txt0.data()) == "");	 // NOLINT
 static_assert(std::string_view(txt0.c_str()) == ""); // NOLINT
 static_assert(std::string_view(txt1.data()) == "a");
 static_assert(std::string_view(txt1.c_str()) == "a");
@@ -189,45 +191,44 @@ static_assert(txt9 == "cba");
 static_assert(txt1 == snap::basic_fixed_string("a"));
 static_assert(txt1 != snap::basic_fixed_string("b"));
 static_assert(txt1 != snap::basic_fixed_string("aa"));
-static_assert(txt1 <  snap::basic_fixed_string("b"));
-static_assert(txt1 <  snap::basic_fixed_string("aa"));
+static_assert(txt1 < snap::basic_fixed_string("b"));
+static_assert(txt1 < snap::basic_fixed_string("aa"));
 static_assert(txt1 == "a");
 static_assert(txt1 != "b");
 static_assert(txt1 != "aa");
-static_assert(txt1 <  "b");
-static_assert(txt1 <  "aa");
+static_assert(txt1 < "b");
+static_assert(txt1 < "aa");
 
-static_assert(txt1 + snap::basic_fixed_string('b')    == "ab");
-static_assert(snap::basic_fixed_string('b') + txt1    == "ba");
-static_assert(txt1 + snap::basic_fixed_string("bc")   == "abc");
-static_assert(snap::basic_fixed_string("bc") + txt1   == "bca");
-static_assert(txt1 + 'b'                        == "ab");
-static_assert('b' + txt1                        == "ba");
-static_assert(txt1 + "bc"                       == "abc");
-static_assert("bc" + txt1                       == "bca");
+static_assert(txt1 + snap::basic_fixed_string('b') == "ab");
+static_assert(snap::basic_fixed_string('b') + txt1 == "ba");
+static_assert(txt1 + snap::basic_fixed_string("bc") == "abc");
+static_assert(snap::basic_fixed_string("bc") + txt1 == "bca");
+static_assert(txt1 + 'b' == "ab");
+static_assert('b' + txt1 == "ba");
+static_assert(txt1 + "bc" == "abc");
+static_assert("bc" + txt1 == "bca");
 
 static_assert(txt2 == snap::basic_fixed_string("abc"));
 static_assert(txt2 != snap::basic_fixed_string("cba"));
 static_assert(txt2 != snap::basic_fixed_string("abcd"));
-static_assert(txt2 <  snap::basic_fixed_string("b"));
-static_assert(txt2 >  snap::basic_fixed_string("aa"));
+static_assert(txt2 < snap::basic_fixed_string("b"));
+static_assert(txt2 > snap::basic_fixed_string("aa"));
 static_assert(txt2 == "abc");
 static_assert(txt2 != "cba");
 static_assert(txt2 != "abcd");
-static_assert(txt2 <  "b");
-static_assert(txt2 >  "aa");
+static_assert(txt2 < "b");
+static_assert(txt2 > "aa");
 
-static_assert(txt2 + snap::basic_fixed_string('d')   == "abcd");
-static_assert(snap::basic_fixed_string('d') + txt2   == "dabc");
+static_assert(txt2 + snap::basic_fixed_string('d') == "abcd");
+static_assert(snap::basic_fixed_string('d') + txt2 == "dabc");
 static_assert(txt2 + snap::basic_fixed_string("def") == "abcdef");
 static_assert(snap::basic_fixed_string("def") + txt2 == "defabc");
-static_assert(txt2 + 'd'                       == "abcd");
-static_assert('d' + txt2                       == "dabc");
-static_assert(txt2 + "def"                     == "abcdef");
-static_assert("def" + txt2                     == "defabc");
+static_assert(txt2 + 'd' == "abcd");
+static_assert('d' + txt2 == "dabc");
+static_assert(txt2 + "def" == "abcdef");
+static_assert("def" + txt2 == "defabc");
 
 static_assert(std::string_view(txt2) == "abc");
 static_assert(txt2.view() == "abc");
 static_assert(std::string_view(txt2).find('b') == 1);
 static_assert(txt2.view().find('b') == 1);
-

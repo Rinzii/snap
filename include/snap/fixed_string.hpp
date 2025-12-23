@@ -1,5 +1,6 @@
 #pragma once
 
+// Must be included first
 #include "snap/internal/abi_namespace.hpp"
 
 #include <cassert>
@@ -327,24 +328,24 @@ SNAP_END_NAMESPACE
 #include <functional>
 #include <string_view>
 
-template <std::size_t N> struct std::hash<snap::fixed_string<N>> : std::hash<std::string_view>
+template <std::size_t N> struct std::hash<SNAP_NAMESPACE::fixed_string<N>> : std::hash<std::string_view>
 {
 };
 
 #if defined(__cpp_char8_t)
 	#include <string_view> // for std::u8string_view
-template <std::size_t N> struct std::hash<snap::fixed_u8string<N>> : std::hash<std::u8string_view>
+template <std::size_t N> struct std::hash<SNAP_NAMESPACE::fixed_u8string<N>> : std::hash<std::u8string_view>
 {
 };
 #endif
 
-template <std::size_t N> struct std::hash<snap::fixed_u16string<N>> : std::hash<std::u16string_view>
+template <std::size_t N> struct std::hash<SNAP_NAMESPACE::fixed_u16string<N>> : std::hash<std::u16string_view>
 {
 };
-template <std::size_t N> struct std::hash<snap::fixed_u32string<N>> : std::hash<std::u32string_view>
+template <std::size_t N> struct std::hash<SNAP_NAMESPACE::fixed_u32string<N>> : std::hash<std::u32string_view>
 {
 };
-template <std::size_t N> struct std::hash<snap::fixed_wstring<N>> : std::hash<std::wstring_view>
+template <std::size_t N> struct std::hash<SNAP_NAMESPACE::fixed_wstring<N>> : std::hash<std::wstring_view>
 {
 };
 
@@ -355,10 +356,10 @@ template <std::size_t N> struct std::hash<snap::fixed_wstring<N>> : std::hash<st
 		#if defined(__cpp_lib_format)
 namespace std
 {
-	template <class CharT, std::size_t N, class ParseCharT> struct formatter<snap::basic_fixed_string<CharT, N>, ParseCharT>
+	template <class CharT, std::size_t N, class ParseCharT> struct formatter<SNAP_NAMESPACE::basic_fixed_string<CharT, N>, ParseCharT>
 		: formatter<std::basic_string_view<CharT>, ParseCharT>
 	{
-		template <class FormatContext> auto format(const snap::basic_fixed_string<CharT, N>& str, FormatContext& ctx) const -> decltype(ctx.out())
+		template <class FormatContext> auto format(const SNAP_NAMESPACE::basic_fixed_string<CharT, N>& str, FormatContext& ctx) const -> decltype(ctx.out())
 		{
 			using SV = std::basic_string_view<CharT>;
 			return formatter<SV, ParseCharT>::format(SV(str), ctx);

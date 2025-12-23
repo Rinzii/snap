@@ -1,6 +1,10 @@
 #pragma once
 
+// Must be included first
 #include "snap/internal/abi_namespace.hpp"
+
+#include <type_traits>
+#include <utility>
 
 SNAP_BEGIN_NAMESPACE
 // C++17: detect brace-constructibility (aggregate-friendly)

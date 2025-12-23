@@ -45,6 +45,9 @@ DerivePointerAlignment: true
 FixNamespaceComments: true
 IncludeBlocks: Regroup
 IncludeCategories:
+  # Always pull abi namespace guard first, blank line after.
+  - Regex: '"snap/internal/abi_namespace\.hpp"'
+    Priority: 1
   # Headers in "" with .h extension.
   - Regex: '"([A-Za-z0-9\/-_])+\.h"'
     Priority: 10

@@ -1,8 +1,11 @@
 #pragma once
 
+// Must be included first
 #include "snap/internal/abi_namespace.hpp"
+
 #include "snap/internal/helpers/perfect_forward.hpp"
 
+#include <functional>
 #include <type_traits>
 #include <utility>
 
