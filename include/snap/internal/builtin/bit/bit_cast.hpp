@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_INTERNAL_BUILTIN_BIT_BIT_CAST_HPP
+#define SNP_INCLUDE_SNAP_INTERNAL_BUILTIN_BIT_BIT_CAST_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -100,3 +101,5 @@ SNAP_END_NAMESPACE
 #ifdef SNAP_HAS_BUILTIN_BIT_CAST
 	#undef SNAP_HAS_BUILTIN_BIT_CAST
 #endif
+
+#endif // SNP_INCLUDE_SNAP_INTERNAL_BUILTIN_BIT_BIT_CAST_HPP

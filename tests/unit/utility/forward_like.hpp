@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_TESTS_UNIT_UTILITY_FORWARD_LIKE_HPP
+#define SNP_TESTS_UNIT_UTILITY_FORWARD_LIKE_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -37,3 +38,5 @@ template <class T, class U> constexpr decltype(auto) forward_like(U&& x) noexcep
 }
 
 SNAP_END_NAMESPACE
+
+#endif // SNP_TESTS_UNIT_UTILITY_FORWARD_LIKE_HPP

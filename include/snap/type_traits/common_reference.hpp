@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_TYPE_TRAITS_COMMON_REFERENCE_HPP
+#define SNP_INCLUDE_SNAP_TYPE_TRAITS_COMMON_REFERENCE_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -163,3 +164,5 @@ template <class... Types> using common_reference_t = typename common_reference<T
 template <class... Types> using is_common_reference_detected = internal::has_type_member<common_reference<Types...>>;
 
 SNAP_END_NAMESPACE
+
+#endif // SNP_INCLUDE_SNAP_TYPE_TRAITS_COMMON_REFERENCE_HPP

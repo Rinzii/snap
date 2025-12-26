@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_TESTS_UNIT_TYPE_TRAITS_IS_INTEGER_HPP
+#define SNP_TESTS_UNIT_TYPE_TRAITS_IS_INTEGER_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -72,3 +73,5 @@ template <class T> struct is_integer : std::integral_constant<bool, is_signed_in
 template <class T> inline constexpr bool is_integer_v = is_integer<T>::value;
 
 SNAP_END_NAMESPACE
+
+#endif // SNP_TESTS_UNIT_TYPE_TRAITS_IS_INTEGER_HPP

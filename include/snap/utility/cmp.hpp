@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_UTILITY_CMP_HPP
+#define SNP_INCLUDE_SNAP_UTILITY_CMP_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -96,3 +97,5 @@ template <class T, class U, detail::enable_cmp_t<T, U> = 0> constexpr bool cmp_g
 }
 
 SNAP_END_NAMESPACE
+
+#endif // SNP_INCLUDE_SNAP_UTILITY_CMP_HPP

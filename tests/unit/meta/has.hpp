@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_TESTS_UNIT_META_HAS_HPP
+#define SNP_TESTS_UNIT_META_HAS_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -157,3 +158,5 @@ namespace op
 
 template <class T> inline constexpr bool has_arrow = std::is_pointer_v<std::remove_reference_t<T>> || ::SNAP_NAMESPACE::is_detected_v<op::member_arrow, T>;
 SNAP_END_NAMESPACE
+
+#endif // SNP_TESTS_UNIT_META_HAS_HPP

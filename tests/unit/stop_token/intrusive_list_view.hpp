@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_TESTS_UNIT_STOP_TOKEN_INTRUSIVE_LIST_VIEW_HPP
+#define SNP_TESTS_UNIT_STOP_TOKEN_INTRUSIVE_LIST_VIEW_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -68,3 +69,5 @@ private:
 };
 
 SNAP_END_NAMESPACE
+
+#endif // SNP_TESTS_UNIT_STOP_TOKEN_INTRUSIVE_LIST_VIEW_HPP

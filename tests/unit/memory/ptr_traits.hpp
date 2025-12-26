@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_TESTS_UNIT_MEMORY_PTR_TRAITS_HPP
+#define SNP_TESTS_UNIT_MEMORY_PTR_TRAITS_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -38,3 +39,5 @@ template <class Smart, class Pointer, class... Args> inline constexpr bool is_re
 	is_resettable_smart_pointer_with_args<Smart, Pointer, Args...>::value;
 
 SNAP_END_NAMESPACE
+
+#endif // SNP_TESTS_UNIT_MEMORY_PTR_TRAITS_HPP

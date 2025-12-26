@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_INTERNAL_COMPAT_VERSION_HPP
+#define SNP_INCLUDE_SNAP_INTERNAL_COMPAT_VERSION_HPP
 
 #include "snap/internal/compat/std.hpp"
 
@@ -414,3 +415,5 @@
 	#endif
 
 #endif // !SNAP_DISABLE_FEATURE_TEST_BACKPORTS
+
+#endif // SNP_INCLUDE_SNAP_INTERNAL_COMPAT_VERSION_HPP

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_TESTS_UNIT_NUMERIC_MIDPOINT_HPP
+#define SNP_TESTS_UNIT_NUMERIC_MIDPOINT_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -43,7 +44,6 @@ template <class T, class = std::enable_if_t<std::is_object_v<T>>> inline T* midp
 
 SNAP_END_NAMESPACE
 
-#pragma once
 #include <cstddef> // ptrdiff_t
 #include <type_traits>
 
@@ -83,3 +83,5 @@ template <class T, class = std::enable_if_t<std::is_object_v<T>>> inline T* midp
 }
 
 SNAP_END_NAMESPACE
+
+#endif // SNP_TESTS_UNIT_NUMERIC_MIDPOINT_HPP

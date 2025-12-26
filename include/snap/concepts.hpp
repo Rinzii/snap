@@ -1,5 +1,6 @@
 // snap/concepts.hpp
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_CONCEPTS_HPP
+#define SNP_INCLUDE_SNAP_CONCEPTS_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -12,3 +13,5 @@
 #include "snap/concepts/pair_like.hpp"
 #include "snap/concepts/tuple_like.hpp"
 #include "snap/concepts/variant_like.hpp"
+
+#endif // SNP_INCLUDE_SNAP_CONCEPTS_HPP

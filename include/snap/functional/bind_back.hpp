@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_FUNCTIONAL_BIND_BACK_HPP
+#define SNP_INCLUDE_SNAP_FUNCTIONAL_BIND_BACK_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -53,3 +54,5 @@ constexpr auto bind_back(Fn&& f, Args&&... args) noexcept(
 }
 
 SNAP_END_NAMESPACE
+
+#endif // SNP_INCLUDE_SNAP_FUNCTIONAL_BIND_BACK_HPP

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_INTERNAL_PP_NO_UNIQUE_ADDRESS_HPP
+#define SNP_INCLUDE_SNAP_INTERNAL_PP_NO_UNIQUE_ADDRESS_HPP
 
 #if defined(__has_cpp_attribute)
 	#if __has_cpp_attribute(msvc::no_unique_address)
@@ -15,3 +16,5 @@
 		#define SNAP_NO_UNIQUE_ADDRESS_ATTR
 	#endif
 #endif
+
+#endif // SNP_INCLUDE_SNAP_INTERNAL_PP_NO_UNIQUE_ADDRESS_HPP

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_TESTS_UNIT_ITERATOR_DEFAULT_SENTINEL_HPP
+#define SNP_TESTS_UNIT_ITERATOR_DEFAULT_SENTINEL_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -9,3 +10,5 @@ struct default_sentinel_t
 };
 inline constexpr default_sentinel_t default_sentinel{};
 SNAP_END_NAMESPACE
+
+#endif // SNP_TESTS_UNIT_ITERATOR_DEFAULT_SENTINEL_HPP

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_TESTS_UNIT_TYPE_TRAITS_IS_CHAR_HPP
+#define SNP_TESTS_UNIT_TYPE_TRAITS_IS_CHAR_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -43,3 +44,5 @@ template <class T> struct is_char : detail::is_char_impl<typename std::remove_cv
 template <class T> inline constexpr bool is_char_v = is_char<T>::value;
 
 SNAP_END_NAMESPACE
+
+#endif // SNP_TESTS_UNIT_TYPE_TRAITS_IS_CHAR_HPP

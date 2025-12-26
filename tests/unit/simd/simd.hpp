@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_TESTS_UNIT_SIMD_SIMD_HPP
+#define SNP_TESTS_UNIT_SIMD_SIMD_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -655,3 +656,5 @@ int main()
 #endif
 	return 0;
 }
+
+#endif // SNP_TESTS_UNIT_SIMD_SIMD_HPP

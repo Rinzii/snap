@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_META_HAS_TRAITS_HPP
+#define SNP_INCLUDE_SNAP_META_HAS_TRAITS_HPP
 
 #include "snap/internal/abi_namespace.hpp"
 
@@ -272,3 +273,5 @@ namespace meta::traits
 } // namespace meta::traits
 
 SNAP_END_NAMESPACE
+
+#endif // SNP_INCLUDE_SNAP_META_HAS_TRAITS_HPP

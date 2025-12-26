@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_CONCEPTS_CONTAINER_COMPATIBLE_RANGE_HPP
+#define SNP_INCLUDE_SNAP_CONCEPTS_CONTAINER_COMPATIBLE_RANGE_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -17,3 +18,5 @@ namespace concepts
 } // namespace concepts
 SNAP_END_NAMESPACE
 #endif // SNAP_HAS_CPP20
+
+#endif // SNP_INCLUDE_SNAP_CONCEPTS_CONTAINER_COMPATIBLE_RANGE_HPP

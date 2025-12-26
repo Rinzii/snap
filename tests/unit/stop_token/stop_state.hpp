@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_TESTS_UNIT_STOP_TOKEN_STOP_STATE_HPP
+#define SNP_TESTS_UNIT_STOP_TOKEN_STOP_STATE_HPP
 
 // C++17 stop state using SNAP_NAMESPACE::intrusive_list_view (converted earlier) and
 // SNAP_NAMESPACE::atomic_unique_lock. No reserved identifiers.
@@ -181,3 +182,5 @@ template <> struct intrusive_shared_ptr_traits<stop_state>
 };
 
 SNAP_END_NAMESPACE
+
+#endif // SNP_TESTS_UNIT_STOP_TOKEN_STOP_STATE_HPP

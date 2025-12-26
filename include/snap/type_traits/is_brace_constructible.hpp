@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_TYPE_TRAITS_IS_BRACE_CONSTRUCTIBLE_HPP
+#define SNP_INCLUDE_SNAP_TYPE_TRAITS_IS_BRACE_CONSTRUCTIBLE_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -20,3 +21,5 @@ public:
 
 template <class T, class... Args> inline constexpr bool is_brace_constructible_v = is_brace_constructible<T, Args...>::value;
 SNAP_END_NAMESPACE
+
+#endif // SNP_INCLUDE_SNAP_TYPE_TRAITS_IS_BRACE_CONSTRUCTIBLE_HPP

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_INPLACE_VECTOR_HPP
+#define SNP_INCLUDE_SNAP_INPLACE_VECTOR_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -1094,3 +1095,5 @@ template <class T, std::size_t N, class Pred> typename inplace_vector<T, N>::siz
 }
 
 SNAP_END_NAMESPACE
+
+#endif // SNP_INCLUDE_SNAP_INPLACE_VECTOR_HPP

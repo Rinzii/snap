@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_TYPE_TRAITS_REFERENCE_CONVERTS_FROM_TEMPORARY_HPP
+#define SNP_INCLUDE_SNAP_TYPE_TRAITS_REFERENCE_CONVERTS_FROM_TEMPORARY_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -102,3 +103,5 @@ template <class T, class U> struct reference_converts_from_temporary
 template <class T, class U> inline constexpr bool reference_converts_from_temporary_v = reference_converts_from_temporary<T, U>::value;
 
 SNAP_END_NAMESPACE
+
+#endif // SNP_INCLUDE_SNAP_TYPE_TRAITS_REFERENCE_CONVERTS_FROM_TEMPORARY_HPP

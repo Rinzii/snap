@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_BIT_POPCOUNT_HPP
+#define SNP_INCLUDE_SNAP_BIT_POPCOUNT_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -122,3 +123,5 @@ constexpr int popcount(unsigned long long n)
 
 #undef INTERNAL_SNP_ADD_POPCOUNT_SPECIALIZATION
 SNAP_END_NAMESPACE
+
+#endif // SNP_INCLUDE_SNAP_BIT_POPCOUNT_HPP

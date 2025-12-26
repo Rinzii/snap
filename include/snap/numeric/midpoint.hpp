@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_NUMERIC_MIDPOINT_HPP
+#define SNP_INCLUDE_SNAP_NUMERIC_MIDPOINT_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -107,3 +108,5 @@ template <class T, std::enable_if_t<std::is_object_v<T>, int> = 0> constexpr T* 
 }
 
 SNAP_END_NAMESPACE
+
+#endif // SNP_INCLUDE_SNAP_NUMERIC_MIDPOINT_HPP

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_BIT_ROTR_HPP
+#define SNP_INCLUDE_SNAP_BIT_ROTR_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -39,3 +40,5 @@ template <class T, std::enable_if_t<std::is_unsigned_v<T>, bool> = true> constex
 	return (t >> (static_cast<unsigned int>(cnt) % dig)) | (t << (dig - (static_cast<unsigned int>(cnt) % dig)));
 }
 SNAP_END_NAMESPACE
+
+#endif // SNP_INCLUDE_SNAP_BIT_ROTR_HPP

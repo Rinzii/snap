@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_MEMORY_OBSERVER_PTR_HPP
+#define SNP_INCLUDE_SNAP_MEMORY_OBSERVER_PTR_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -122,3 +123,5 @@ template <class T> struct std::hash<SNAP_NAMESPACE::observer_ptr<T>>
 {
 	size_t operator()(const SNAP_NAMESPACE::observer_ptr<T>& p) const noexcept { return std::hash<T*>{}(p.get()); }
 }; // namespace std
+
+#endif // SNP_INCLUDE_SNAP_MEMORY_OBSERVER_PTR_HPP

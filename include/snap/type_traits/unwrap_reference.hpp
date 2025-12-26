@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_TYPE_TRAITS_UNWRAP_REFERENCE_HPP
+#define SNP_INCLUDE_SNAP_TYPE_TRAITS_UNWRAP_REFERENCE_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -25,3 +26,5 @@ template <class T> using unwrap_reference_t = typename unwrap_reference<T>::type
 
 template <class T> using unwrap_ref_decay_t = typename unwrap_ref_decay<T>::type;
 SNAP_END_NAMESPACE
+
+#endif // SNP_INCLUDE_SNAP_TYPE_TRAITS_UNWRAP_REFERENCE_HPP

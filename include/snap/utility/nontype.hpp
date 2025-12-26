@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_UTILITY_NONTYPE_HPP
+#define SNP_INCLUDE_SNAP_UTILITY_NONTYPE_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -11,3 +12,5 @@ template <auto V> struct nontype_t
 
 template <auto V> inline constexpr nontype_t<V> nontype{};
 SNAP_END_NAMESPACE
+
+#endif // SNP_INCLUDE_SNAP_UTILITY_NONTYPE_HPP

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_BIT_BIT_CAST_HPP
+#define SNP_INCLUDE_SNAP_BIT_BIT_CAST_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -27,3 +28,5 @@ template <class To, class From, detail::bit_cast_req<To, From> = 0> constexpr To
 	}
 }
 SNAP_END_NAMESPACE
+
+#endif // SNP_INCLUDE_SNAP_BIT_BIT_CAST_HPP

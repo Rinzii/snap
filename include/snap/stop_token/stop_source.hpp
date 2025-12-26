@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_STOP_TOKEN_STOP_SOURCE_HPP
+#define SNP_INCLUDE_SNAP_STOP_TOKEN_STOP_SOURCE_HPP
 
 #include "snap/internal/abi_namespace.hpp"
 
@@ -96,3 +97,5 @@ private:
 };
 
 SNAP_END_NAMESPACE
+
+#endif // SNP_INCLUDE_SNAP_STOP_TOKEN_STOP_SOURCE_HPP

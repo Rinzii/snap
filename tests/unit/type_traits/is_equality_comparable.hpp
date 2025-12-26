@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_TESTS_UNIT_TYPE_TRAITS_IS_EQUALITY_COMPARABLE_HPP
+#define SNP_TESTS_UNIT_TYPE_TRAITS_IS_EQUALITY_COMPARABLE_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -43,3 +44,5 @@ template <class T, class U> struct is_equality_comparable_with<T,
 template <class T, class U> inline constexpr bool is_equality_comparable_with_v = is_equality_comparable_with<T, U>::value;
 
 SNAP_END_NAMESPACE
+
+#endif // SNP_TESTS_UNIT_TYPE_TRAITS_IS_EQUALITY_COMPARABLE_HPP

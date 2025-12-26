@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_INTERNAL_COMPAT_CONSTEXPR_HPP
+#define SNP_INCLUDE_SNAP_INTERNAL_COMPAT_CONSTEXPR_HPP
 
 #include "snap/internal/compat/std.hpp"
 
@@ -26,3 +27,5 @@
 #else
 	#define SNAP_CONSTEVAL constexpr
 #endif
+
+#endif // SNP_INCLUDE_SNAP_INTERNAL_COMPAT_CONSTEXPR_HPP

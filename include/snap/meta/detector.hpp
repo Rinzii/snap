@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_META_DETECTOR_HPP
+#define SNP_INCLUDE_SNAP_META_DETECTOR_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -198,3 +199,5 @@ template <class FallbackType, template <class...> class Probe, class... Args> in
 	is_detected_or<FallbackType, Probe, Args...>::value;
 
 SNAP_END_NAMESPACE
+
+#endif // SNP_INCLUDE_SNAP_META_DETECTOR_HPP

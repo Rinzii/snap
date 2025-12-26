@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_TYPE_TRAITS_IS_IMPLICIT_LIFETIME_HPP
+#define SNP_INCLUDE_SNAP_TYPE_TRAITS_IS_IMPLICIT_LIFETIME_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -69,3 +70,5 @@ SNAP_END_NAMESPACE
 #ifdef SNAP_HAS_IL_BUILTIN
 	#undef SNAP_HAS_IL_BUILTIN
 #endif
+
+#endif // SNP_INCLUDE_SNAP_TYPE_TRAITS_IS_IMPLICIT_LIFETIME_HPP

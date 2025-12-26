@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_TESTS_UNIT_TYPE_TRAITS_TYPE_IDENTITY_HPP
+#define SNP_TESTS_UNIT_TYPE_TRAITS_TYPE_IDENTITY_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -9,3 +10,5 @@ template <typename Type> struct type_identity
 	using type = Type;
 };
 SNAP_END_NAMESPACE
+
+#endif // SNP_TESTS_UNIT_TYPE_TRAITS_TYPE_IDENTITY_HPP

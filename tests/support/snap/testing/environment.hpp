@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_TESTS_SUPPORT_SNAP_TESTING_ENVIRONMENT_HPP
+#define SNP_TESTS_SUPPORT_SNAP_TESTING_ENVIRONMENT_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -43,3 +44,5 @@ namespace test
 
 } // namespace test
 SNAP_END_NAMESPACE
+
+#endif // SNP_TESTS_SUPPORT_SNAP_TESTING_ENVIRONMENT_HPP

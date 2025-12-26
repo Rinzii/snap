@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_TESTS_UNIT_UTILITY_FUNCTION_REF_HPP
+#define SNP_TESTS_UNIT_UTILITY_FUNCTION_REF_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -39,3 +40,5 @@ namespace details
 	};
 } // namespace details
 SNAP_END_NAMESPACE
+
+#endif // SNP_TESTS_UNIT_UTILITY_FUNCTION_REF_HPP

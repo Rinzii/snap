@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_TESTS_UNIT_THREAD_JTHREAD_HPP
+#define SNP_TESTS_UNIT_THREAD_JTHREAD_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -96,3 +97,5 @@ private:
 };
 
 SNAP_END_NAMESPACE
+
+#endif // SNP_TESTS_UNIT_THREAD_JTHREAD_HPP

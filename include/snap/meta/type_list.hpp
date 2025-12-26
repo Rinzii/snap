@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_META_TYPE_LIST_HPP
+#define SNP_INCLUDE_SNAP_META_TYPE_LIST_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -680,3 +681,5 @@ namespace typelist
 } // namespace typelist
 
 SNAP_END_NAMESPACE
+
+#endif // SNP_INCLUDE_SNAP_META_TYPE_LIST_HPP

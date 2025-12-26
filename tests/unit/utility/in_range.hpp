@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_TESTS_UNIT_UTILITY_IN_RANGE_HPP
+#define SNP_TESTS_UNIT_UTILITY_IN_RANGE_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -14,3 +15,5 @@ template <class R, class T> constexpr bool in_range(T t) noexcept
 }
 
 SNAP_END_NAMESPACE
+
+#endif // SNP_TESTS_UNIT_UTILITY_IN_RANGE_HPP

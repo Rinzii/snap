@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_BIT_COUNTL_HPP
+#define SNP_INCLUDE_SNAP_BIT_COUNTL_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -62,3 +63,5 @@ template <typename T, std::enable_if_t<is_unsigned_integer_v<T>, bool> = true>
 	return value != std::numeric_limits<T>::max() ? SNAP_NAMESPACE::countl_zero(static_cast<T>(~value)) : std::numeric_limits<T>::digits;
 }
 SNAP_END_NAMESPACE
+
+#endif // SNP_INCLUDE_SNAP_BIT_COUNTL_HPP

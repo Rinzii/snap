@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_TESTS_UNIT_TYPE_TRAITS_IS_CONSTANT_EVALUATED_HPP
+#define SNP_TESTS_UNIT_TYPE_TRAITS_IS_CONSTANT_EVALUATED_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -31,3 +32,5 @@ constexpr bool is_constant_evaluated() noexcept
 SNAP_END_NAMESPACE
 
 #undef SNAP_HAS_BUILTIN_IS_CONSTANT_EVALUATED
+
+#endif // SNP_TESTS_UNIT_TYPE_TRAITS_IS_CONSTANT_EVALUATED_HPP

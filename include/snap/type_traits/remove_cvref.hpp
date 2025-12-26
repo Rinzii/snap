@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_TYPE_TRAITS_REMOVE_CVREF_HPP
+#define SNP_INCLUDE_SNAP_TYPE_TRAITS_REMOVE_CVREF_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -13,3 +14,5 @@ template <class T> struct remove_cvref
 
 template <class T> using remove_cvref_t = typename remove_cvref<T>::type;
 SNAP_END_NAMESPACE
+
+#endif // SNP_INCLUDE_SNAP_TYPE_TRAITS_REMOVE_CVREF_HPP

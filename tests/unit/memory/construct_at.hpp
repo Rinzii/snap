@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_TESTS_UNIT_MEMORY_CONSTRUCT_AT_HPP
+#define SNP_TESTS_UNIT_MEMORY_CONSTRUCT_AT_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -51,3 +52,5 @@ template <class T, std::enable_if_t<std::is_array_v<T>, int> = 0> SNAP_CONSTEXPR
 }
 
 SNAP_END_NAMESPACE
+
+#endif // SNP_TESTS_UNIT_MEMORY_CONSTRUCT_AT_HPP

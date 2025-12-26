@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_TESTS_UNIT_TYPE_TRAITS_IS_UNBOUNDED_ARRAY_HPP
+#define SNP_TESTS_UNIT_TYPE_TRAITS_IS_UNBOUNDED_ARRAY_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -16,3 +17,5 @@ template <class T> struct is_unbounded_array<T[]> : std::true_type
 
 template <class T> constexpr inline bool is_unbounded_array_v = is_unbounded_array<T>::value;
 SNAP_END_NAMESPACE
+
+#endif // SNP_TESTS_UNIT_TYPE_TRAITS_IS_UNBOUNDED_ARRAY_HPP

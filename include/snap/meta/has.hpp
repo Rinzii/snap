@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_META_HAS_HPP
+#define SNP_INCLUDE_SNAP_META_HAS_HPP
 
 #include "snap/internal/abi_namespace.hpp"
 
@@ -1141,3 +1142,5 @@ namespace probe
 } // namespace probe
 
 SNAP_END_NAMESPACE
+
+#endif // SNP_INCLUDE_SNAP_META_HAS_HPP

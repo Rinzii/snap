@@ -48,8 +48,8 @@ Configuration
 - Define one of SNAP_ASSUME_LITTLE_ENDIAN or SNAP_ASSUME_BIG_ENDIAN to override.
 - Define SNAP_DISABLE_ENDIAN_ARCH_HINTS to skip architecture hints.
 */
-
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_BIT_ENDIAN_HPP
+#define SNP_INCLUDE_SNAP_BIT_ENDIAN_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -159,3 +159,5 @@ enum class endian : int
 	native = detail::native_value
 };
 SNAP_END_NAMESPACE
+
+#endif // SNP_INCLUDE_SNAP_BIT_ENDIAN_HPP

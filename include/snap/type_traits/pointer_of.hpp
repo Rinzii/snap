@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_TYPE_TRAITS_POINTER_OF_HPP
+#define SNP_INCLUDE_SNAP_TYPE_TRAITS_POINTER_OF_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -38,3 +39,5 @@ template <class T> using pointer_of_t = typename pointer_of<T>::type;
 
 template <class T, class U> using pointer_of_or_t = detected_or_t<U, pointer_of_t, T>;
 SNAP_END_NAMESPACE
+
+#endif // SNP_INCLUDE_SNAP_TYPE_TRAITS_POINTER_OF_HPP

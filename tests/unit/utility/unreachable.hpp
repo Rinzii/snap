@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_TESTS_UNIT_UTILITY_UNREACHABLE_HPP
+#define SNP_TESTS_UNIT_UTILITY_UNREACHABLE_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -19,3 +20,5 @@ SNAP_BEGIN_NAMESPACE
 }
 
 SNAP_END_NAMESPACE
+
+#endif // SNP_TESTS_UNIT_UTILITY_UNREACHABLE_HPP

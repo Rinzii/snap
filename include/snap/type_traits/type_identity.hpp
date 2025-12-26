@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_TYPE_TRAITS_TYPE_IDENTITY_HPP
+#define SNP_INCLUDE_SNAP_TYPE_TRAITS_TYPE_IDENTITY_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -13,3 +14,5 @@ template <class Type> struct type_identity
 template <class Type> using type_identity_t = typename type_identity<Type>::type;
 
 SNAP_END_NAMESPACE
+
+#endif // SNP_INCLUDE_SNAP_TYPE_TRAITS_TYPE_IDENTITY_HPP

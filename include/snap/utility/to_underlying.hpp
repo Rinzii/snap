@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_UTILITY_TO_UNDERLYING_HPP
+#define SNP_INCLUDE_SNAP_UTILITY_TO_UNDERLYING_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -13,3 +14,5 @@ template <class Enum> constexpr std::underlying_type_t<Enum> to_underlying(Enum 
 }
 
 SNAP_END_NAMESPACE
+
+#endif // SNP_INCLUDE_SNAP_UTILITY_TO_UNDERLYING_HPP

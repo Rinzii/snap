@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_BIT_HAS_SINGLE_BIT_HPP
+#define SNP_INCLUDE_SNAP_BIT_HAS_SINGLE_BIT_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -12,3 +13,5 @@ constexpr bool has_single_bit(T x) noexcept
 	return x && !(x & (x - 1));
 }
 SNAP_END_NAMESPACE
+
+#endif // SNP_INCLUDE_SNAP_BIT_HAS_SINGLE_BIT_HPP

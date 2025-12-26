@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_TESTS_UNIT_TYPE_TRAITS_POINTER_OF_HPP
+#define SNP_TESTS_UNIT_TYPE_TRAITS_POINTER_OF_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -49,3 +50,5 @@ template <class T> using pointer_of_t = typename pointer_of<T>::type;
 // Fallback: if pointer_of_t<T> is not detectable, use U instead
 template <class T, class U> using pointer_of_or_t = detected_or_t<U, pointer_of_t, T>;
 SNAP_END_NAMESPACE
+
+#endif // SNP_TESTS_UNIT_TYPE_TRAITS_POINTER_OF_HPP

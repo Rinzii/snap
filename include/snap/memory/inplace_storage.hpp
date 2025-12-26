@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_MEMORY_INPLACE_STORAGE_HPP
+#define SNP_INCLUDE_SNAP_MEMORY_INPLACE_STORAGE_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -126,3 +127,5 @@ private:
 };
 
 SNAP_END_NAMESPACE
+
+#endif // SNP_INCLUDE_SNAP_MEMORY_INPLACE_STORAGE_HPP

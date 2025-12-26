@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_TESTS_UNIT_TYPE_TRAITS_IS_SEMIREGULAR_HPP
+#define SNP_TESTS_UNIT_TYPE_TRAITS_IS_SEMIREGULAR_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -14,3 +15,5 @@ template <class T> struct is_semiregular : std::conjunction<is_copyable<T>, std:
 
 template <class T> inline constexpr bool is_semiregular_v = is_semiregular<T>::value;
 SNAP_END_NAMESPACE
+
+#endif // SNP_TESTS_UNIT_TYPE_TRAITS_IS_SEMIREGULAR_HPP

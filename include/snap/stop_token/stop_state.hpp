@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_STOP_TOKEN_STOP_STATE_HPP
+#define SNP_INCLUDE_SNAP_STOP_TOKEN_STOP_STATE_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -161,3 +162,5 @@ template <> struct intrusive_shared_ptr_traits<stop_state>
 };
 
 SNAP_END_NAMESPACE
+
+#endif // SNP_INCLUDE_SNAP_STOP_TOKEN_STOP_STATE_HPP

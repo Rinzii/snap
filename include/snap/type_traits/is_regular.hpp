@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_TYPE_TRAITS_IS_REGULAR_HPP
+#define SNP_INCLUDE_SNAP_TYPE_TRAITS_IS_REGULAR_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -15,3 +16,5 @@ template <class T> struct is_regular : std::conjunction<is_semiregular<T>, is_eq
 
 template <class T> inline constexpr bool is_regular_v = is_regular<T>::value;
 SNAP_END_NAMESPACE
+
+#endif // SNP_INCLUDE_SNAP_TYPE_TRAITS_IS_REGULAR_HPP

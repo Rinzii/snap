@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_INTERNAL_PP_HAS_BUILTIN_HPP
+#define SNP_INCLUDE_SNAP_INTERNAL_PP_HAS_BUILTIN_HPP
 
 #ifndef SNAP_HAS_BUILTIN
 	#if defined(__has_builtin)
@@ -7,3 +8,5 @@
 		#define SNAP_HAS_BUILTIN(BUILTIN) (0)
 	#endif // defined(__has_builtin)
 #endif	   // SNAP_HAS_BUILTIN
+
+#endif // SNP_INCLUDE_SNAP_INTERNAL_PP_HAS_BUILTIN_HPP

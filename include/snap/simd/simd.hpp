@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_SIMD_SIMD_HPP
+#define SNP_INCLUDE_SNAP_SIMD_SIMD_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -464,3 +465,5 @@ namespace simd
 
 } // namespace simd
 SNAP_END_NAMESPACE
+
+#endif // SNP_INCLUDE_SNAP_SIMD_SIMD_HPP

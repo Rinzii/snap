@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_FUNCTIONAL_INVOKE_R_HPP
+#define SNP_INCLUDE_SNAP_FUNCTIONAL_INVOKE_R_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -24,3 +25,5 @@ constexpr R invoke_r(F&& f, Args&&... args) noexcept(std::is_nothrow_invocable_r
 	else { return static_cast<R>(std::invoke(std::forward<F>(f), std::forward<Args>(args)...)); }
 }
 SNAP_END_NAMESPACE
+
+#endif // SNP_INCLUDE_SNAP_FUNCTIONAL_INVOKE_R_HPP

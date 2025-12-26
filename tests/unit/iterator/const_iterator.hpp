@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_TESTS_UNIT_ITERATOR_CONST_ITERATOR_HPP
+#define SNP_TESTS_UNIT_ITERATOR_CONST_ITERATOR_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -337,3 +338,5 @@ template <class S> constexpr const_sentinel<S> make_const_sentinel(S s)
 }
 
 SNAP_END_NAMESPACE
+
+#endif // SNP_TESTS_UNIT_ITERATOR_CONST_ITERATOR_HPP

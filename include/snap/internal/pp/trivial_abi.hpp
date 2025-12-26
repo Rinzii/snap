@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_INTERNAL_PP_TRIVIAL_ABI_HPP
+#define SNP_INCLUDE_SNAP_INTERNAL_PP_TRIVIAL_ABI_HPP
 
 #ifndef SNAP_TRIVIAL_ABI_ATTR
 	#if defined(__clang__)
@@ -7,3 +8,5 @@
 		#define SNAP_TRIVIAL_ABI_ATTR
 	#endif
 #endif
+
+#endif // SNP_INCLUDE_SNAP_INTERNAL_PP_TRIVIAL_ABI_HPP

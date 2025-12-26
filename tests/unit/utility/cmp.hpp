@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_TESTS_UNIT_UTILITY_CMP_HPP
+#define SNP_TESTS_UNIT_UTILITY_CMP_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -90,3 +91,5 @@ template <class T, class U, detail::enable_cmp_t<T, U> = 0> constexpr bool cmp_g
 }
 
 SNAP_END_NAMESPACE
+
+#endif // SNP_TESTS_UNIT_UTILITY_CMP_HPP

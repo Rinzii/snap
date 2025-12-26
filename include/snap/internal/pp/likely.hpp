@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_INTERNAL_PP_LIKELY_HPP
+#define SNP_INCLUDE_SNAP_INTERNAL_PP_LIKELY_HPP
 
 #include "snap/internal/abi_namespace.hpp"
 
@@ -29,3 +30,5 @@
 #else
 	#define SNAP_LIKELY_ATTR
 #endif
+
+#endif // SNP_INCLUDE_SNAP_INTERNAL_PP_LIKELY_HPP

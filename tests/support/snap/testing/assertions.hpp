@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_TESTS_SUPPORT_SNAP_TESTING_ASSERTIONS_HPP
+#define SNP_TESTS_SUPPORT_SNAP_TESTING_ASSERTIONS_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -162,3 +163,5 @@ SNAP_END_NAMESPACE
 
 #define SNAP_EXPECT_THROW_MSG(statement, exception, message) EXPECT_TRUE(::SNAP_NAMESPACE::test::ThrowsWithMessage<exception>([&] { statement; }, (message)))
 #define SNAP_ASSERT_THROW_MSG(statement, exception, message) ASSERT_TRUE(::SNAP_NAMESPACE::test::ThrowsWithMessage<exception>([&] { statement; }, (message)))
+
+#endif // SNP_TESTS_SUPPORT_SNAP_TESTING_ASSERTIONS_HPP

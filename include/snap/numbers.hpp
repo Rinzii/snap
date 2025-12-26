@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_NUMBERS_HPP
+#define SNP_INCLUDE_SNAP_NUMBERS_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -68,3 +69,5 @@ namespace numbers
 	inline constexpr double phi		   = phi_v<double>;
 } // namespace numbers
 SNAP_END_NAMESPACE
+
+#endif // SNP_INCLUDE_SNAP_NUMBERS_HPP

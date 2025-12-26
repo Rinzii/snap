@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_BIT_COUNTR_HPP
+#define SNP_INCLUDE_SNAP_BIT_COUNTR_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -76,3 +77,5 @@ template <typename T> [[nodiscard]] constexpr std::enable_if_t<std::is_unsigned_
 	return SNAP_NAMESPACE::countr_zero<T>(~value);
 }
 SNAP_END_NAMESPACE
+
+#endif // SNP_INCLUDE_SNAP_BIT_COUNTR_HPP

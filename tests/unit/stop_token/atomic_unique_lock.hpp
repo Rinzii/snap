@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_TESTS_UNIT_STOP_TOKEN_ATOMIC_UNIQUE_LOCK_HPP
+#define SNP_TESTS_UNIT_STOP_TOKEN_ATOMIC_UNIQUE_LOCK_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -105,3 +106,5 @@ private:
 };
 
 SNAP_END_NAMESPACE
+
+#endif // SNP_TESTS_UNIT_STOP_TOKEN_ATOMIC_UNIQUE_LOCK_HPP

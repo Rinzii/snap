@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_TYPE_TRAITS_IS_PREDICATE_HPP
+#define SNP_INCLUDE_SNAP_TYPE_TRAITS_IS_PREDICATE_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -14,3 +15,5 @@ template <class F, class... Args> struct is_predicate : std::conjunction<std::is
 
 template <class F, class... Args> inline constexpr bool is_predicate_v = is_predicate<F, Args...>::value;
 SNAP_END_NAMESPACE
+
+#endif // SNP_INCLUDE_SNAP_TYPE_TRAITS_IS_PREDICATE_HPP

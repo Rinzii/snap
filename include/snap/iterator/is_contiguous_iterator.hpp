@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_ITERATOR_IS_CONTIGUOUS_ITERATOR_HPP
+#define SNP_INCLUDE_SNAP_ITERATOR_IS_CONTIGUOUS_ITERATOR_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -102,3 +103,5 @@ public:
 
 template <class I> inline constexpr bool is_contiguous_iterator_v = is_contiguous_iterator<I>::value;
 SNAP_END_NAMESPACE
+
+#endif // SNP_INCLUDE_SNAP_ITERATOR_IS_CONTIGUOUS_ITERATOR_HPP

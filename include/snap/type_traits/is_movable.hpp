@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_TYPE_TRAITS_IS_MOVABLE_HPP
+#define SNP_INCLUDE_SNAP_TYPE_TRAITS_IS_MOVABLE_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -14,3 +15,5 @@ template <class T> struct is_movable : std::conjunction<std::is_object<T>, std::
 
 template <class T> inline constexpr bool is_movable_v = is_movable<T>::value;
 SNAP_END_NAMESPACE
+
+#endif // SNP_INCLUDE_SNAP_TYPE_TRAITS_IS_MOVABLE_HPP

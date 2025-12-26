@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_MEMORY_INOUT_PTR_HPP
+#define SNP_INCLUDE_SNAP_MEMORY_INOUT_PTR_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -85,3 +86,5 @@ template <class Pointer = void, class Smart, class... Args> auto inout_ptr(Smart
 }
 
 SNAP_END_NAMESPACE
+
+#endif // SNP_INCLUDE_SNAP_MEMORY_INOUT_PTR_HPP

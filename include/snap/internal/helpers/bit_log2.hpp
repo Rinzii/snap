@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_INTERNAL_HELPERS_BIT_LOG2_HPP
+#define SNP_INCLUDE_SNAP_INTERNAL_HELPERS_BIT_LOG2_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -18,3 +19,5 @@ namespace internal
 	}
 } // namespace internal
 SNAP_END_NAMESPACE
+
+#endif // SNP_INCLUDE_SNAP_INTERNAL_HELPERS_BIT_LOG2_HPP

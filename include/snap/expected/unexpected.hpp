@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_EXPECTED_UNEXPECTED_HPP
+#define SNP_INCLUDE_SNAP_EXPECTED_UNEXPECTED_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -86,3 +87,5 @@ private:
 
 template <class E> unexpected(E) -> unexpected<E>;
 SNAP_END_NAMESPACE
+
+#endif // SNP_INCLUDE_SNAP_EXPECTED_UNEXPECTED_HPP

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_TESTS_UNIT_MEMORY_TO_ADDRESS_HPP
+#define SNP_TESTS_UNIT_MEMORY_TO_ADDRESS_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -41,3 +42,5 @@ template <class T> constexpr auto to_address(const T& p) noexcept
 }
 
 SNAP_END_NAMESPACE
+
+#endif // SNP_TESTS_UNIT_MEMORY_TO_ADDRESS_HPP

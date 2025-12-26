@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_TYPE_TRAITS_IS_DESTRUCTIBLE_HPP
+#define SNP_INCLUDE_SNAP_TYPE_TRAITS_IS_DESTRUCTIBLE_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -12,3 +13,5 @@ template <class T> struct is_destructible : std::conjunction<std::is_object<T>, 
 
 template <class T> inline constexpr bool is_destructible_v = is_destructible<T>::value;
 SNAP_END_NAMESPACE
+
+#endif // SNP_INCLUDE_SNAP_TYPE_TRAITS_IS_DESTRUCTIBLE_HPP

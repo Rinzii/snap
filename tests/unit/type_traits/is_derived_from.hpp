@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_TESTS_UNIT_TYPE_TRAITS_IS_DERIVED_FROM_HPP
+#define SNP_TESTS_UNIT_TYPE_TRAITS_IS_DERIVED_FROM_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -12,3 +13,5 @@ template <class D, class B> struct is_derived_from : std::conjunction<std::is_ba
 
 template <class D, class B> inline constexpr bool is_derived_from_v = is_derived_from<D, B>::value;
 SNAP_END_NAMESPACE
+
+#endif // SNP_TESTS_UNIT_TYPE_TRAITS_IS_DERIVED_FROM_HPP

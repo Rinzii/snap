@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_TESTS_UNIT_META_DETECTOR_HPP
+#define SNP_TESTS_UNIT_META_DETECTOR_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -54,3 +55,5 @@ template <class T, template <class...> class U, class... Args> using is_detected
 
 template <class T, template <class...> class U, class... Args> inline constexpr bool is_detected_exact_v = is_detected_exact<T, U, Args...>::value;
 SNAP_END_NAMESPACE
+
+#endif // SNP_TESTS_UNIT_META_DETECTOR_HPP

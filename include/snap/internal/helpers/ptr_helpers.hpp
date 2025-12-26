@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_INTERNAL_HELPERS_PTR_HELPERS_HPP
+#define SNP_INCLUDE_SNAP_INTERNAL_HELPERS_PTR_HELPERS_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -24,3 +25,5 @@ namespace internal
 
 } // namespace internal
 SNAP_END_NAMESPACE
+
+#endif // SNP_INCLUDE_SNAP_INTERNAL_HELPERS_PTR_HELPERS_HPP

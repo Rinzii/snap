@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_TYPE_TRAITS_IS_NEITHER_HPP
+#define SNP_INCLUDE_SNAP_TYPE_TRAITS_IS_NEITHER_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -12,3 +13,5 @@ template <typename T, typename... U> struct is_neither : std::integral_constant<
 
 template <typename T, typename... U> inline constexpr bool is_neither_v = is_neither<T, U...>::value;
 SNAP_END_NAMESPACE
+
+#endif // SNP_INCLUDE_SNAP_TYPE_TRAITS_IS_NEITHER_HPP

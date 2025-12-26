@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_FIXED_STRING_HPP
+#define SNP_INCLUDE_SNAP_FIXED_STRING_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -367,3 +368,5 @@ namespace std
 		#endif
 	#endif
 #endif
+
+#endif // SNP_INCLUDE_SNAP_FIXED_STRING_HPP

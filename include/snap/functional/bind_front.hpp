@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_FUNCTIONAL_BIND_FRONT_HPP
+#define SNP_INCLUDE_SNAP_FUNCTIONAL_BIND_FRONT_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -40,3 +41,5 @@ constexpr auto bind_front(Fn&& f, Args&&... args) -> detail::bind_front_t<std::d
 }
 
 SNAP_END_NAMESPACE
+
+#endif // SNP_INCLUDE_SNAP_FUNCTIONAL_BIND_FRONT_HPP

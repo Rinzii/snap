@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_INTERNAL_COMPAT_STD_HPP
+#define SNP_INCLUDE_SNAP_INTERNAL_COMPAT_STD_HPP
 
 #if defined(_MSC_VER)
 	#if defined(_MSVC_LANG)
@@ -21,3 +22,5 @@
 #define SNAP_HAS_CPP26 (SNAP_CPLUSPLUS >= 202602L) // TODO: Update this when wg14 defines it. Currently best guess
 
 #define SNAP_LANG_AT_LEAST(CXX) (SNAP_CPLUSPLUS >= (CXX##L))
+
+#endif // SNP_INCLUDE_SNAP_INTERNAL_COMPAT_STD_HPP

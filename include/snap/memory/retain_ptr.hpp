@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_INCLUDE_SNAP_MEMORY_RETAIN_PTR_HPP
+#define SNP_INCLUDE_SNAP_MEMORY_RETAIN_PTR_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -323,3 +324,5 @@ template <class T, class R> constexpr bool operator<(nullptr_t, retain_ptr<T, R>
 }
 
 SNAP_END_NAMESPACE
+
+#endif // SNP_INCLUDE_SNAP_MEMORY_RETAIN_PTR_HPP

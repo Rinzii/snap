@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SNP_TESTS_UNIT_TYPE_TRAITS_IS_COPYABLE_HPP
+#define SNP_TESTS_UNIT_TYPE_TRAITS_IS_COPYABLE_HPP
 
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
@@ -18,3 +19,5 @@ template <class T> struct is_copyable : std::conjunction<std::is_copy_constructi
 
 template <class T> inline constexpr bool is_copyable_v = is_copyable<T>::value;
 SNAP_END_NAMESPACE
+
+#endif // SNP_TESTS_UNIT_TYPE_TRAITS_IS_COPYABLE_HPP
