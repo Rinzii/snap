@@ -18,8 +18,9 @@ project(
 # Include helper CMake files for project configuration
 include(cmake/config/ProjectIsTopLevel.cmake)
 include(cmake/config/ProjectOptions.cmake)
+include(cmake/config/UserOptions.cmake)
 
-option(SNAP_ENABLE_ABI_NAMESPACE "Enable inline ABI namespace for snap symbols" ON)
+snap_option(SNAP_ENABLE_ABI_NAMESPACE "Enable inline ABI namespace for snap symbols" ON ON)
 set(SNAP_ABI_NAMESPACE "abi_v1" CACHE STRING "Inline ABI namespace nested inside snap")
 set(SNAP_NAMESPACE "snap" CACHE STRING "Namespace of the snap library")
 
@@ -47,7 +48,7 @@ unset(_snap_enable_abi_namespace_bool)
 # ----------------------------------------------------------------------
 # Color Diagnostics (Only if at top-level with Ninja)
 # ----------------------------------------------------------------------
-if (SNAP_PROJECT_IS_TOP_LEVEL)
+if (SNAP_ENABLE_PROJECT_FLAGS AND SNAP_ENABLE_COLOR_DIAGNOSTICS AND SNAP_PROJECT_IS_TOP_LEVEL)
     if (CMAKE_GENERATOR STREQUAL "Ninja")
         # Enable colored output for C++ compilers
         if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
@@ -75,39 +76,39 @@ endif ()
 
 message(STATUS "SNAP: Version: ${SNAP_BUILD_VERSION}")
 
-# Load user-configurable options (e.g., BUILD_EXAMPLES, BUILD_TESTS, etc.)
-include(cmake/config/UserOptions.cmake)
-
-
 # ----------------------------------------------------------------------
 # Compiler Warning Options
 # ----------------------------------------------------------------------
-# Collect common warning flags for various compilers and conditions.
-set(
-        SNAP_warning_options
-        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wconversion -Wpedantic -Werror=return-type -Wundef -Wnull-dereference>
-        $<$<CXX_COMPILER_ID:Clang>:-Wpedantic-macros>
-        $<$<CXX_COMPILER_ID:MSVC>:/W4 /permissive- /we4715>
-)
+set(SNAP_warning_options)
 
-# Turn on -Werror or /WX if requested
-if (SNAP_ENABLE_WARNINGS_AS_ERRORS)
+if (SNAP_ENABLE_PROJECT_FLAGS)
+    # Collect common warning flags for various compilers and conditions.
     set(
             SNAP_warning_options
-            ${SNAP_warning_options}
-            $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Werror>
-            $<$<CXX_COMPILER_ID:MSVC>:/WX>
+            $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wconversion -Wpedantic -Werror=return-type -Wundef -Wnull-dereference>
+            $<$<CXX_COMPILER_ID:Clang>:-Wpedantic-macros>
+            $<$<CXX_COMPILER_ID:MSVC>:/W4 /permissive- /we4715>
     )
-endif ()
 
-# Add extra debug info flags if requested
-if (SNAP_ENABLE_DEBUG_INFO)
-    set(
-            SNAP_warning_options
-            ${SNAP_warning_options}
-            $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wwrite-strings -g3>
-            $<$<CXX_COMPILER_ID:MSVC>:/Zi /analyze>
-    )
+    # Turn on -Werror or /WX if requested
+    if (SNAP_ENABLE_WARNINGS_AS_ERRORS)
+        list(
+                APPEND
+                SNAP_warning_options
+                $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Werror>
+                $<$<CXX_COMPILER_ID:MSVC>:/WX>
+        )
+    endif ()
+
+    # Add extra debug info flags if requested
+    if (SNAP_ENABLE_DEBUG_INFO)
+        list(
+                APPEND
+                SNAP_warning_options
+                $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wwrite-strings -g3>
+                $<$<CXX_COMPILER_ID:MSVC>:/Zi /analyze>
+        )
+    endif ()
 endif ()
 
 
@@ -135,12 +136,12 @@ target_include_directories(${SNAP_TARGET_NAME} PUBLIC
 target_compile_features(${SNAP_TARGET_NAME} PUBLIC ${SNAP_DESIRED_CXX_STANDARD})
 
 # Enable aggressive warning options only if requested
-if (SNAP_ENABLE_AGGRESSIVE_WARNINGS)
+if (SNAP_ENABLE_PROJECT_FLAGS AND SNAP_ENABLE_AGGRESSIVE_WARNINGS AND SNAP_warning_options)
     target_compile_options(${SNAP_TARGET_NAME} PUBLIC ${SNAP_warning_options})
 endif ()
 
 # Enable AddressSanitizer if requested
-if (SNAP_ENABLE_SANITIZER_BUILD)
+if (SNAP_ENABLE_PROJECT_FLAGS AND SNAP_ENABLE_SANITIZER_BUILD)
     add_compile_options(-fsanitize=address)
     add_link_options(-fsanitize=address)
 endif ()
