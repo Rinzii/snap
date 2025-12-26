@@ -5,6 +5,7 @@ snap_option(SNAP_BUILD_TESTS "Build snap's test suite" ON OFF)
 snap_option(SNAP_BUILD_EXAMPLES "Build the example targets" OFF OFF)
 snap_option(SNAP_BUILD_BENCHMARKS "Build the benchmark targets" OFF OFF)
 snap_option(SNAP_BUILD_FUZZERS "Build libFuzzer harnesses for snap" OFF OFF)
+snap_option(SNAP_INSTALL "Generate installable targets + CMake package files" ON OFF)
 
 # ==================================================================
 # Project-wide flag controls
