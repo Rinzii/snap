@@ -13,10 +13,10 @@ check_cxx_source_compiles("
 " SNAP_BUILTIN_BIT_CAST_SUPPORT)
 
 if (SNAP_BUILTIN_BIT_CAST_SUPPORT)
-    add_compile_definitions(CCM_CONFIG_HAS_BUILTIN_BIT_CAST)
+    add_compile_definitions(SNAP_CONFIG_HAS_BUILTIN_BIT_CAST)
 else ()
     message(FATAL_ERROR "
-  CCMath: __builtin_bit_cast is not supported by the compiler.
-  CCmath MANDATES you have a compiler that supports __builtin_bit_cast!
+  Snap: __builtin_bit_cast is not supported by the compiler.
+  Snap mandates you have a compiler that supports __builtin_bit_cast!
 ")
 endif ()

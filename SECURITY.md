@@ -3,7 +3,7 @@
 ## 1. Introduction
 
 This security policy outlines the procedures and guidelines for reporting vulnerabilities and managing security issues
-related to the CCMath library. Our commitment is to provide only the essential support necessary to maintain the
+related to the Snap library. Our commitment is to provide only the essential support necessary to maintain the
 security of this project.
 
 ## 2. Supported Versions
@@ -43,11 +43,11 @@ Once the vulnerability is resolved, we will:
 
 ## 6. Security Best Practices
 
-We recommend that users of the CCMath library:
+We recommend that users of the Snap library:
 
-- Keep their CCMath version up to date by always using the latest release.
+- Keep their Snap version up to date by always using the latest release.
 - Regularly review and apply security patches as they become available.
-- Follow secure coding practices when integrating CCMath into their projects.
+- Follow secure coding practices when integrating Snap into their projects.
 
 ## 7. Security Contact Information
 

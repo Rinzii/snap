@@ -7,8 +7,8 @@ check_cxx_source_compiles("
             _mm_sin_pd(_mm_set1_pd(1.0));
             return 0;
         }
-    " CCMATH_SIMD_HAS_SVML_SUPPORT)
+    " SNAP_SIMD_HAS_SVML_SUPPORT)
 
-if (CCMATH_SIMD_HAS_SVML_SUPPORT)
-    add_compile_definitions(CCM_CONFIG_RT_SIMD_HAS_SVML)
+if (SNAP_SIMD_HAS_SVML_SUPPORT)
+    add_compile_definitions(SNAP_CONFIG_RT_SIMD_HAS_SVML)
 endif ()

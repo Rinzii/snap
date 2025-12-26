@@ -153,7 +153,7 @@ include(cmake/config/ProjectCompileDefinitions.cmake)
 set(SNAP_VERSION_MAJOR ${CMAKE_PROJECT_VERSION_MAJOR})
 set(SNAP_VERSION_MINOR ${CMAKE_PROJECT_VERSION_MINOR})
 set(SNAP_VERSION_PATCH ${CMAKE_PROJECT_VERSION_PATCH})
-configure_file("${PROJECT_SOURCE_DIR}/cmake/in/version.hpp.in" "${PROJECT_BINARY_DIR}/include/snap/version.hpp")
+configure_file("${PROJECT_SOURCE_DIR}/cmake/in/snap_version.hpp.in" "${PROJECT_BINARY_DIR}/include/snap/version.hpp")
 configure_file("${PROJECT_SOURCE_DIR}/include/snap/internal/config/abi_namespace.hpp.in" "${PROJECT_BINARY_DIR}/include/snap/internal/config/abi_namespace.hpp" @ONLY)
 
 

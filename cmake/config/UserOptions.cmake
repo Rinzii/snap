@@ -16,6 +16,7 @@ snap_option(SNAP_ENABLE_WARNINGS_AS_ERRORS "Treat warnings as errors in snap tar
 snap_option(SNAP_ENABLE_DEBUG_INFO "Inject extra debug information flags when supported" OFF OFF)
 snap_option(SNAP_ENABLE_SANITIZER_BUILD "Enable AddressSanitizer when building snap" OFF OFF)
 snap_option(SNAP_ENABLE_RUNTIME_SIMD "Enable runtime SIMD feature detection" ON ON)
+snap_option(SNAP_DISABLE_SVML_USAGE "Skip Intel SVML detection during SIMD checks" OFF OFF)
 snap_option(SNAP_DISABLE_CMAKE_FEATURE_CHECKS "Skip snap's feature detection CMake checks" OFF OFF)
 
 # ==================================================================

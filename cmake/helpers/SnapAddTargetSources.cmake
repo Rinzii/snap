@@ -1,4 +1,4 @@
-# Helper functions for adding headers to the interfaces of ccmath
+# Helper functions for wiring snap headers/sources into targets
 
 function(snap_add_headers)
     foreach (header IN LISTS ARGV)
