@@ -10,11 +10,20 @@
 
 SNAP_BEGIN_NAMESPACE
 
+/**
+ * \brief Compile-time list of types.
+ */
 template <class... Ts>
 struct type_list
 {
 };
 
+/**
+ * \brief Trait that detects whether T is a snap::type_list.
+ *
+ * \par Complexity
+ * O(1)
+ */
 template <class T>
 struct is_type_list : std::false_type
 {
@@ -25,13 +34,26 @@ struct is_type_list<type_list<Ts...>> : std::true_type
 {
 };
 
+/**
+ * \brief True if T is a snap::type_list after cvref removal.
+ *
+ * \par Complexity
+ * O(1)
+ */
 template <class T>
 inline constexpr bool is_type_list_v = is_type_list<snap::remove_cvref_t<T>>::value;
 
+/**
+ * \brief Type list algorithms.
+ *
+ * All operations are compile-time utilities over snap::type_list.
+ */
 namespace typelist
 {
+	/** \cond SNAP_DOXYGEN_DETAIL */
 	namespace detail
 	{
+		// size: O(1)
 		template <class List>
 		struct size_impl_unqual
 		{
@@ -47,6 +69,7 @@ namespace typelist
 		{
 		};
 
+		// empty: O(1)
 		template <class List>
 		struct empty_impl_unqual
 		{
@@ -62,6 +85,7 @@ namespace typelist
 		{
 		};
 
+		// front: O(1), requires non-empty list
 		template <class List>
 		struct front_impl_unqual
 		{
@@ -79,6 +103,7 @@ namespace typelist
 			using type = typename front_impl_unqual<snap::remove_cvref_t<List>>::type;
 		};
 
+		// back: O(N), requires non-empty pack
 		template <class... Ts>
 		struct back_pack;
 
@@ -110,6 +135,7 @@ namespace typelist
 			using type = typename back_impl_unqual<snap::remove_cvref_t<List>>::type;
 		};
 
+		// push_front: O(1)
 		template <class List, class T>
 		struct push_front_impl_unqual
 		{
@@ -127,6 +153,7 @@ namespace typelist
 			using type = typename push_front_impl_unqual<snap::remove_cvref_t<List>, T>::type;
 		};
 
+		// push_back: O(N) pack materialization
 		template <class List, class T>
 		struct push_back_impl_unqual
 		{
@@ -144,6 +171,7 @@ namespace typelist
 			using type = typename push_back_impl_unqual<snap::remove_cvref_t<List>, T>::type;
 		};
 
+		// pop_front: O(1), requires non-empty list
 		template <class List>
 		struct pop_front_impl_unqual
 		{
@@ -161,6 +189,7 @@ namespace typelist
 			using type = typename pop_front_impl_unqual<snap::remove_cvref_t<List>>::type;
 		};
 
+		// pop_back: O(N), requires non-empty list
 		template <class Acc, class... Ts>
 		struct pop_back_accum;
 
@@ -192,6 +221,7 @@ namespace typelist
 			using type = typename pop_back_impl_unqual<snap::remove_cvref_t<List>>::type;
 		};
 
+		// at: O(I), requires I in range
 		template <std::size_t I, class T0, class... Ts>
 		struct at_pack : at_pack<I - 1u, Ts...>
 		{
@@ -220,6 +250,7 @@ namespace typelist
 			using type = typename at_impl_unqual<snap::remove_cvref_t<List>, I>::type;
 		};
 
+		// contains: O(N)
 		template <class List, class T>
 		struct contains_impl_unqual
 		{
@@ -235,6 +266,7 @@ namespace typelist
 		{
 		};
 
+		// index_of: O(N)
 		template <class T, class... Ts>
 		struct index_of_pack;
 
@@ -268,6 +300,7 @@ namespace typelist
 		{
 		};
 
+		// concat: O(K) recursion, plus pack materialization
 		template <class... Lists>
 		struct concat_impl_unqual
 		{
@@ -296,6 +329,7 @@ namespace typelist
 			using type = typename concat_impl_unqual<snap::remove_cvref_t<Lists>...>::type;
 		};
 
+		// clear: O(1)
 		template <class List>
 		struct clear_impl_unqual
 		{
@@ -313,6 +347,7 @@ namespace typelist
 			using type = typename clear_impl_unqual<snap::remove_cvref_t<List>>::type;
 		};
 
+		// unique: O(N^2) worst case
 		template <class Acc, class... Ts>
 		struct unique_accum;
 
@@ -347,6 +382,7 @@ namespace typelist
 			using type = typename unique_impl_unqual<snap::remove_cvref_t<List>>::type;
 		};
 
+		// transform: O(N)
 		template <template <class> class F, class T, class = void>
 		struct has_tt_apply : std::false_type
 		{
@@ -377,6 +413,7 @@ namespace typelist
 			using type = typename transform_impl_unqual<snap::remove_cvref_t<List>, F>::type;
 		};
 
+		// transform_type: O(N)
 		template <template <class> class Trait, class T, class = void>
 		struct has_tt_type : std::false_type
 		{
@@ -407,6 +444,7 @@ namespace typelist
 			using type = typename transform_type_impl_unqual<snap::remove_cvref_t<List>, Trait>::type;
 		};
 
+		// filter: O(N)
 		template <template <class> class Pred, class T, class = void>
 		struct has_tt_pred : std::false_type
 		{
@@ -454,65 +492,191 @@ namespace typelist
 			using type = typename filter_impl_unqual<snap::remove_cvref_t<List>, Pred>::type;
 		};
 	} // namespace detail
+	/** \endcond */
 
+	/**
+	 * \brief Number of elements in List.
+	 *
+	 * \par Complexity
+	 * O(1)
+	 */
 	template <class List>
 	inline constexpr std::size_t size_v = detail::size_impl<List>::value;
 
+	/**
+	 * \brief True if List is empty.
+	 *
+	 * \par Complexity
+	 * O(1)
+	 */
 	template <class List>
 	inline constexpr bool empty_v = detail::empty_impl<List>::value;
 
+	/**
+	 * \brief First element of List.
+	 *
+	 * \pre List is non-empty.
+	 * \par Complexity
+	 * O(1)
+	 */
 	template <class List>
 	using front_t = typename detail::front_impl<List>::type;
 
+	/**
+	 * \brief Last element of List.
+	 *
+	 * \pre List is non-empty.
+	 * \par Complexity
+	 * O(N)
+	 */
 	template <class List>
 	using back_t = typename detail::back_impl<List>::type;
 
+	/**
+	 * \brief Ith element of List (0-based).
+	 *
+	 * \pre I < size_v<List>.
+	 * \par Complexity
+	 * O(I)
+	 */
 	template <class List, std::size_t I>
 	using at_t = typename detail::at_impl<List, I>::type;
 
+	/**
+	 * \brief List with T prepended.
+	 *
+	 * \par Complexity
+	 * O(1)
+	 */
 	template <class List, class T>
 	using push_front_t = typename detail::push_front_impl<List, T>::type;
 
+	/**
+	 * \brief List with T appended.
+	 *
+	 * \par Complexity
+	 * O(N) pack materialization
+	 */
 	template <class List, class T>
 	using push_back_t = typename detail::push_back_impl<List, T>::type;
 
+	/**
+	 * \brief List with the first element removed.
+	 *
+	 * \pre List is non-empty.
+	 * \par Complexity
+	 * O(1)
+	 */
 	template <class List>
 	using pop_front_t = typename detail::pop_front_impl<List>::type;
 
+	/**
+	 * \brief List with the last element removed.
+	 *
+	 * \pre List is non-empty.
+	 * \par Complexity
+	 * O(N)
+	 */
 	template <class List>
 	using pop_back_t = typename detail::pop_back_impl<List>::type;
 
+	/**
+	 * \brief True if T occurs in List.
+	 *
+	 * \par Complexity
+	 * O(N)
+	 */
 	template <class List, class T>
 	inline constexpr bool contains_v = detail::contains_impl<List, T>::value;
 
+	/**
+	 * \brief First index of T in List, or size_v<List> if not found.
+	 *
+	 * \par Complexity
+	 * O(N)
+	 */
 	template <class List, class T>
 	inline constexpr std::size_t index_of_v = detail::index_of_impl<List, T>::value;
 
+	/**
+	 * \brief Sentinel for "not found" results.
+	 *
+	 * \par Complexity
+	 * O(1)
+	 */
 	template <class List>
 	inline constexpr std::size_t npos_v = size_v<List>;
 
+	/**
+	 * \brief Alias for index_of_v.
+	 *
+	 * \par Complexity
+	 * O(N)
+	 */
 	template <class List, class T>
 	inline constexpr std::size_t find_v = index_of_v<List, T>;
 
+	/**
+	 * \brief Concatenate Lists in order.
+	 *
+	 * \par Complexity
+	 * O(K) recursion, plus pack materialization
+	 */
 	template <class... Lists>
 	using concat_t = typename detail::concat_impl<Lists...>::type;
 
+	/**
+	 * \brief Clears List to type_list<>.
+	 *
+	 * \par Complexity
+	 * O(1)
+	 */
 	template <class List>
 	using clear_t = typename detail::clear_impl<List>::type;
 
+	/**
+	 * \brief Removes duplicates while preserving first occurrences.
+	 *
+	 * \par Complexity
+	 * O(N^2) worst case
+	 */
 	template <class List>
 	using unique_t = typename detail::unique_impl<List>::type;
 
+	/**
+	 * \brief Maps each element T to F<T>.
+	 *
+	 * \pre F<T> is well-formed for all elements.
+	 * \par Complexity
+	 * O(N)
+	 */
 	template <class List, template <class> class F>
 	using transform_t = typename detail::transform_impl<List, F>::type;
 
+	/**
+	 * \brief Maps each element T to Trait<T>::type.
+	 *
+	 * \pre Trait<T>::type is well-formed for all elements.
+	 * \par Complexity
+	 * O(N)
+	 */
 	template <class List, template <class> class Trait>
 	using transform_type_t = typename detail::transform_type_impl<List, Trait>::type;
 
+	/**
+	 * \brief Keeps elements where Pred<T>::value is true.
+	 *
+	 * \pre Pred<T>::value is usable for all elements.
+	 * \par Complexity
+	 * O(N)
+	 */
 	template <class List, template <class> class Pred>
 	using filter_t = typename detail::filter_impl<List, Pred>::type;
 
-	// index_of_v<List, T> returns the first index i such that at_t<List, i> is T, or npos_v<List> if not found.
+	/**
+	 * \brief index_of_v<List, T> returns the first index i such that at_t<List, i> is T,
+	 * or npos_v<List> if not found.
+	 */
 } // namespace typelist
 
 SNAP_END_NAMESPACE
