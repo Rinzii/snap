@@ -1,4 +1,4 @@
-#include "snap/concepts/ranges.hpp"
+#include "snap/concepts/container_compatible_range.hpp"
 
 #include <gtest/gtest.h>
 
