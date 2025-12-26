@@ -158,6 +158,35 @@ configure_file("${PROJECT_SOURCE_DIR}/include/snap/internal/config/abi_namespace
 
 
 # ----------------------------------------------------------------------
+# Package config + exports
+# ----------------------------------------------------------------------
+include(GNUInstallDirs)
+include(CMakePackageConfigHelpers)
+
+set(SNAP_CMAKE_CONFIG_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}")
+set(SNAP_CMAKE_CONFIG_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}/cmake/${SNAP_TARGET_NAME}")
+
+configure_package_config_file(
+        "${SNAP_ROOT_DIR}/cmake/in/snap-config.cmake.in"
+        "${SNAP_CMAKE_CONFIG_BUILD_DIR}/snap-config.cmake"
+        INSTALL_DESTINATION "${SNAP_CMAKE_CONFIG_INSTALL_DIR}"
+)
+
+write_basic_package_version_file(
+        "${SNAP_CMAKE_CONFIG_BUILD_DIR}/snap-config-version.cmake"
+        COMPATIBILITY SameMajorVersion
+)
+
+export(
+        TARGETS ${SNAP_TARGET_NAME}
+        FILE "${SNAP_CMAKE_CONFIG_BUILD_DIR}/${SNAP_TARGET_NAME}-targets.cmake"
+        NAMESPACE ${SNAP_TARGET_NAME}::
+)
+
+export(PACKAGE ${SNAP_TARGET_NAME})
+
+
+# ----------------------------------------------------------------------
 # Installation Rules
 # ----------------------------------------------------------------------
 if (SNAP_INSTALL)

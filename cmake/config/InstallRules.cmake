@@ -3,7 +3,6 @@ if (NOT DEFINED SNAP_ROOT_DIR)
 endif ()
 
 include(GNUInstallDirs)
-include(CMakePackageConfigHelpers)
 
 install(DIRECTORY
         "${SNAP_ROOT_DIR}/include/"
@@ -28,23 +27,11 @@ install(
 install(EXPORT ${SNAP_TARGET_NAME}-targets
         FILE ${SNAP_TARGET_NAME}-targets.cmake
         NAMESPACE ${SNAP_TARGET_NAME}::
-        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/snap"
-)
-
-configure_package_config_file(
-        "${SNAP_ROOT_DIR}/cmake/in/snap-config.cmake.in"
-        "${CMAKE_CURRENT_BINARY_DIR}/snap-config.cmake"
-        INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/snap"
-)
-
-# Write a version file for strict version checking
-write_basic_package_version_file(
-        "${CMAKE_CURRENT_BINARY_DIR}/snap-config-version.cmake"
-        COMPATIBILITY SameMajorVersion
+        DESTINATION "${SNAP_CMAKE_CONFIG_INSTALL_DIR}"
 )
 
 install(FILES
-        "${CMAKE_CURRENT_BINARY_DIR}/snap-config.cmake"
-        "${CMAKE_CURRENT_BINARY_DIR}/snap-config-version.cmake"
-        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/snap"
+        "${SNAP_CMAKE_CONFIG_BUILD_DIR}/snap-config.cmake"
+        "${SNAP_CMAKE_CONFIG_BUILD_DIR}/snap-config-version.cmake"
+        DESTINATION "${SNAP_CMAKE_CONFIG_INSTALL_DIR}"
 )
