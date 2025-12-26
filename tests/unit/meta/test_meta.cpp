@@ -30,16 +30,18 @@ TEST(MetaTraits, PlaceholderToleratesAnyConstruction)
 
 TEST(MetaTraits, HasUtilitiesDetectExpressions)
 {
-	static_assert(SNAP_NAMESPACE::has<begin_expr, std::vector<int>>);
-	static_assert(!SNAP_NAMESPACE::has<begin_expr, int>);
+	using namespace SNAP_NAMESPACE::probe;
 
-	static_assert(SNAP_NAMESPACE::has_as<size_expr, std::size_t, std::vector<int>>);
-	static_assert(!SNAP_NAMESPACE::has_as<size_expr, std::size_t, int>);
+	static_assert(has<begin_expr, std::vector<int>>);
+	static_assert(!has<begin_expr, int>);
 
-	static_assert(SNAP_NAMESPACE::has_either<equals_expr, int, double>);
-	static_assert(!SNAP_NAMESPACE::has_either<equals_expr, std::string, SNAP_NAMESPACE::placeholder_t>);
+	static_assert(has_as<size_expr, std::size_t, std::vector<int>>);
+	static_assert(!has_as<size_expr, std::size_t, int>);
 
-	static_assert(SNAP_NAMESPACE::has_either_as<equals_expr, bool, int, double>);
-	static_assert(!SNAP_NAMESPACE::has_either_as<equals_expr, bool, std::string, SNAP_NAMESPACE::placeholder_t>);
+	static_assert(has_either<equals_expr, int, double>);
+	static_assert(!has_either<equals_expr, std::string, SNAP_NAMESPACE::placeholder_t>);
+
+	static_assert(has_either_as<equals_expr, bool, int, double>);
+	static_assert(!has_either_as<equals_expr, bool, std::string, SNAP_NAMESPACE::placeholder_t>);
 }
 

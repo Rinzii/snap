@@ -565,6 +565,8 @@ snap_add_unit_tests(
         SOURCES
         meta/test_meta.cpp
         meta/test_detector.cpp
+        meta/test_has.cpp
+        meta/test_has_traits.cpp
 )
 
 snap_add_unit_tests(
