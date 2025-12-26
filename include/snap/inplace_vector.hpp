@@ -3,7 +3,6 @@
 // Must be included first
 #include "snap/internal/abi_namespace.hpp"
 
-#include "snap/internal/compat/constexpr.hpp"
 #include "snap/internal/helpers/raw_storage.hpp"
 
 #include <algorithm> // std::move, std::move_backward, std::lexicographical_compare
@@ -21,7 +20,7 @@ SNAP_BEGIN_NAMESPACE
 template <class T, std::size_t N> struct inplace_vector
 {
 	static_assert(N > 0, "Primary template is for N > 0; N==0 has a specialization");
-	static_assert(std::is_move_constructible<T>::value && std::is_move_assignable<T>::value, "T must be MoveConstructible and MoveAssignable");
+	static_assert(std::is_move_constructible_v<T> && std::is_move_assignable_v<T>, "T must be MoveConstructible and MoveAssignable");
 
 	// member types
 	using value_type			 = T;
@@ -589,9 +588,9 @@ template <class T, std::size_t N> struct inplace_vector
 					::new (static_cast<void*>(tmp + built)) T(*first);
 					++built;
 				}
-				iterator it = insert(pos, built, tmp[0]); // insert count copies of first—wrong
-														  // The above would duplicate the first value only; instead we need element-wise placement:
-														  // Roll back that approach; do a proper block insert below.
+				insert(pos, built, tmp[0]); // insert count copies of first—wrong
+											// The above would duplicate the first value only; instead we need element-wise placement:
+											// Roll back that approach; do a proper block insert below.
 			}
 			catch (...)
 			{
@@ -669,12 +668,12 @@ template <class T, std::size_t N> struct inplace_vector
 	template <class InputIt> void append_range(InputIt first, InputIt last)
 	{
 		// collect into temp up to avail; throw if more
-		size_type avail = N - m_size;
-		using tmp_t		= internal::raw_storage_for<T>;
+		size_type avail			 = N - m_size;
+		using tmp_t				 = internal::raw_storage_for<T>;
 		const size_type temp_cap = (avail > 0) ? avail : 1;
 		auto tmp				 = std::make_unique<tmp_t[]>(temp_cap);
 		T* buf					 = std::launder(reinterpret_cast<T*>(tmp.get()));
-		size_type built = 0;
+		size_type built			 = 0;
 		try
 		{
 			for (; first != last; ++first)
