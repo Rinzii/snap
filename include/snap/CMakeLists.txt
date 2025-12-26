@@ -6,6 +6,12 @@ snap_add_headers(
         version.hpp
 )
 
+if (CMAKE_CXX_STANDARD GREATER_EQUAL 20)
+    snap_add_headers(
+            concepts.hpp
+    )
+endif ()
+
 add_subdirectory(bit)
 add_subdirectory(concepts)
 add_subdirectory(debugging)

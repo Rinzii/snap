@@ -17,7 +17,7 @@
 		#pragma comment(lib, "Synchronization") // need WaitOnAddress/WakeByAddress* when linking snap.lib
 	#endif
 #elif defined(__APPLE__)
-	#if __has_include(<sys/ulock.h>)
+	#if defined(__has_include) && __has_include(<sys/ulock.h>)
 		#include <sys/ulock.h>
 		#define SNAP_HAS_APPLE_ULOCK 1
 	#else

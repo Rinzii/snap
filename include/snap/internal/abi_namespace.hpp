@@ -1,8 +1,6 @@
 #pragma once
 
-#include "snap/internal/pp/has_include.hpp"
-
-#if SNAP_HAS_INCLUDE("snap/internal/config/abi_namespace.hpp")
+#if defined(__has_include) && __has_include("snap/internal/config/abi_namespace.hpp")
 	#include "snap/internal/config/abi_namespace.hpp"
 #else
 	#ifndef SNAP_ENABLE_ABI_NAMESPACE
@@ -23,7 +21,7 @@
 			inline namespace SNAP_ABI_NAMESPACE                                                                                                                \
 			{
 	#define SNAP_END_NAMESPACE                                                                                                                                 \
-			}                                                                                                                                                      \
+		}                                                                                                                                                      \
 		} // namespace SNAP_NAMESPACE
 #else
 	#define SNAP_BEGIN_NAMESPACE                                                                                                                               \
