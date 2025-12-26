@@ -10,9 +10,9 @@ struct placeholder_t
 {
 	placeholder_t() = default;
 
-	template <class... Ts> constexpr placeholder_t(Ts &&...) noexcept {}
+	template <class... Ts> explicit constexpr placeholder_t(Ts &&...) noexcept {}
 
-	template <class T> [[nodiscard]] operator T() const noexcept
+	template <class T> [[nodiscard]] explicit operator T() const noexcept
 	{
 		static_assert(SNAP_NAMESPACE::always_false<T>, "conversion of SNAP_NAMESPACE::placeholder_t is ill-formed");
 		return nullptr;
