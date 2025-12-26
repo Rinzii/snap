@@ -4,6 +4,7 @@ snap_add_headers(
         has.hpp
         has_traits.hpp
         placeholder.hpp
+        type_list.hpp
 )
 
 
