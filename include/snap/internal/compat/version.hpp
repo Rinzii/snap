@@ -1,11 +1,10 @@
 #pragma once
 
 #include "snap/internal/compat/std.hpp"
-#include "snap/internal/pp/has_include.hpp"
 
-#if SNAP_HAS_INCLUDE(<version>) // If we have the version header just use that instead.
+#if defined(__has_include) && __has_include(<version>) // If we have the version header just use that instead.
 	#include <version>
-#elif defined(_MSC_VER) && defined(_WIN32) && SNAP_HAS_INCLUDE(<yvals_core.h>) // MSVC actually backports these macros in yvals_core.h
+#elif defined(_MSC_VER) && defined(_WIN32) && defined(__has_include) && __has_include(<yvals_core.h>) // MSVC actually backports these macros in yvals_core.h
 	#include <yvals_core.h>
 
 // General feature testing backport. Disable-able through macro.
