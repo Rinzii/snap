@@ -10,6 +10,9 @@ extern "C" __declspec(dllimport) int __stdcall IsDebuggerPresent(void);
 	#include <sys/sysctl.h>
 	#include <sys/types.h>
 	#include <unistd.h>
+	#if defined(__FreeBSD__)
+		#include <sys/user.h>
+	#endif
 #elif defined(__unix__) || defined(__linux__) || defined(__ANDROID__)
 	#include <cctype>
 	#include <cstdio>
