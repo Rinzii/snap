@@ -75,11 +75,42 @@ fi
 echo "Beginning linting..."
 rc=0
 files_seen=0
+only_errors=0
+if [[ -n "${SNAP_LINT_ONLY_ERRORS:-}" ]]; then
+	if [[ "${SNAP_LINT_ONLY_ERRORS}" == "1" ]]; then
+		only_errors=1
+	fi
+elif [[ -n "${CI:-}" && "${CI}" != "false" ]]; then
+	only_errors=1
+fi
+
+print_tidy_output() {
+	local content=$1
+	[[ -z "$content" ]] && return
+	if [[ $only_errors -eq 1 ]]; then
+		# Ignore lines that are purely warnings; retain everything else (errors, notes).
+		printf '%s\n' "$content" | grep -vE ': warning:' || true
+	else
+		printf '%s\n' "$content"
+	fi
+}
+
 while IFS= read -r -d '' header; do
 	files_seen=1
-	if ! "$clang_tidy_bin" "$header" -p="$build_dir" --quiet "${extra_args[@]}"; then
-		echo "Error in $header"
-		rc=1
+	cmd=( "$clang_tidy_bin" "$header" -p="$build_dir" --quiet "${extra_args[@]}" )
+	if [[ $only_errors -eq 1 ]]; then
+		if ! output="$("${cmd[@]}" 2>&1)"; then
+			print_tidy_output "$output"
+			echo "Error in $header"
+			rc=1
+		else
+			print_tidy_output "$output"
+		fi
+	else
+		if ! "${cmd[@]}"; then
+			echo "Error in $header"
+			rc=1
+		fi
 	fi
 done < <(find "$source_dir" -type f -name "$file_glob" -print0 | sort -z)
 

@@ -18,6 +18,13 @@ if not defined SNAP_LINT_BUILD_DIR set "SNAP_LINT_BUILD_DIR=out\clang-tidy"
 if not defined SNAP_LINT_SOURCE_DIR set "SNAP_LINT_SOURCE_DIR=include\snap"
 if not defined SNAP_LINT_FILE_GLOB set "SNAP_LINT_FILE_GLOB=*.hpp"
 if not defined SNAP_LINT_STD set "SNAP_LINT_STD=c++20"
+if not defined SNAP_LINT_ONLY_ERRORS (
+    if defined CI (
+        set "SNAP_LINT_ONLY_ERRORS=1"
+    ) else (
+        set "SNAP_LINT_ONLY_ERRORS=0"
+    )
+)
 
 set "CLANG_TIDY_BIN=%SNAP_LINT_CLANG_TIDY%"
 call :ensure_cmd "%CLANG_TIDY_BIN%"
@@ -28,16 +35,33 @@ if errorlevel 1 exit /b 1
 
 set "status=0"
 set "files_seen=0"
+set "only_errors=0"
+if "%SNAP_LINT_ONLY_ERRORS%"=="1" set "only_errors=1"
 echo Beginning linting...
 for /r "%SNAP_LINT_SOURCE_DIR%" %%f in (%SNAP_LINT_FILE_GLOB%) do (
     set "files_seen=1"
-    call "%CLANG_TIDY_BIN%" "%%f" -p="%SNAP_LINT_BUILD_DIR%" --quiet ^
-        --extra-arg=-std=%SNAP_LINT_STD% ^
-        --extra-arg=-include%CD%\include\snap\internal\abi_namespace.hpp ^
-        %SNAP_LINT_EXTRA_ARGS%
-    if errorlevel 1 (
-        echo Error in %%f
-        set "status=1"
+    if "%only_errors%"=="1" (
+        set "tmpfile=%TEMP%\snap-lint-%%~nf-!random!.log"
+        call "%CLANG_TIDY_BIN%" "%%f" -p="%SNAP_LINT_BUILD_DIR%" --quiet ^
+            --extra-arg=-std=%SNAP_LINT_STD% ^
+            --extra-arg=-include%CD%\include\snap\internal\abi_namespace.hpp ^
+            %SNAP_LINT_EXTRA_ARGS% >"!tmpfile!" 2>&1
+        set "tidy_status=!errorlevel!"
+        call :emit_filtered "!tmpfile!"
+        del /q "!tmpfile!" >nul 2>&1
+        if not "!tidy_status!"=="0" (
+            echo Error in %%f
+            set "status=1"
+        )
+    ) else (
+        call "%CLANG_TIDY_BIN%" "%%f" -p="%SNAP_LINT_BUILD_DIR%" --quiet ^
+            --extra-arg=-std=%SNAP_LINT_STD% ^
+            --extra-arg=-include%CD%\include\snap\internal\abi_namespace.hpp ^
+            %SNAP_LINT_EXTRA_ARGS%
+        if errorlevel 1 (
+            echo Error in %%f
+            set "status=1"
+        )
     )
 )
 if "%files_seen%"=="0" (
@@ -80,3 +104,10 @@ if not defined SNAP_LINT_CMAKE_GENERATOR (
 echo Generating compile_commands.json in %SNAP_LINT_BUILD_DIR%...
 cmake -S . -B "%SNAP_LINT_BUILD_DIR%" -G "%SNAP_LINT_CMAKE_GENERATOR%" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON %SNAP_LINT_CMAKE_FLAGS%
 exit /b %errorlevel%
+
+:emit_filtered
+set "file=%~1"
+if not exist "%file%" exit /b 0
+powershell -NoProfile -Command ^
+    "Get-Content -Path '%file%' | Where-Object { $_ -notmatch ': warning:' } | ForEach-Object { $_ }"
+exit /b 0
