@@ -23,10 +23,12 @@ namespace
 
 	template <class T> constexpr int digits_v = std::numeric_limits<T>::digits; // value bits
 
-	template <class T> constexpr T highest_pow2()
+	template <class T> constexpr T pow2(int exponent)
 	{
-		return T{ 1 } << (digits_v<T> - 1);
+		return static_cast<T>(T{ 1 } << exponent);
 	}
+
+	template <class T> constexpr T highest_pow2() { return pow2<T>(digits_v<T> - 1); }
 
 	// Typed test over common unsigned integer types
 	template <class T> class BitCeilTyped : public ::testing::Test
@@ -35,7 +37,7 @@ namespace
 	};
 
 	using TestTypes = ::testing::Types<unsigned char, unsigned short, unsigned int, unsigned long, unsigned long long>;
-	TYPED_TEST_SUITE(BitCeilTyped, TestTypes);
+	TYPED_TEST_SUITE(BitCeilTyped, TestTypes, ::testing::internal::DefaultNameGenerator);
 
 	// 0 and 1 well-defined
 	TYPED_TEST(BitCeilTyped, ZeroAndOne)
@@ -51,7 +53,7 @@ namespace
 		using T = TypeParam;
 		for (int k = 0; k < digits_v<T>; ++k)
 		{
-			const T p = T{ 1 } << k;
+			const T p = pow2<T>(k);
 			EXPECT_EQ(SNAP_NAMESPACE::bit_ceil(p), p) << "k=" << k;
 		}
 	}
@@ -70,7 +72,7 @@ namespace
 		using T = TypeParam;
 		for (int k = 2; k < digits_v<T>; ++k)
 		{
-			const T p = T{ 1 } << k;   // 2^k
+			const T p = pow2<T>(k);	   // 2^k
 			const T m = T(p - T{ 1 }); // 2^k - 1
 			EXPECT_EQ(SNAP_NAMESPACE::bit_ceil(m), p) << "k=" << k;
 		}
@@ -82,9 +84,9 @@ namespace
 		using T = TypeParam;
 		for (int k = 0; k < digits_v<T> - 1; ++k)
 		{
-			const T p	   = T{ 1 } << k;		// 2^k
+			const T p	   = pow2<T>(k);		// 2^k
 			const T a	   = T(p + T{ 1 });		// 2^k + 1
-			const T expect = T{ 1 } << (k + 1); // 2^(k+1)
+			const T expect = pow2<T>(k + 1);	// 2^(k+1)
 			EXPECT_EQ(SNAP_NAMESPACE::bit_ceil(a), expect) << "k=" << k;
 		}
 	}
@@ -122,13 +124,13 @@ namespace
 
 			for (int k = 0; k < digits; ++k)
 			{
-				const T p = T{ 1 } << k; // 2^k
+				const T p = pow2<T>(k); // 2^k
 				if (p > hp2) break;
 				check_props(p); // exact power-of-two is fixed point
 
 				if (k > 0)
 				{
-					const T prev = T{ 1 } << (k - 1); // 2^(k-1)
+					const T prev = pow2<T>(k - 1); // 2^(k-1)
 					check_props(T(prev + T{ 1 }));	  // just above prev -> p
 					check_props(T(p - T{ 1 }));		  // just below p    -> p
 				}
@@ -176,7 +178,7 @@ namespace
 			// Add boundary neighborhoods in increasing order: {p-1, p, p+1}
 			for (int k = 1; k < digits; ++k)
 			{
-				const T p = T{ 1 } << k;
+				const T p = pow2<T>(k);
 				if (p > hp2) { break; }
 
 				const T below = T(p - T{ 1 });
@@ -196,7 +198,7 @@ namespace
 			// Coarse sweep to fill gaps (~2^15 total steps max)
 			int shift = 0;
 			if (digits > 15) { shift = digits - 15; }
-			const T step = (shift > 0) ? T{ 1 } << shift : T{ 1 };
+			const T step = (shift > 0) ? pow2<T>(shift) : T{ 1 };
 
 			for (T x = T{ 1 }; x < hp2;)
 			{
@@ -269,7 +271,7 @@ namespace
 			check(T{ 1 });
 			for (int k = 0; k < digits; ++k)
 			{
-				const T p = T{ 1 } << k;
+				const T p = pow2<T>(k);
 				if (p > hp2) break;
 				if (k > 0) check(T(p - T{ 1 }));		  // just below p
 				check(p);								  // at p

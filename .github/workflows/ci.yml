@@ -24,7 +24,6 @@ jobs:
     name: tier0 · lint + header smoke
     runs-on: ubuntu-24.04
     timeout-minutes: 15
-    continue-on-error: true
     steps:
       - name: Harden runner
         uses: step-security/harden-runner@v2.11.0

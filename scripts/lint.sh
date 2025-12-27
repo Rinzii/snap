@@ -55,7 +55,7 @@ if [[ -z "$sysroot" && "$(uname -s)" == "Darwin" ]] && command -v xcrun >/dev/nu
 	fi
 fi
 
-extra_args=(--extra-arg="-std=${std_ver}")
+extra_args=(--extra-arg="-std=${std_ver}" --warnings-as-errors=)
 if [[ -n "$sysroot" ]]; then
 	extra_args+=(--extra-arg="-isysroot${sysroot}")
 fi

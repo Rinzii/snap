@@ -144,7 +144,7 @@ protected:
 	static_assert(std::is_trivially_copyable_v<To>, "To must be trivially copyable");
 	static_assert(std::is_trivially_copyable_v<From>, "From must be trivially copyable");
 };
-TYPED_TEST_SUITE(BitCastTyped, BitCastPairs);
+TYPED_TEST_SUITE(BitCastTyped, BitCastPairs, ::testing::internal::DefaultNameGenerator);
 
 // Round-trip preserves object representation (bytes) regardless of type
 TYPED_TEST(BitCastTyped, RoundTripPreservesBytes)
