@@ -8,6 +8,20 @@
 #include <cstring>
 #include <mutex>
 
+#if defined(__linux__) || defined(__ANDROID__)
+	#if defined(__has_include)
+		#if __has_include(<linux/futex.h>)
+			#define SNAP_HAS_LINUX_FUTEX 1
+		#else
+			#define SNAP_HAS_LINUX_FUTEX 0
+		#endif
+	#else
+		#define SNAP_HAS_LINUX_FUTEX 1
+	#endif
+#else
+	#define SNAP_HAS_LINUX_FUTEX 0
+#endif
+
 #if defined(_WIN32)
 	#ifndef NOMINMAX
 		#define NOMINMAX
@@ -23,7 +37,7 @@
 	#else
 		#define SNAP_HAS_APPLE_ULOCK 0
 	#endif
-#elif defined(__linux__) || defined(__ANDROID__)
+#elif SNAP_HAS_LINUX_FUTEX
 	#include <linux/futex.h>
 	#include <sys/syscall.h>
 	#include <unistd.h>
@@ -172,7 +186,7 @@ namespace internal::detail
 		std::memcpy(std::addressof(old), expected, 4);
 		[[maybe_unused]] const int rc = __ulock_wait(UL_COMPARE_AND_WAIT, const_cast<void*>(addr), static_cast<std::uint64_t>(old), 0);
 		return rc == 0;
-#elif defined(__linux__) || defined(__ANDROID__)
+#elif SNAP_HAS_LINUX_FUTEX
 		if (size != 4) { return false; }
 		if (!aligned_for(4, addr)) { return false; }
 		std::uint32_t old = 0;
@@ -245,7 +259,7 @@ namespace internal::detail
 #elif defined(__APPLE__) && SNAP_HAS_APPLE_ULOCK
 		[[maybe_unused]] const int rc = __ulock_wake(UL_COMPARE_AND_WAIT, const_cast<void*>(addr), 0);
 		return rc == 0;
-#elif defined(__linux__) || defined(__ANDROID__)
+#elif SNAP_HAS_LINUX_FUTEX
 		auto* p						   = reinterpret_cast<std::uint32_t*>(const_cast<void*>(addr)); // NOLINT(*-pro-type-reinterpret-cast)
 		[[maybe_unused]] const long rc = ::syscall(SYS_futex, p, FUTEX_WAKE | FUTEX_PRIVATE_FLAG, 1, nullptr, nullptr, 0);
 		return rc >= 0;
@@ -276,7 +290,7 @@ namespace internal::detail
 #elif defined(__APPLE__) && SNAP_HAS_APPLE_ULOCK
 		[[maybe_unused]] const int rc = __ulock_wake(UL_COMPARE_AND_WAIT | ULF_WAKE_ALL, const_cast<void*>(addr), 0);
 		return rc == 0;
-#elif defined(__linux__) || defined(__ANDROID__)
+#elif SNAP_HAS_LINUX_FUTEX
 		auto* p						   = reinterpret_cast<std::uint32_t*>(const_cast<void*>(addr)); // NOLINT(*-pro-type-reinterpret-cast)
 		[[maybe_unused]] const long rc = ::syscall(SYS_futex, p, FUTEX_WAKE | FUTEX_PRIVATE_FLAG, INT_MAX, nullptr, nullptr, 0);
 		return rc >= 0;
@@ -330,7 +344,7 @@ namespace internal::detail
 			[[maybe_unused]] const int rc =
 				__ulock_wait(UL_COMPARE_AND_WAIT, reinterpret_cast<void*>(std::addressof(b.gen)), static_cast<std::uint64_t>(expected), 0);
 			return;
-#elif defined(__linux__) || defined(__ANDROID__)
+#elif SNAP_HAS_LINUX_FUTEX
 			auto* p = reinterpret_cast<std::uint32_t*>(std::addressof(b.gen)); // NOLINT(*-pro-type-reinterpret-cast)
 			for (;;)
 			{
@@ -386,7 +400,7 @@ namespace internal::detail
 #elif defined(__APPLE__) && SNAP_HAS_APPLE_ULOCK
 			[[maybe_unused]] const int rc = __ulock_wake(UL_COMPARE_AND_WAIT, reinterpret_cast<void*>(std::addressof(b.gen)), 0);
 			return;
-#elif defined(__linux__) || defined(__ANDROID__)
+#elif SNAP_HAS_LINUX_FUTEX
 			auto* p						   = reinterpret_cast<std::uint32_t*>(std::addressof(b.gen)); // NOLINT(*-pro-type-reinterpret-cast)
 			[[maybe_unused]] const long rc = ::syscall(SYS_futex, p, FUTEX_WAKE | FUTEX_PRIVATE_FLAG, 1, nullptr, nullptr, 0);
 			return;
@@ -417,7 +431,7 @@ namespace internal::detail
 #elif defined(__APPLE__) && SNAP_HAS_APPLE_ULOCK
 			[[maybe_unused]] const int rc = __ulock_wake(UL_COMPARE_AND_WAIT | ULF_WAKE_ALL, reinterpret_cast<void*>(std::addressof(b.gen)), 0);
 			return;
-#elif defined(__linux__) || defined(__ANDROID__)
+#elif SNAP_HAS_LINUX_FUTEX
 			auto* p						   = reinterpret_cast<std::uint32_t*>(std::addressof(b.gen)); // NOLINT(*-pro-type-reinterpret-cast)
 			[[maybe_unused]] const long rc = ::syscall(SYS_futex, p, FUTEX_WAKE | FUTEX_PRIVATE_FLAG, INT_MAX, nullptr, nullptr, 0);
 			return;
