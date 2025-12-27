@@ -88,8 +88,21 @@ print_tidy_output() {
 	local content=$1
 	[[ -z "$content" ]] && return
 	if [[ $only_errors -eq 1 ]]; then
-		# Ignore lines that are purely warnings; retain everything else (errors, notes).
-		printf '%s\n' "$content" | grep -vE ': warning:' || true
+		# Strip the complete warning block (header + caret + notes) as well as summary lines.
+		printf '%s\n' "$content" | awk '
+			BEGIN { skip = 0 }
+			/^[[:space:]]*$/ {
+				if (skip == 1) { skip = 0 }
+				next
+			}
+			/: warning:/ { skip = 1; next }
+			/: note:/ { if (skip == 1) next }
+			/[0-9]+ warnings generated\./ { next }
+			/warning generated\./ { next }
+			{
+				if (skip == 0) { print }
+			}
+		' || true
 	else
 		printf '%s\n' "$content"
 	fi

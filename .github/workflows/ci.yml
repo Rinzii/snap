@@ -258,9 +258,9 @@ jobs:
             distro: ubuntu22.04
             std: 17
             pkg: >
-              ninja-build cmake clang-16 lld-16 python3
-            cc: clang-16
-            cxx: clang++-16
+              ninja-build cmake gcc-12 g++-12 python3
+            cc: gcc-12
+            cxx: g++-12
     steps:
       - name: Harden runner
         uses: step-security/harden-runner@v2.11.0
@@ -311,8 +311,8 @@ jobs:
           operating_system: freebsd
           version: '14.2'
           run: |
-            env ASSUME_ALWAYS_YES=yes pkg update -f
-            env ASSUME_ALWAYS_YES=yes pkg install cmake ninja llvm git
+            sudo pkg update -f
+            sudo pkg install -y cmake ninja llvm git
             export CC=clang
             export CXX=clang++
             cmake -S . -B out/build/freebsd -G Ninja \
