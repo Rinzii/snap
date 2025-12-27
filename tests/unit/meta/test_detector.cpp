@@ -8,7 +8,7 @@
 namespace
 {
 	template <class T> using value_type_t = typename T::value_type;
-}
+} // namespace
 
 TEST(Meta, DetectorFindsMemberTypes)
 {

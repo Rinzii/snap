@@ -38,6 +38,7 @@ namespace
 
 	TYPED_TEST_SUITE(PopcountTyped, UnsignedTypes);
 
+	// NOLINTNEXTLINE(readability-function-cognitive-complexity)
 	TYPED_TEST(PopcountTyped, MatchesReference)
 	{
 		using T = TypeParam;

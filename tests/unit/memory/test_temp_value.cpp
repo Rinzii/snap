@@ -16,7 +16,7 @@ namespace
 		int* constructs = nullptr;
 		int* destroys   = nullptr;
 
-		CountingAllocator(int* c, int* d) : constructs(c), destroys(d) {}
+		explicit CountingAllocator(int* c, int* d) : constructs(c), destroys(d) {}
 
 		template <class U> CountingAllocator(const CountingAllocator<U>& other) : constructs(other.constructs), destroys(other.destroys) {}
 

@@ -12,7 +12,7 @@ namespace
 {
 	void AcquireRaw(int** target, int value)
 	{
-		*target = new int(value);
+		*target = new int(value); // NOLINT(cppcoreguidelines-owning-memory)
 	}
 } // namespace
 
@@ -43,7 +43,7 @@ TEST(MemoryOutPtr, SupportsSharedPtrWithDeleterArgs)
 TEST(MemoryInoutPtr, ReplacesManagedObject)
 {
 	std::unique_ptr<int> ptr(new int(5));
-	int*				 old_raw = ptr.get();
+	int* old_raw = ptr.get(); // NOLINT(misc-const-correctness)
 	{
 		auto adapter = SNAP_NAMESPACE::inout_ptr(ptr);
 		AcquireRaw(adapter, 42);
@@ -52,12 +52,12 @@ TEST(MemoryInoutPtr, ReplacesManagedObject)
 	EXPECT_TRUE(ptr);
 	EXPECT_EQ(*ptr, 42);
 	EXPECT_NE(ptr.get(), old_raw);
-	delete old_raw; // release() leaks the previous pointer by design
+	delete old_raw; // release() leaks the previous pointer by design NOLINT(cppcoreguidelines-owning-memory)
 }
 
 TEST(MemoryInoutPtr, WorksWithRawPointers)
 {
-	int* raw = nullptr;
+	int* raw = nullptr; // NOLINT(misc-const-correctness)
 	{
 		auto adapter = SNAP_NAMESPACE::inout_ptr(raw);
 		AcquireRaw(adapter, 12);
@@ -65,7 +65,7 @@ TEST(MemoryInoutPtr, WorksWithRawPointers)
 
 	ASSERT_NE(raw, nullptr);
 	EXPECT_EQ(*raw, 12);
-	delete raw;
+	delete raw; // NOLINT(cppcoreguidelines-owning-memory)
 }
 
 TEST(MemoryPtrTraits, DetectsCapabilities)

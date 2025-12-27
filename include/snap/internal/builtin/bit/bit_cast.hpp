@@ -19,69 +19,69 @@
 /// - MSVC 19.27+
 
 // GCC 11.1+ (no Clang/NVHPC/CUDA frontends)
-#if !defined(SNAP_HAS_BUILTIN_BIT_CAST)
+#ifndef SNAP_HAS_BUILTIN_BIT_CAST
 	#if defined(__GNUC__) && (__GNUC__ > 11 || (__GNUC__ == 11 && __GNUC_MINOR__ >= 1)) && !defined(__clang__) && !defined(__NVCOMPILER) &&                    \
 		!defined(__NVCOMPILER_LLVM__) && !defined(__CUDACC__)
 		#define SNAP_HAS_BUILTIN_BIT_CAST
 	#endif
-#endif
+#endif // SNAP_HAS_BUILTIN_BIT_CAST
 
 // Clang 9.0.0+ (non-Apple)
-#if !defined(SNAP_HAS_BUILTIN_BIT_CAST)
+#ifndef SNAP_HAS_BUILTIN_BIT_CAST
 	#if defined(__clang__) && !defined(__apple_build_version__) && (__clang_major__ >= 9)
 		#define SNAP_HAS_BUILTIN_BIT_CAST
 	#endif
-#endif
+#endif // SNAP_HAS_BUILTIN_BIT_CAST
 
 // Apple Clang 9.0.0+
-#if !defined(SNAP_HAS_BUILTIN_BIT_CAST)
+#ifndef SNAP_HAS_BUILTIN_BIT_CAST
 	#if defined(__clang__) && defined(__apple_build_version__) && (__clang_major__ >= 9)
 		#define SNAP_HAS_BUILTIN_BIT_CAST
 	#endif
-#endif
+#endif // SNAP_HAS_BUILTIN_BIT_CAST
 
 // Clang-CL 9.0.0+
-#if !defined(SNAP_HAS_BUILTIN_BIT_CAST)
+#ifndef SNAP_HAS_BUILTIN_BIT_CAST
 	#if defined(__clang__) && defined(_MSC_VER) && (__clang_major__ >= 9)
 		#define SNAP_HAS_BUILTIN_BIT_CAST
 	#endif
-#endif
+#endif // SNAP_HAS_BUILTIN_BIT_CAST
 
 // DPC++ 2021.1.2+
-#if !defined(SNAP_HAS_BUILTIN_BIT_CAST)
+#ifndef SNAP_HAS_BUILTIN_BIT_CAST
 	#if (defined(SYCL_LANGUAGE_VERSION) || defined(__INTEL_LLVM_COMPILER)) && (__INTEL_LLVM_COMPILER >= 20210102)
 		#define SNAP_HAS_BUILTIN_BIT_CAST
 	#endif
-#endif
+#endif // SNAP_HAS_BUILTIN_BIT_CAST
 
 // NVIDIA HPC 22.7+
-#if !defined(SNAP_HAS_BUILTIN_BIT_CAST)
+#ifndef SNAP_HAS_BUILTIN_BIT_CAST
 	#if (defined(__NVCOMPILER) || defined(__NVCOMPILER_LLVM__)) && (__NVCOMPILER_MAJOR__ >= 22 && __NVCOMPILER_MINOR__ >= 7)
 		#define SNAP_HAS_BUILTIN_BIT_CAST
 	#endif
-#endif
+#endif // SNAP_HAS_BUILTIN_BIT_CAST
 
 // MSVC 19.27+ (not Clang-CL)
-#if !defined(SNAP_HAS_BUILTIN_BIT_CAST)
+#ifndef SNAP_HAS_BUILTIN_BIT_CAST
 	#if defined(_MSC_VER) && !defined(__clang__) && (_MSC_VER >= 1927)
 		#define SNAP_HAS_BUILTIN_BIT_CAST
 	#endif
-#endif
+#endif // SNAP_HAS_BUILTIN_BIT_CAST
 
 // Final fallback: direct builtin check
-#if !defined(SNAP_HAS_BUILTIN_BIT_CAST)
+#ifndef SNAP_HAS_BUILTIN_BIT_CAST
 	#if defined(__has_builtin)
 		#if __has_builtin(__builtin_bit_cast)
 			#define SNAP_HAS_BUILTIN_BIT_CAST
 		#endif
 	#endif
-#endif
+#endif // SNAP_HAS_BUILTIN_BIT_CAST
 
 SNAP_BEGIN_NAMESPACE
 namespace builtin
 {
-	inline constexpr bool has_constexpr_bit_cast =
-#if defined(SNAP_HAS_BUILTIN_BIT_CAST)
+inline constexpr bool has_constexpr_bit_cast =
+#ifdef SNAP_HAS_BUILTIN_BIT_CAST
 		true
 #else
 		false

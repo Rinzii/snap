@@ -54,7 +54,7 @@ namespace details
 
 		template <class F> void bind(F* ptr) noexcept
 		{
-			object	= const_cast<void*>(static_cast<const void*>(ptr));
+		object	= const_cast<void*>(static_cast<const void*>(ptr)); // NOLINT(cppcoreguidelines-pro-type-const-cast)
 			invoker = [](void* obj, Args... call_args) noexcept(Noexcept) -> R { return std::invoke(*static_cast<F*>(obj), std::forward<Args>(call_args)...); };
 		}
 	};
@@ -70,18 +70,21 @@ template <class R, class... Args> class function_ref<R(Args...)> : private detai
 public:
 	function_ref()				 = delete;
 	function_ref(std::nullptr_t) = delete;
+	~function_ref()				 = default;
 
 	template <class F,
 			  std::enable_if_t<!std::is_same_v<std::remove_reference_t<F>, function_ref> && std::is_invocable_r_v<R, F&, Args...> &&
 								   (std::is_lvalue_reference_v<F> || std::is_pointer_v<std::decay_t<F>> || std::is_function_v<std::remove_reference_t<F>>),
 							   int> = 0>
-	function_ref(F&& f) noexcept
+	explicit function_ref(F&& f) noexcept
 	{
 		bind_callable(std::forward<F>(f));
 	}
 
 	function_ref(const function_ref&)			 = default;
 	function_ref& operator=(const function_ref&) = default;
+	function_ref(function_ref&&)				 = default;
+	function_ref& operator=(function_ref&&)		 = default;
 
 	R operator()(Args... args) const
 	{
@@ -95,12 +98,13 @@ private:
 
 	template <class F> void bind_callable(F&& f) noexcept
 	{
-		if constexpr (std::is_function_v<std::remove_reference_t<F>>) { fn_ptr_ = std::addressof(f); }
-		else if constexpr (std::is_pointer_v<std::decay_t<F>> && std::is_function_v<std::remove_pointer_t<std::decay_t<F>>>) { fn_ptr_ = f; }
+		auto&& callable = std::forward<F>(f);
+		if constexpr (std::is_function_v<std::remove_reference_t<F>>) { fn_ptr_ = std::addressof(callable); }
+		else if constexpr (std::is_pointer_v<std::decay_t<F>> && std::is_function_v<std::remove_pointer_t<std::decay_t<F>>>) { fn_ptr_ = callable; }
 		else
 		{
 			using stored_t = std::remove_reference_t<F>;
-			base::template bind<stored_t>(std::addressof(f));
+			base::template bind<stored_t>(std::addressof(callable));
 		}
 	}
 };
@@ -112,18 +116,21 @@ template <class R, class... Args> class function_ref<R(Args...) noexcept> : priv
 public:
 	function_ref()				 = delete;
 	function_ref(std::nullptr_t) = delete;
+	~function_ref()				 = default;
 
 	template <class F,
 			  std::enable_if_t<!std::is_same_v<std::remove_reference_t<F>, function_ref> && std::is_nothrow_invocable_r_v<R, F&, Args...> &&
 								   (std::is_lvalue_reference_v<F> || std::is_pointer_v<std::decay_t<F>> || std::is_function_v<std::remove_reference_t<F>>),
 							   int> = 0>
-	function_ref(F&& f) noexcept
+	explicit function_ref(F&& f) noexcept
 	{
 		bind_callable(std::forward<F>(f));
 	}
 
 	function_ref(const function_ref&)			 = default;
 	function_ref& operator=(const function_ref&) = default;
+	function_ref(function_ref&&)				 = default;
+	function_ref& operator=(function_ref&&)		 = default;
 
 	R operator()(Args... args) const noexcept
 	{
@@ -137,12 +144,13 @@ private:
 
 	template <class F> void bind_callable(F&& f) noexcept
 	{
-		if constexpr (std::is_function_v<std::remove_reference_t<F>>) { fn_ptr_ = std::addressof(f); }
-		else if constexpr (std::is_pointer_v<std::decay_t<F>> && std::is_function_v<std::remove_pointer_t<std::decay_t<F>>>) { fn_ptr_ = f; }
+		auto&& callable = std::forward<F>(f);
+		if constexpr (std::is_function_v<std::remove_reference_t<F>>) { fn_ptr_ = std::addressof(callable); }
+		else if constexpr (std::is_pointer_v<std::decay_t<F>> && std::is_function_v<std::remove_pointer_t<std::decay_t<F>>>) { fn_ptr_ = callable; }
 		else
 		{
 			using stored_t = std::remove_reference_t<F>;
-			base::template bind<stored_t>(std::addressof(f));
+			base::template bind<stored_t>(std::addressof(callable));
 		}
 	}
 };

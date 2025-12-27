@@ -15,6 +15,12 @@ project(
         LANGUAGES CXX
 )
 
+if (NOT DEFINED CMAKE_CXX_STANDARD)
+    set(CMAKE_CXX_STANDARD 17)
+endif ()
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 # Include helper CMake files for project configuration
 include(cmake/config/ProjectIsTopLevel.cmake)
 include(cmake/config/ProjectOptions.cmake)

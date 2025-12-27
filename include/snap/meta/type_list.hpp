@@ -7,7 +7,10 @@
 #include "snap/type_traits/remove_cvref.hpp"
 
 #include <cstddef>
+#include <tuple>
 #include <type_traits>
+#include <utility>
+#include <variant>
 
 SNAP_BEGIN_NAMESPACE
 
@@ -492,6 +495,42 @@ namespace typelist
 		{
 			using type = typename filter_impl_unqual<snap::remove_cvref_t<List>, Pred>::type;
 		};
+
+		// apply: O(1)
+		template <class List, template <class...> class To>
+		struct apply_impl_unqual
+		{
+		};
+
+		template <class... Ts, template <class...> class To>
+		struct apply_impl_unqual<type_list<Ts...>, To>
+		{
+			using type = To<Ts...>;
+		};
+
+		template <class List, template <class...> class To>
+		struct apply_impl
+		{
+			using type = typename apply_impl_unqual<snap::remove_cvref_t<List>, To>::type;
+		};
+
+		// from: O(1)
+		template <class T>
+		struct from_impl_unqual
+		{
+		};
+
+		template <template <class...> class From, class... Ts>
+		struct from_impl_unqual<From<Ts...>>
+		{
+			using type = type_list<Ts...>;
+		};
+
+		template <class T>
+		struct from_impl
+		{
+			using type = typename from_impl_unqual<snap::remove_cvref_t<T>>::type;
+		};
 	} // namespace detail
 	/** \endcond */
 
@@ -673,6 +712,83 @@ namespace typelist
 	 */
 	template <class List, template <class> class Pred>
 	using filter_t = typename detail::filter_impl<List, Pred>::type;
+
+	/**
+	 * \brief Applies List's type pack to a type-pack template.
+	 *
+	 * apply_t<type_list<Ts...>, To> produces To<Ts...>.
+	 *
+	 * \par Complexity
+	 * O(1)
+	 */
+	template <class List, template <class...> class To>
+	using apply_t = typename detail::apply_impl<List, To>::type;
+
+	/**
+	 * \brief Extracts a type pack from a type-pack template instantiation.
+	 *
+	 * from_t<From<Ts...>> produces type_list<Ts...>.
+	 *
+	 * \par Complexity
+	 * O(1)
+	 */
+	template <class T>
+	using from_t = typename detail::from_impl<T>::type;
+
+	/**
+	 * \brief Converts List to std::tuple<Ts...>.
+	 *
+	 * \par Complexity
+	 * O(1)
+	 */
+	template <class List>
+	using to_tuple_t = apply_t<List, std::tuple>;
+
+	/**
+	 * \brief Converts std::tuple<Ts...> to type_list<Ts...>.
+	 *
+	 * \par Complexity
+	 * O(1)
+	 */
+	template <class Tuple>
+	using from_tuple_t = from_t<Tuple>;
+
+	/**
+	 * \brief Converts List to std::variant<Ts...>.
+	 *
+	 * \par Complexity
+	 * O(1)
+	 */
+	template <class List>
+	using to_variant_t = apply_t<List, std::variant>;
+
+	/**
+	 * \brief Converts std::variant<Ts...> to type_list<Ts...>.
+	 *
+	 * \par Complexity
+	 * O(1)
+	 */
+	template <class Variant>
+	using from_variant_t = from_t<Variant>;
+
+	/**
+	 * \brief Converts List to std::pair<T0, T1>.
+	 *
+	 * \pre List has exactly two elements.
+	 * \par Complexity
+	 * O(1)
+	 */
+	template <class List>
+	using to_pair_t = apply_t<List, std::pair>;
+
+	/**
+	 * \brief Converts std::pair<T0, T1> to type_list<T0, T1>.
+	 *
+	 * \par Complexity
+	 * O(1)
+	 */
+	template <class Pair>
+	using from_pair_t = from_t<Pair>;
 
 	/**
 	 * \brief index_of_v<List, T> returns the first index i such that at_t<List, i> is T,

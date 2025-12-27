@@ -28,7 +28,7 @@ namespace
 
 		int value = 0;
 
-		Tracking() : value(0)
+		Tracking()
 		{
 			++alive;
 			++constructions;
@@ -91,27 +91,31 @@ namespace
 
 		ThrowOnCopy(const ThrowOnCopy& other) : value(other.value)
 		{
-			if (--copy_budget < 0) throw std::runtime_error("copy budget exceeded");
+			if (--copy_budget < 0) { throw std::runtime_error("copy budget exceeded"); }
 		}
 
+		// NOLINTNEXTLINE(cppcoreguidelines-noexcept-move-operations,performance-noexcept-move-constructor,bugprone-exception-escape)
 		ThrowOnCopy(ThrowOnCopy&& other) : value(other.value)
 		{
-			if (--move_budget < 0) throw std::runtime_error("move budget exceeded");
+			if (--move_budget < 0) { throw std::runtime_error("move budget exceeded"); }
 		}
 
 		ThrowOnCopy& operator=(const ThrowOnCopy& other)
 		{
-			if (--copy_budget < 0) throw std::runtime_error("copy assign budget exceeded");
+			if (--copy_budget < 0) { throw std::runtime_error("copy assign budget exceeded"); }
 			value = other.value;
 			return *this;
 		}
 
+		// NOLINTNEXTLINE(cppcoreguidelines-noexcept-move-operations,performance-noexcept-move-constructor,bugprone-exception-escape)
 		ThrowOnCopy& operator=(ThrowOnCopy&& other)
 		{
 			value = other.value;
-			if (--move_budget < 0) throw std::runtime_error("move assign budget exceeded");
+			if (--move_budget < 0) { throw std::runtime_error("move assign budget exceeded"); }
 			return *this;
 		}
+
+		~ThrowOnCopy() = default;
 	};
 
 } // namespace
@@ -124,7 +128,10 @@ namespace test_cases
 	{
 		std::vector<int> result;
 		result.reserve(container.size());
-		for (const auto& element : container) result.push_back(element.value);
+		for (const auto& element : container)
+		{
+			result.push_back(element.value);
+		}
 		return result;
 	}
 
@@ -133,9 +140,9 @@ namespace test_cases
 		SNAP_NAMESPACE::inplace_vector<int, 4> values;
 
 		EXPECT_TRUE(values.empty());
-		EXPECT_EQ(0u, values.size());
+		EXPECT_EQ(0U, values.size());
 		EXPECT_EQ(nullptr, values.data());
-		EXPECT_EQ(4u, values.capacity());
+		EXPECT_EQ(4U, values.capacity());
 	}
 
 	TEST(InplaceVector, PushBackPopBackAndIterators)
@@ -146,13 +153,13 @@ namespace test_cases
 		values.push_back(3);
 
 		SNAP_NAMESPACE::test::ExpectRangeEq(values, std::vector<int>{ 1, 2, 3 });
-		EXPECT_EQ(3u, values.size());
+		EXPECT_EQ(3U, values.size());
 		EXPECT_EQ(3, values.back());
 		EXPECT_EQ(1, values.front());
 
 		values.pop_back();
 		SNAP_NAMESPACE::test::ExpectRangeEq(values, std::vector<int>{ 1, 2 });
-		EXPECT_EQ(2u, std::distance(values.begin(), values.end()));
+		EXPECT_EQ(2U, static_cast<std::size_t>(std::distance(values.begin(), values.end())));
 	}
 
 	TEST(InplaceVector, TryPushBackRespectCapacity)
@@ -194,9 +201,10 @@ namespace test_cases
 		SNAP_NAMESPACE::inplace_vector<int, 8> values;
 		values.append_range(std::initializer_list<int>{ 1, 4, 5 });
 
-		auto it = values.insert(values.begin() + 1, 2);
-		EXPECT_EQ(values.begin() + 1, it);
-		values.insert(values.begin() + 2, 3);
+		auto* const insert_pos = std::next(values.begin(), 1);
+		auto* it			   = values.insert(insert_pos, 2);
+		EXPECT_EQ(insert_pos, it);
+		values.insert(std::next(values.begin(), 2), 3);
 		SNAP_NAMESPACE::test::ExpectRangeEq(values, std::vector<int>{ 1, 2, 3, 4, 5 });
 
 		std::vector<int> tail{ 6, 7 };
@@ -204,8 +212,8 @@ namespace test_cases
 		EXPECT_EQ(tail.end(), appended_end);
 		SNAP_NAMESPACE::test::ExpectRangeEq(values, std::vector<int>{ 1, 2, 3, 4, 5, 6, 7 });
 
-		auto erase_it = values.erase(values.begin() + 1, values.begin() + 3);
-		EXPECT_EQ(values.begin() + 1, erase_it);
+		auto* erase_it = values.erase(std::next(values.begin(), 1), std::next(values.begin(), 3));
+		EXPECT_EQ(std::next(values.begin(), 1), erase_it);
 		SNAP_NAMESPACE::test::ExpectRangeEq(values, std::vector<int>{ 1, 4, 5, 6, 7 });
 	}
 
@@ -213,7 +221,7 @@ namespace test_cases
 	{
 		SNAP_NAMESPACE::inplace_vector<int, 0> values;
 		EXPECT_TRUE(values.empty());
-		EXPECT_EQ(0u, values.capacity());
+		EXPECT_EQ(0U, values.capacity());
 		EXPECT_THROW(values.push_back(1), std::bad_alloc);
 		EXPECT_EQ(nullptr, values.try_push_back(2));
 	}
@@ -226,7 +234,7 @@ namespace test_cases
 
 		ThrowOnCopy::copy_budget = std::numeric_limits<int>::max();
 		ThrowOnCopy::move_budget = 0; // force exception during tail relocation
-		EXPECT_THROW(values.insert(values.begin() + 1, ThrowOnCopy{ 3 }), std::runtime_error);
+		EXPECT_THROW(values.insert(std::next(values.begin(), 1), ThrowOnCopy{ 3 }), std::runtime_error);
 
 		// Container should remain unchanged
 		EXPECT_EQ(2U, values.size());
@@ -244,7 +252,7 @@ namespace test_cases
 			values.emplace_back(3);
 			SNAP_NAMESPACE::test::ExpectRangeEq(values_of(values), std::vector<int>{ 1, 2, 3 });
 
-			values.erase(values.begin() + 1);
+			values.erase(std::next(values.begin(), 1));
 			EXPECT_EQ(2U, values.size());
 		}
 		EXPECT_EQ(0, Tracking::alive);

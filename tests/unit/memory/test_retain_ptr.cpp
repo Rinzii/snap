@@ -8,6 +8,10 @@ namespace
 {
 	struct RefCounted : SNAP_NAMESPACE::atomic_reference_count<RefCounted>
 	{
+		RefCounted(const RefCounted&)			 = delete;
+		RefCounted& operator=(const RefCounted&) = delete;
+		RefCounted(RefCounted&&)				 = delete;
+		RefCounted& operator=(RefCounted&&)		 = delete;
 		explicit RefCounted(int v) : value(v) { ++instances; }
 		~RefCounted() { --instances; }
 
@@ -26,7 +30,8 @@ TEST(MemoryRetainPtr, ManagesReferenceCounts)
 		EXPECT_EQ(ptr->value, 5);
 
 		{
-			auto copy = ptr;
+			// NOLINTNEXTLINE(performance-unnecessary-copy-initialization)
+			const auto copy = ptr;
 			EXPECT_EQ(ptr.use_count(), 2);
 			EXPECT_EQ(copy.use_count(), 2);
 		}
@@ -38,7 +43,7 @@ TEST(MemoryRetainPtr, ManagesReferenceCounts)
 
 TEST(MemoryRetainPtr, AdoptAndRetainBehaviors)
 {
-	auto raw = new RefCounted(9);
+	auto* raw = new RefCounted(9); // NOLINT(cppcoreguidelines-owning-memory)
 	{
 		SNAP_NAMESPACE::retain_ptr<RefCounted> adopted(raw, SNAP_NAMESPACE::adopt_object);
 		EXPECT_EQ(adopted.use_count(), 1);

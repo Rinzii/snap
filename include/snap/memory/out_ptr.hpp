@@ -5,6 +5,7 @@
 #include "snap/internal/abi_namespace.hpp"
 
 #include "snap/memory/ptr_traits.hpp"
+#include "snap/type_traits/is_specialization_of.hpp"
 #include "snap/type_traits/pointer_of.hpp"
 
 #include <memory>

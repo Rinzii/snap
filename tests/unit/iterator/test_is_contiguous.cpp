@@ -28,10 +28,13 @@ namespace
 		int& operator*() const { return *ptr; }
 		TagIterator& operator++()
 		{
-			++ptr;
+			++ptr; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 			return *this;
 		}
-		TagIterator operator+(difference_type n) const { return TagIterator(ptr + n); }
+		TagIterator operator+(difference_type n) const // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+		{
+			return TagIterator(ptr + n); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+		}
 		auto operator->() const { return ptr; }
 		friend bool operator==(const TagIterator& a, const TagIterator& b) { return a.ptr == b.ptr; }
 		friend bool operator!=(const TagIterator& a, const TagIterator& b) { return !(a == b); }
@@ -53,7 +56,7 @@ namespace
 		Proxy operator*() const { return Proxy{ *ptr }; }
 		NonLvalueRandomAccess& operator++()
 		{
-			++ptr;
+			++ptr; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 			return *this;
 		}
 		auto operator->() const { return ptr; }

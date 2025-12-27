@@ -33,6 +33,7 @@ namespace internal
 		perfect_forward_impl(perfect_forward_impl&&)				 = default;
 		perfect_forward_impl& operator=(const perfect_forward_impl&) = default;
 		perfect_forward_impl& operator=(perfect_forward_impl&&)		 = default;
+		~perfect_forward_impl()										 = default;
 
 		// & overload
 		template <class... Args, class = std::enable_if_t<std::is_invocable_v<Op, BoundArgs&..., Args...>>>

@@ -3,7 +3,9 @@
 #include <gtest/gtest.h>
 
 #include <cstddef>
+#include <array>
 #include <functional>
+#include <iterator>
 #include <ostream>
 #include <string>
 #include <vector>
@@ -30,8 +32,8 @@ namespace
 	{
 	};
 
-	inline bool operator==(const EqOnly&, const EqOnly&) { return true; }
-	inline bool operator!=(const EqOnly&, const EqOnly&) { return false; }
+inline bool operator==(const EqOnly& /*lhs*/, const EqOnly& /*rhs*/) { return true; }
+inline bool operator!=(const EqOnly& /*lhs*/, const EqOnly& /*rhs*/) { return false; }
 
 	struct LogicalPair
 	{
@@ -162,50 +164,68 @@ struct NonDecrementable
 
 	struct RangeMember
 	{
-		int storage[2]{};
+		std::array<int, 2> storage{};
 
-		int* begin() { return storage; }
-		int* end() { return storage + 2; }
-		const int* begin() const { return storage; }
-		const int* end() const { return storage + 2; }
-		std::size_t size() const { return 2; }
-		int* data() { return storage; }
-		const int* data() const { return storage; }
+		int* begin() { return storage.data(); }
+		int* end() { return std::next(storage.data(), static_cast<std::ptrdiff_t>(storage.size())); }
+		const int* begin() const { return storage.data(); }
+		const int* end() const { return std::next(storage.data(), static_cast<std::ptrdiff_t>(storage.size())); }
+		[[nodiscard]] std::size_t size() const noexcept { return storage.size(); }
+		int* data() { return storage.data(); }
+		const int* data() const { return storage.data(); }
 	};
 
 	struct RangeAdl
 	{
-		int storage[2]{};
+		std::array<int, 2> storage{};
 	};
 
-	inline int* begin(RangeAdl& r) { return r.storage; }
-	inline int* end(RangeAdl& r) { return r.storage + 2; }
-	inline const int* begin(const RangeAdl& r) { return r.storage; }
-	inline const int* end(const RangeAdl& r) { return r.storage + 2; }
-	inline std::size_t size(const RangeAdl&) { return 2; }
-	inline int* data(RangeAdl& r) { return r.storage; }
-	inline const int* data(const RangeAdl& r) { return r.storage; }
+[[nodiscard]] inline int* begin(RangeAdl& r) { return r.storage.data(); }
+[[nodiscard]] inline int* end(RangeAdl& r)
+{
+	return std::next(r.storage.data(), static_cast<std::ptrdiff_t>(r.storage.size()));
+}
+[[nodiscard]] inline const int* begin(const RangeAdl& r) { return r.storage.data(); }
+[[nodiscard]] inline const int* end(const RangeAdl& r)
+{
+	return std::next(r.storage.data(), static_cast<std::ptrdiff_t>(r.storage.size()));
+}
+[[nodiscard]] inline std::size_t size(const RangeAdl& r) { return r.storage.size(); }
+[[nodiscard]] inline int* data(RangeAdl& r) { return r.storage.data(); }
+[[nodiscard]] inline const int* data(const RangeAdl& r) { return r.storage.data(); }
 
 struct RangeAdlNoSize
 {
-	int storage[2]{};
+	std::array<int, 2> storage{};
 };
 
-inline int* begin(RangeAdlNoSize& r) { return r.storage; }
-inline int* end(RangeAdlNoSize& r) { return r.storage + 2; }
-inline const int* begin(const RangeAdlNoSize& r) { return r.storage; }
-inline const int* end(const RangeAdlNoSize& r) { return r.storage + 2; }
+[[nodiscard]] inline int* begin(RangeAdlNoSize& r) { return r.storage.data(); }
+[[nodiscard]] inline int* end(RangeAdlNoSize& r)
+{
+	return std::next(r.storage.data(), static_cast<std::ptrdiff_t>(r.storage.size()));
+}
+[[nodiscard]] inline const int* begin(const RangeAdlNoSize& r) { return r.storage.data(); }
+[[nodiscard]] inline const int* end(const RangeAdlNoSize& r)
+{
+	return std::next(r.storage.data(), static_cast<std::ptrdiff_t>(r.storage.size()));
+}
 
 struct RangeAdlNoData
 {
-	int storage[2]{};
+	std::array<int, 2> storage{};
 };
 
-inline int* begin(RangeAdlNoData& r) { return r.storage; }
-inline int* end(RangeAdlNoData& r) { return r.storage + 2; }
-inline const int* begin(const RangeAdlNoData& r) { return r.storage; }
-inline const int* end(const RangeAdlNoData& r) { return r.storage + 2; }
-inline std::size_t size(const RangeAdlNoData&) { return 2; }
+[[nodiscard]] inline int* begin(RangeAdlNoData& r) { return r.storage.data(); }
+[[nodiscard]] inline int* end(RangeAdlNoData& r)
+{
+	return std::next(r.storage.data(), static_cast<std::ptrdiff_t>(r.storage.size()));
+}
+[[nodiscard]] inline const int* begin(const RangeAdlNoData& r) { return r.storage.data(); }
+[[nodiscard]] inline const int* end(const RangeAdlNoData& r)
+{
+	return std::next(r.storage.data(), static_cast<std::ptrdiff_t>(r.storage.size()));
+}
+[[nodiscard]] inline std::size_t size(const RangeAdlNoData& r) { return r.storage.size(); }
 
 	struct Indexable
 	{

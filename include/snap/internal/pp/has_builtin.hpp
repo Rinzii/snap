@@ -2,11 +2,11 @@
 #define SNP_INCLUDE_SNAP_INTERNAL_PP_HAS_BUILTIN_HPP
 
 #ifndef SNAP_HAS_BUILTIN
-	#if defined(__has_builtin)
+	#ifdef __has_builtin
 		#define SNAP_HAS_BUILTIN(BUILTIN) __has_builtin(BUILTIN)
 	#else
 		#define SNAP_HAS_BUILTIN(BUILTIN) (0)
-	#endif // defined(__has_builtin)
+	#endif // __has_builtin
 #endif	   // SNAP_HAS_BUILTIN
 
 #endif // SNP_INCLUDE_SNAP_INTERNAL_PP_HAS_BUILTIN_HPP

@@ -61,7 +61,7 @@ namespace
 			for (T x = T{ 0 };; x = T(x + T{ 1 }))
 			{
 				EXPECT_EQ(SNAP_NAMESPACE::bit_width(x), reference_bit_width(x)) << +x;
-				if (x == max_value) break;
+				if (x == max_value) { break; }
 			}
 		}
 		else
@@ -84,7 +84,7 @@ namespace
 			{
 				EXPECT_EQ(SNAP_NAMESPACE::bit_width(sample), reference_bit_width(sample));
 				sample = T(sample + (sample >> 1) + T{ 1 });
-				if (sample == T{ 0 }) break;
+				if (sample == T{ 0 }) { break; }
 			}
 		}
 	}

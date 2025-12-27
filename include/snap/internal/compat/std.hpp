@@ -1,8 +1,8 @@
 #ifndef SNP_INCLUDE_SNAP_INTERNAL_COMPAT_STD_HPP
 #define SNP_INCLUDE_SNAP_INTERNAL_COMPAT_STD_HPP
 
-#if defined(_MSC_VER)
-	#if defined(_MSVC_LANG)
+#ifdef _MSC_VER
+	#ifdef _MSVC_LANG
 		#define SNAP_CPLUSPLUS _MSVC_LANG
 	#else
 		#define SNAP_CPLUSPLUS 0L

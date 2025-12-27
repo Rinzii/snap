@@ -21,3 +21,12 @@ if (NOT COMMAND snap_option)
         unset(_snap_option_default)
     endmacro()
 endif ()
+
+if (NOT COMMAND snap_require_fetchcontent_allowed)
+    function(snap_require_fetchcontent_allowed feature_name)
+        if (SNAP_DISABLE_FETCHCONTENT)
+            message(FATAL_ERROR
+                    "SNAP_DISABLE_FETCHCONTENT=ON. Provide ${feature_name} yourself or turn the toggle OFF to allow FetchContent.")
+        endif ()
+    endfunction()
+endif ()

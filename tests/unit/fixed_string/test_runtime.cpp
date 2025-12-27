@@ -24,7 +24,7 @@ namespace test_cases
 	{
 		constexpr auto fs = SNAP_NAMESPACE::fixed_string<4>{ "snap" };
 
-		EXPECT_EQ(4u, fs.size());
+		EXPECT_EQ(4U, fs.size());
 		EXPECT_EQ('s', fs.front());
 		EXPECT_EQ('p', fs.back());
 		EXPECT_EQ('n', fs[1]);
@@ -44,7 +44,7 @@ namespace test_cases
 		SNAP_NAMESPACE::test::ExpectRangeEq(fs, std::array{ 'a', 'b', 'c' });
 
 		std::array<char, 3> reversed{};
-		std::copy(fs.rbegin(), fs.rend(), reversed.begin());
+		std::reverse_copy(fs.begin(), fs.end(), reversed.begin());
 		SNAP_NAMESPACE::test::ExpectRangeEq(reversed, std::array{ 'c', 'b', 'a' });
 	}
 

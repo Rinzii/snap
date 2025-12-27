@@ -12,7 +12,7 @@
 
 TEST(IteratorConstIterator, WrapsRawIteratorAndEnforcesConstAccess)
 {
-	std::vector<int> values{ 1, 2, 3 };
+	const std::vector<int> values{ 1, 2, 3 };
 
 	auto it = SNAP_NAMESPACE::make_const_iterator(values.begin());
 	static_assert(std::is_same_v<decltype(*it), const int &>);
@@ -45,7 +45,7 @@ TEST(IteratorConstIterator, SupportsRandomAccessOperations)
 
 TEST(IteratorConstIterator, ProducesConstSentinelForIteratorLikeTypes)
 {
-	std::vector<int> data{ 10, 20 };
+	const std::vector<int> data{ 10, 20 };
 	auto sentinel = SNAP_NAMESPACE::make_const_sentinel(data.cend());
 	auto iter	  = SNAP_NAMESPACE::make_const_iterator(data.cbegin());
 

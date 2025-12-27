@@ -75,6 +75,27 @@
       "description": "Ninja Multi-config + Clang"
     },
     {
+      "name": "ninja-clang-nofetch",
+      "inherits": [
+        "ninja-clang"
+      ],
+      "description": "Ninja Multi-config + Clang (FetchContent disabled)",
+      "cacheVariables": {
+        "SNAP_DISABLE_FETCHCONTENT": "ON"
+      }
+    },
+    {
+      "name": "ninja-clang-asan",
+      "inherits": [
+        "ninja-clang"
+      ],
+      "description": "Ninja Multi-config + Clang + sanitizer build",
+      "cacheVariables": {
+        "SNAP_ENABLE_SANITIZER_BUILD": "ON",
+        "SNAP_TEST_ENABLE_ASAN": "ON"
+      }
+    },
+    {
       "name": "vs22",
       "inherits": [
         "base-vs22"
@@ -106,15 +127,6 @@
       ],
       "cacheVariables": {
         "SNAP_TEST_WERROR": "ON"
-      }
-    },
-    {
-      "name": "ninja-clang-asan",
-      "inherits": [
-        "ninja-clang"
-      ],
-      "cacheVariables": {
-        "SNAP_TEST_ENABLE_ASAN": "ON"
       }
     },
     {
@@ -252,6 +264,33 @@
       "jobs": 0
     },
     {
+      "name": "build-ninja-clang-nofetch-debug",
+      "configurePreset": "ninja-clang-nofetch",
+      "configuration": "Debug",
+      "targets": [
+        "all"
+      ],
+      "jobs": 0
+    },
+    {
+      "name": "build-ninja-clang-nofetch-release",
+      "configurePreset": "ninja-clang-nofetch",
+      "configuration": "Release",
+      "targets": [
+        "all"
+      ],
+      "jobs": 0
+    },
+    {
+      "name": "build-ninja-clang-asan-debug",
+      "configurePreset": "ninja-clang-asan",
+      "configuration": "Debug",
+      "targets": [
+        "all"
+      ],
+      "jobs": 0
+    },
+    {
       "name": "build-ninja-gcc-single-debug",
       "configurePreset": "ninja-gcc-Debug",
       "targets": [
@@ -331,6 +370,24 @@
       "name": "test-ninja-clang-release",
       "configurePreset": "ninja-clang",
       "configuration": "Release",
+      "inheritConfigureEnvironment": true
+    },
+    {
+      "name": "test-ninja-clang-nofetch-debug",
+      "configurePreset": "ninja-clang-nofetch",
+      "configuration": "Debug",
+      "inheritConfigureEnvironment": true
+    },
+    {
+      "name": "test-ninja-clang-nofetch-release",
+      "configurePreset": "ninja-clang-nofetch",
+      "configuration": "Release",
+      "inheritConfigureEnvironment": true
+    },
+    {
+      "name": "test-ninja-clang-asan-debug",
+      "configurePreset": "ninja-clang-asan",
+      "configuration": "Debug",
       "inheritConfigureEnvironment": true
     },
     {

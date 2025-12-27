@@ -11,7 +11,7 @@ SNAP_BEGIN_NAMESPACE
 namespace detail
 {
 
-#if defined(__has_builtin)
+#ifdef __has_builtin
 	#if __has_builtin(__builtin_is_implicit_lifetime)
 		#define SNAP_HAS_IL_BUILTIN 1
 	#elif __has_builtin(__is_implicit_lifetime)

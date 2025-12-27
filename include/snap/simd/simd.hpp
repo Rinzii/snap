@@ -149,7 +149,7 @@ namespace simd
 		};
 
 // Builds the SIMD ABI registry in preference order (AVX-512, AVX2, AVX, SSE2, NEON), including only those enabled for this build.
-#if defined(__AVX512F__)
+#ifdef __AVX512F__
 		// using abi_avx512 = type_list<avx512_tag>; // Commented until support
 		using abi_avx512 = type_list<>;
 #else

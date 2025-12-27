@@ -18,11 +18,11 @@ namespace
 
 	template <class T> constexpr int reference_countl_zero(T value)
 	{
-		if (value == T{ 0 }) return digits_v<T>;
+		if (value == T{ 0 }) { return digits_v<T>; }
 		int count = 0;
 		for (int bit = digits_v<T> - 1; bit >= 0; --bit)
 		{
-			if ((value >> bit) & T{ 1 }) break;
+			if ((value >> bit) & T{ 1 }) { break; }
 			++count;
 		}
 		return count;
@@ -30,11 +30,11 @@ namespace
 
 	template <class T> constexpr int reference_countl_one(T value)
 	{
-		if (value == std::numeric_limits<T>::max()) return digits_v<T>;
+		if (value == std::numeric_limits<T>::max()) { return digits_v<T>; }
 		int count = 0;
 		for (int bit = digits_v<T> - 1; bit >= 0; --bit)
 		{
-			if (((value >> bit) & T{ 1 }) == T{ 0 }) break;
+			if (((value >> bit) & T{ 1 }) == T{ 0 }) { break; }
 			++count;
 		}
 		return count;
@@ -42,11 +42,11 @@ namespace
 
 	template <class T> constexpr int reference_countr_zero(T value)
 	{
-		if (value == T{ 0 }) return digits_v<T>;
+		if (value == T{ 0 }) { return digits_v<T>; }
 		int count = 0;
 		for (int bit = 0; bit < digits_v<T>; ++bit)
 		{
-			if ((value >> bit) & T{ 1 }) break;
+			if ((value >> bit) & T{ 1 }) { break; }
 			++count;
 		}
 		return count;
@@ -54,11 +54,11 @@ namespace
 
 	template <class T> constexpr int reference_countr_one(T value)
 	{
-		if (value == std::numeric_limits<T>::max()) return digits_v<T>;
+		if (value == std::numeric_limits<T>::max()) { return digits_v<T>; }
 		int count = 0;
 		for (int bit = 0; bit < digits_v<T>; ++bit)
 		{
-			if (((value >> bit) & T{ 1 }) == T{ 0 }) break;
+			if (((value >> bit) & T{ 1 }) == T{ 0 }) { break; }
 			++count;
 		}
 		return count;
@@ -72,6 +72,7 @@ namespace
 
 	TYPED_TEST_SUITE(CountLeadingTrailingTyped, UnsignedTypes);
 
+	// NOLINTNEXTLINE(readability-function-cognitive-complexity)
 	TYPED_TEST(CountLeadingTrailingTyped, CountlZeroMatchesReference)
 	{
 		using T			 = TypeParam;
@@ -82,7 +83,7 @@ namespace
 			for (T value = T{ 0 };; value = T(value + T{ 1 }))
 			{
 				EXPECT_EQ(SNAP_NAMESPACE::countl_zero(value), reference_countl_zero(value)) << +value;
-				if (value == max_value) break;
+				if (value == max_value) { break; }
 			}
 		}
 		else
@@ -98,6 +99,7 @@ namespace
 		EXPECT_EQ(SNAP_NAMESPACE::countl_zero(std::numeric_limits<T>::max()), 0);
 	}
 
+	// NOLINTNEXTLINE(readability-function-cognitive-complexity)
 	TYPED_TEST(CountLeadingTrailingTyped, CountlOneMatchesReference)
 	{
 		using T			 = TypeParam;
@@ -108,7 +110,7 @@ namespace
 			for (T value = T{ 0 };; value = T(value + T{ 1 }))
 			{
 				EXPECT_EQ(SNAP_NAMESPACE::countl_one(value), reference_countl_one(value)) << +value;
-				if (value == max_value) break;
+				if (value == max_value) { break; }
 			}
 		}
 		else
@@ -123,6 +125,7 @@ namespace
 		}
 	}
 
+	// NOLINTNEXTLINE(readability-function-cognitive-complexity)
 	TYPED_TEST(CountLeadingTrailingTyped, CountrZeroMatchesReference)
 	{
 		using T			 = TypeParam;
@@ -133,7 +136,7 @@ namespace
 			for (T value = T{ 0 };; value = T(value + T{ 1 }))
 			{
 				EXPECT_EQ(SNAP_NAMESPACE::countr_zero(value), reference_countr_zero(value)) << +value;
-				if (value == max_value) break;
+				if (value == max_value) { break; }
 			}
 		}
 		else
@@ -149,6 +152,7 @@ namespace
 		EXPECT_EQ(SNAP_NAMESPACE::countr_zero(T{ 1 }), 0);
 	}
 
+	// NOLINTNEXTLINE(readability-function-cognitive-complexity)
 	TYPED_TEST(CountLeadingTrailingTyped, CountrOneMatchesReference)
 	{
 		using T			 = TypeParam;

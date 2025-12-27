@@ -15,7 +15,7 @@ namespace
 	{
 		using U					 = std::make_unsigned_t<T>;
 		constexpr int byte_count = static_cast<int>(sizeof(T));
-		U u						 = static_cast<U>(value);
+		const U u				 = static_cast<U>(value);
 		U result				 = 0;
 		for (int i = 0; i < byte_count; ++i)
 		{
@@ -44,7 +44,7 @@ namespace
 		samples.push_back(std::numeric_limits<T>::min());
 		samples.push_back(static_cast<T>(0x0102030405060708ULL));
 
-		for (T value : samples)
+		for (const T value : samples)
 		{
 			const T swapped = SNAP_NAMESPACE::byteswap(value);
 			EXPECT_EQ(swapped, reference_byteswap(value)) << +value;

@@ -15,7 +15,7 @@ namespace detail
 	template <class T> inline constexpr bool is_not_invalid_for_bit_floor = std::is_unsigned_v<std::remove_cv_t<T>> && is_neither_v<std::remove_cv_t<T>,
 																																	bool,
 																																	char,
-#if defined(__cpp_char8_t)
+#ifdef __cpp_char8_t
 																																	char8_t,
 #endif // __cpp_char8_t
 																																	char16_t,

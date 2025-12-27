@@ -504,6 +504,13 @@ snap_add_unit_tests(
         numbers/test_constants.cpp
 )
 
+snap_add_unit_tests(
+        NAME span
+        STANDARDS 17;20
+        SOURCES
+        span/test_span.cpp
+)
+
 # ==================================================================
 # Additional baseline coverage per module
 # ==================================================================
@@ -572,6 +579,7 @@ snap_add_unit_tests(
         meta/test_detector.cpp
         meta/test_has.cpp
         meta/test_has_traits.cpp
+        meta/test_type_list.cpp
 )
 
 snap_add_unit_tests(

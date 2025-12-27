@@ -43,7 +43,7 @@ TEST(FunctionalBind, BindBackAppendsArgumentsAndPreservesOrder)
 		[&observed](int a, int b, int c)
 		{
 			observed = { a, b, c };
-			return a * 100 + b * 10 + c;
+			return (a * 100) + (b * 10) + c;
 		};
 
 	auto bound = SNAP_NAMESPACE::bind_back(fn, 2, 3);

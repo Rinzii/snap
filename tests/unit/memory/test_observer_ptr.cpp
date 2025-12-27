@@ -11,6 +11,11 @@ namespace
 {
 	struct Base
 	{
+		Base()                              = default;
+		Base(const Base&)			 = delete;
+		Base& operator=(const Base&) = delete;
+		Base(Base&&)				 = delete;
+		Base& operator=(Base&&)		 = delete;
 		virtual ~Base() = default;
 	};
 
@@ -35,7 +40,7 @@ TEST(MemoryObserverPtr, BasicOperations)
 	auto copy = ptr;
 	EXPECT_EQ(copy.get(), &value);
 
-	int* raw = copy.release();
+	const int* const raw = copy.release();
 	EXPECT_EQ(raw, &value);
 	EXPECT_FALSE(copy);
 }

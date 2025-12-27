@@ -314,7 +314,7 @@ template <class CharT, std::size_t N> constexpr void swap(basic_fixed_string<Cha
 
 template <std::size_t N> using fixed_string = basic_fixed_string<char, N>;
 
-#if defined(__cpp_char8_t) // C++20 or newer provides char8_t
+#ifdef __cpp_char8_t // C++20 or newer provides char8_t
 template <std::size_t N> using fixed_u8string = basic_fixed_string<char8_t, N>;
 #endif
 
@@ -331,7 +331,7 @@ template <std::size_t N> struct std::hash<SNAP_NAMESPACE::fixed_string<N>> : std
 {
 };
 
-#if defined(__cpp_char8_t)
+#ifdef __cpp_char8_t
 	#include <string_view> // for std::u8string_view
 template <std::size_t N> struct std::hash<SNAP_NAMESPACE::fixed_u8string<N>> : std::hash<std::u8string_view>
 {

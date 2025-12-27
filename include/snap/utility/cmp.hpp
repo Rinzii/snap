@@ -41,7 +41,7 @@ namespace detail
 	{
 	};
 
-#if defined(__cpp_char8_t)
+#ifdef __cpp_char8_t
 	template <> struct is_forbidden_char_base<char8_t> : std::true_type
 	{
 	};
