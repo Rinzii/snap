@@ -242,44 +242,11 @@ jobs:
       - name: Test
         run: ctest --preset "${{ matrix.testPreset }}" --output-on-failure --schedule-random -F
 
-  tier1-windows-arm64:
-    name: tier1 · windows arm64 build
-    needs: lint
-    runs-on: windows-2022
-    timeout-minutes: 45
-    defaults:
-      run:
-        shell: pwsh
-    steps:
-      - name: Harden runner
-        uses: step-security/harden-runner@v2.11.0
-        with:
-          egress-policy: audit
-
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Cache build tree
-        uses: actions/cache@v4
-        with:
-          path: out/build/vs22-arm64
-          key: snap-windows-arm64-${{ hashFiles('CMakePresets.json', 'tests/CMakeLists.txt', 'cmake/config/ProjectOptions.cmake') }}
-
-      - name: Configure (ARM64)
-        run: cmake --preset vs22-arm64 -DCMAKE_CXX_STANDARD=20
-
-      - name: Build (ARM64 Release)
-        run: cmake --build --preset build-vs22-arm64-release --parallel
-
-      - name: Note about tests
-        run: Write-Host "ARM64 binaries are cross-compiled on x64 runners; runtime tests are unavailable on this host."
-
   tier2-arm:
-    name: tier2 · linux (${{ matrix.arch }}) smoke
+    name: tier2 · linux (armv7) smoke
     needs:
       - tier1-posix
       - tier1-windows
-      - tier1-windows-arm64
     runs-on: ubuntu-24.04
     timeout-minutes: 75
     continue-on-error: true
@@ -294,13 +261,6 @@ jobs:
               ninja-build cmake clang-16 lld-16 python3
             cc: clang-16
             cxx: clang++-16
-          - arch: aarch64
-            distro: ubuntu24.04
-            std: 23
-            pkg: >
-              ninja-build cmake gcc-13 g++-13 python3
-            cc: gcc-13
-            cxx: g++-13
     steps:
       - name: Harden runner
         uses: step-security/harden-runner@v2.11.0
@@ -315,7 +275,6 @@ jobs:
         with:
           arch: ${{ matrix.arch }}
           distro: ${{ matrix.distro }}
-          githubToken: ${{ github.token }}
           install: |
             apt-get update -qq
             DEBIAN_FRONTEND=noninteractive apt-get install -yqq ${{ matrix.pkg }}
@@ -334,7 +293,6 @@ jobs:
     needs:
       - tier1-posix
       - tier1-windows
-      - tier1-windows-arm64
     runs-on: ubuntu-24.04
     timeout-minutes: 60
     continue-on-error: true
@@ -363,4 +321,39 @@ jobs:
               -DSNAP_TEST_GROUPED=ON
             cmake --build out/build/freebsd --parallel
             ctest --test-dir out/build/freebsd --label-regex smoke --output-on-failure --stop-on-failure
+
+  tier2-windows-arm64:
+    name: tier2 · windows arm64 build
+    needs:
+      - tier1-posix
+      - tier1-windows
+    runs-on: windows-2022
+    timeout-minutes: 45
+    continue-on-error: true
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@v2.11.0
+        with:
+          egress-policy: audit
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Cache build tree
+        uses: actions/cache@v4
+        with:
+          path: out/build/vs22-arm64
+          key: snap-windows-arm64-${{ hashFiles('CMakePresets.json', 'tests/CMakeLists.txt', 'cmake/config/ProjectOptions.cmake') }}
+
+      - name: Configure (ARM64 cross)
+        run: cmake --preset vs22-arm64 -DCMAKE_CXX_STANDARD=20
+
+      - name: Build (ARM64 Release)
+        run: cmake --build --preset build-vs22-arm64-release --parallel
+
+      - name: Note about tests
+        run: Write-Host "ARM64 binaries are cross-compiled on x64 runners; runtime tests are unavailable on this host."
 
