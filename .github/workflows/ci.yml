@@ -404,11 +404,6 @@ jobs:
     continue-on-error: true
     container:
       image: dockcross/linux-armv7:latest
-    env:
-      CC: /usr/bin/arm-linux-gnueabihf-gcc
-      CXX: /usr/bin/arm-linux-gnueabihf-g++
-      ARMV7_SYSROOT: /usr/arm-linux-gnueabihf
-      CMAKE_CROSSCOMPILING_EMULATOR: /usr/bin/qemu-arm;-L;/usr/arm-linux-gnueabihf
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -418,11 +413,8 @@ jobs:
           cmake -S . -B out/build/armv7-cross -G Ninja \
             -DCMAKE_BUILD_TYPE=RelWithDebInfo \
             -DCMAKE_CXX_STANDARD=20 \
-            -DCMAKE_SYSTEM_NAME=Linux \
-            -DCMAKE_C_COMPILER="${CC}" \
-            -DCMAKE_CXX_COMPILER="${CXX}" \
-            -DCMAKE_CROSSCOMPILING_EMULATOR="${CMAKE_CROSSCOMPILING_EMULATOR}" \
-            -DCMAKE_SYSROOT="${ARMV7_SYSROOT}" \
+            -DCMAKE_TOOLCHAIN_FILE="${CMAKE_TOOLCHAIN_FILE}" \
+            -DCMAKE_TRY_COMPILE_TARGET_TYPE=STATIC_LIBRARY \
             -DSNAP_TEST_GROUPED=ON
           cmake --build out/build/armv7-cross --parallel
 
