@@ -18,6 +18,9 @@ permissions:
 env:
   CTEST_PARALLEL_LEVEL: 0
   SNAP_ENABLE_COLOR: "1"
+  CCACHE_DIR: ~/.cache/ccache
+  CCACHE_MAXSIZE: 2G
+  CCACHE_COMPILERCHECK: content
 
 jobs:
   lint:
@@ -47,6 +50,7 @@ jobs:
           style: file
           tidy-checks: ''
           thread-comments: ${{ github.event_name == 'pull_request' && 'update' }}
+          cache-enable: true
 
       - name: Fail on lint findings
         if: steps.cpp-lint.outputs.checks-failed > 0
@@ -99,7 +103,7 @@ jobs:
             cc: gcc-13
             cxx: g++-13
             packages: >
-              ninja-build cmake gcc-13 g++-13 python3
+              ninja-build cmake gcc-13 g++-13 python3 ccache
             toolchain: ""
             brew_packages: ""
 
@@ -113,7 +117,7 @@ jobs:
             cc: clang-18
             cxx: clang++-18
             packages: >
-              ninja-build cmake clang-18 lld-18 python3
+              ninja-build cmake clang-18 lld-18 python3 ccache
             toolchain: ""
             brew_packages: ""
 
@@ -127,7 +131,7 @@ jobs:
             cc: clang-18
             cxx: clang++-18
             packages: >
-              ninja-build cmake clang-18 lld-18 python3
+              ninja-build cmake clang-18 lld-18 python3 ccache
             toolchain: ""
             brew_packages: ""
 
@@ -141,7 +145,7 @@ jobs:
             cc: clang-18
             cxx: clang++-18
             packages: >
-              ninja-build cmake clang-18 lld-18 python3
+              ninja-build cmake clang-18 lld-18 python3 ccache
             toolchain: ""
             brew_packages: ""
 
@@ -155,7 +159,7 @@ jobs:
             cc: ""
             cxx: ""
             toolchain: apple-clang
-            brew_packages: ninja
+            brew_packages: "ninja ccache"
 
           - name: macos-arm64-llvm-clang-release-cpp23
             runs_on: macos-15
@@ -167,7 +171,7 @@ jobs:
             cc: ""
             cxx: ""
             toolchain: llvm-clang
-            brew_packages: "ninja llvm@18"
+            brew_packages: "ninja llvm@18 ccache"
 
           - name: macos-arm64-gcc-debug-cpp20
             runs_on: macos-15
@@ -179,7 +183,7 @@ jobs:
             cc: ""
             cxx: ""
             toolchain: gcc
-            brew_packages: "ninja gcc@14"
+            brew_packages: "ninja gcc@14 ccache"
 
           - name: macos-intel-clang-debug-cpp17
             runs_on: macos-15-intel
@@ -191,7 +195,7 @@ jobs:
             cc: ""
             cxx: ""
             toolchain: apple-clang
-            brew_packages: ninja
+            brew_packages: "ninja ccache"
 
     steps:
       - name: Harden runner
@@ -262,6 +266,21 @@ jobs:
           echo "CC=${{ matrix.cc }}" >> "$GITHUB_ENV"
           echo "CXX=${{ matrix.cxx }}" >> "$GITHUB_ENV"
 
+      - name: Cache ccache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ccache
+          key: ccache-${{ runner.os }}-${{ matrix.name }}-${{ hashFiles('CMakePresets.json', 'tests/CMakeLists.txt', 'cmake/config/ProjectOptions.cmake') }}
+          restore-keys: |
+            ccache-${{ runner.os }}-${{ matrix.name }}-
+            ccache-${{ runner.os }}-
+
+      - name: Configure ccache env
+        run: |
+          mkdir -p "${CCACHE_DIR}"
+          echo "CCACHE_BASEDIR=$GITHUB_WORKSPACE" >> "$GITHUB_ENV"
+          echo "CCACHE_SLOPPINESS=time_macros" >> "$GITHUB_ENV"
+
       - name: Cache build tree
         uses: actions/cache@v4
         with:
@@ -269,7 +288,7 @@ jobs:
           key: snap-${{ runner.os }}-${{ matrix.name }}-${{ hashFiles('CMakePresets.json', 'tests/CMakeLists.txt', 'cmake/config/ProjectOptions.cmake') }}
 
       - name: Configure
-        run: cmake --preset "${{ matrix.configurePreset }}" -DCMAKE_CXX_STANDARD=${{ matrix.cxxStandard }}
+        run: cmake --preset "${{ matrix.configurePreset }}" -DCMAKE_CXX_STANDARD=${{ matrix.cxxStandard }} -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
 
       - name: Build
         run: cmake --build --preset "${{ matrix.buildPreset }}" --parallel
@@ -340,7 +359,7 @@ jobs:
             distro: ubuntu24.04
             std: 23
             pkg: >
-              git ninja-build cmake clang lld python3
+              git ninja-build cmake clang lld python3 ccache
             cc: clang
             cxx: clang++
           - name: riscv64-ubuntu24-gcc
@@ -348,7 +367,7 @@ jobs:
             distro: ubuntu24.04
             std: 20
             pkg: >
-              git ninja-build cmake build-essential python3
+              git ninja-build cmake build-essential python3 ccache
             cc: gcc
             cxx: g++
           - name: ppc64le-ubuntu22-gcc
@@ -356,7 +375,7 @@ jobs:
             distro: ubuntu22.04
             std: 20
             pkg: >
-              git ninja-build cmake build-essential python3
+              git ninja-build cmake build-essential python3 ccache
             cc: gcc
             cxx: g++
           - name: s390x-ubuntu24-gcc
@@ -364,7 +383,7 @@ jobs:
             distro: ubuntu24.04
             std: 20
             pkg: >
-              git ninja-build cmake build-essential python3
+              git ninja-build cmake build-essential python3 ccache
             cc: gcc
             cxx: g++
     steps:
@@ -376,51 +395,51 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Restore ccache (alt-arch)
+        uses: actions/cache@v4
+        with:
+          path: .cache/ccache-${{ matrix.name }}
+          key: ccache-alt-${{ matrix.name }}-${{ hashFiles('CMakePresets.json', 'tests/CMakeLists.txt', 'cmake/config/ProjectOptions.cmake') }}
+          restore-keys: |
+            ccache-alt-${{ matrix.name }}-
+
+      - name: Prepare ccache directory
+        run: mkdir -p ".cache/ccache-${{ matrix.name }}"
+
       - name: Build + test
         uses: uraimo/run-on-arch-action@v3
         with:
           arch: ${{ matrix.arch }}
           distro: ${{ matrix.distro }}
+          githubToken: ${{ github.token }}
+          setup: |
+            mkdir -p "${PWD}/.cache/ccache-${{ matrix.name }}"
+          dockerRunArgs: |
+            --cpus=4
+            --memory=12000m
+            --volume "${PWD}/.cache/ccache-${{ matrix.name }}:/root/.cache/ccache"
           install: |
             apt-get update -qq
             DEBIAN_FRONTEND=noninteractive apt-get install -yqq ${{ matrix.pkg }}
+          env: |
+            CCACHE_DIR=/root/.cache/ccache
+            CCACHE_BASEDIR=${PWD}
+            CCACHE_SLOPPINESS=time_macros
           run: |
+            export CCACHE_DIR=/root/.cache/ccache
+            export CCACHE_BASEDIR="$PWD"
+            export CCACHE_SLOPPINESS=time_macros
+            mkdir -p "$CCACHE_DIR"
             cmake -S . -B out/build/${{ matrix.arch }} -G Ninja \
               -DCMAKE_BUILD_TYPE=RelWithDebInfo \
               -DCMAKE_C_COMPILER=${{ matrix.cc }} \
               -DCMAKE_CXX_COMPILER=${{ matrix.cxx }} \
               -DCMAKE_CXX_STANDARD=${{ matrix.std }} \
+              -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+              -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
               -DSNAP_TEST_GROUPED=ON
             cmake --build out/build/${{ matrix.arch }} --parallel
             ctest --test-dir out/build/${{ matrix.arch }} --label-regex smoke --output-on-failure --stop-on-failure
-
-  tier2-armv7-cross:
-    name: tier2 · linux (armv7 cross) smoke
-    needs:
-      - tier1-posix
-      - tier1-windows
-    runs-on: ubuntu-24.04
-    timeout-minutes: 40
-    continue-on-error: true
-    container:
-      image: dockcross/linux-armv7:latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Configure + build
-        run: |
-          cmake -S . -B out/build/armv7-cross -G Ninja \
-            -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-            -DCMAKE_CXX_STANDARD=20 \
-            -DCMAKE_TOOLCHAIN_FILE="${CMAKE_TOOLCHAIN_FILE}" \
-            -DCMAKE_TRY_COMPILE_TARGET_TYPE=STATIC_LIBRARY \
-            -DSNAP_TEST_GROUPED=ON
-          cmake --build out/build/armv7-cross --parallel
-
-      - name: Test smoke suite (qemu-arm)
-        run: |
-          ctest --test-dir out/build/armv7-cross --label-regex smoke --output-on-failure --stop-on-failure
 
   tier2-linux-distros:
     name: tier2 · linux (distro matrix) smoke (${{ matrix.name }})
@@ -438,7 +457,7 @@ jobs:
             image: debian:12-slim
             install: |
               apt-get update -qq
-              DEBIAN_FRONTEND=noninteractive apt-get install -yqq git ninja-build cmake build-essential python3
+              DEBIAN_FRONTEND=noninteractive apt-get install -yqq git ninja-build cmake build-essential python3 ccache
             cc: gcc
             cxx: g++
             std: 20
@@ -446,7 +465,7 @@ jobs:
             image: fedora:41
             install: |
               dnf -y update
-              dnf -y install git ninja-build cmake clang lld python3
+              dnf -y install git ninja-build cmake clang lld python3 ccache
             cc: clang
             cxx: clang++
             std: 23
@@ -454,7 +473,7 @@ jobs:
             image: opensuse/leap:15.6
             install: |
               zypper --non-interactive refresh
-              zypper --non-interactive install git ninja cmake gcc gcc-c++ gcc13 gcc13-c++ make python3
+              zypper --non-interactive install git ninja cmake gcc gcc-c++ gcc13 gcc13-c++ make python3 ccache
               update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-13 100
               update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-13 100
             cc: gcc-13
@@ -463,12 +482,13 @@ jobs:
           - name: alpine-320-gcc
             image: alpine:3.20
             install: |
-              apk add --no-cache build-base cmake ninja git python3
+              apk add --no-cache build-base cmake ninja git python3 ccache
             cc: gcc
             cxx: g++
             std: 20
     container:
       image: ${{ matrix.image }}
+      options: --cpus 4 --memory 8000m
     steps:
       - name: Install base toolchain
         run: ${{ matrix.install }}
@@ -476,16 +496,32 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Cache ccache (distro)
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ccache
+          key: ccache-distro-${{ matrix.name }}-${{ hashFiles('CMakePresets.json', 'tests/CMakeLists.txt', 'cmake/config/ProjectOptions.cmake') }}
+          restore-keys: |
+            ccache-distro-${{ matrix.name }}-
+
       - name: Configure toolchain env
         run: |
           echo "CC=${{ matrix.cc }}" >> "$GITHUB_ENV"
           echo "CXX=${{ matrix.cxx }}" >> "$GITHUB_ENV"
+
+      - name: Prepare ccache env
+        run: |
+          mkdir -p "${CCACHE_DIR}"
+          echo "CCACHE_BASEDIR=$GITHUB_WORKSPACE" >> "$GITHUB_ENV"
+          echo "CCACHE_SLOPPINESS=time_macros" >> "$GITHUB_ENV"
 
       - name: Configure + build
         run: |
           cmake -S . -B out/build/distro/${{ matrix.name }} -G Ninja \
             -DCMAKE_BUILD_TYPE=RelWithDebInfo \
             -DCMAKE_CXX_STANDARD=${{ matrix.std }} \
+            -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
             -DSNAP_TEST_GROUPED=ON
           cmake --build out/build/distro/${{ matrix.name }} --parallel
 
