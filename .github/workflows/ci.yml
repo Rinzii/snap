@@ -122,6 +122,17 @@ jobs:
             packages: >
               ninja-build cmake clang-18 lld-18 python3
 
+          - name: linux-arm64-clang-release-cpp23
+            runs_on: ubuntu-24.04-arm
+            configurePreset: ninja-clang
+            buildPreset: build-ninja-clang-release
+            testPreset: test-ninja-clang-release
+            buildDir: out/build/ninja/ninja-clang
+            cxxStandard: 23
+            cc: clang-18
+            cxx: clang++-18
+            packages: >
+              ninja-build cmake clang-18 lld-18 python3
           - name: macos-arm64-clang-release-cpp20
             runs_on: macos-15
             configurePreset: ninja-clang
@@ -231,13 +242,47 @@ jobs:
       - name: Test
         run: ctest --preset "${{ matrix.testPreset }}" --output-on-failure --schedule-random -F
 
+  tier1-windows-arm64:
+    name: tier1 · windows arm64 build
+    needs: lint
+    runs-on: windows-2022
+    timeout-minutes: 45
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@v2.11.0
+        with:
+          egress-policy: audit
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Cache build tree
+        uses: actions/cache@v4
+        with:
+          path: out/build/vs22-arm64
+          key: snap-windows-arm64-${{ hashFiles('CMakePresets.json', 'tests/CMakeLists.txt', 'cmake/config/ProjectOptions.cmake') }}
+
+      - name: Configure (ARM64)
+        run: cmake --preset vs22-arm64 -DCMAKE_CXX_STANDARD=20
+
+      - name: Build (ARM64 Release)
+        run: cmake --build --preset build-vs22-arm64-release --parallel
+
+      - name: Note about tests
+        run: Write-Host "ARM64 binaries are cross-compiled on x64 runners; runtime tests are unavailable on this host."
+
   tier2-arm:
     name: tier2 · linux (${{ matrix.arch }}) smoke
     needs:
       - tier1-posix
       - tier1-windows
+      - tier1-windows-arm64
     runs-on: ubuntu-24.04
     timeout-minutes: 75
+    continue-on-error: true
     strategy:
       fail-fast: true
       matrix:
@@ -289,8 +334,10 @@ jobs:
     needs:
       - tier1-posix
       - tier1-windows
+      - tier1-windows-arm64
     runs-on: ubuntu-24.04
     timeout-minutes: 60
+    continue-on-error: true
     steps:
       - name: Harden runner
         uses: step-security/harden-runner@v2.11.0

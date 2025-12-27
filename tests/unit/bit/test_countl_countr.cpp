@@ -2,7 +2,7 @@
 #include "snap/bit/countr.hpp"
 #include "snap/internal/compat/std.hpp"
 
-#include <gtest/gtest.h>
+#include "snap/testing/gtest_helpers.hpp"
 
 #include <limits>
 #include <type_traits>
@@ -14,7 +14,8 @@
 namespace
 {
 
-	template <class T> constexpr int digits_v = std::numeric_limits<T>::digits;
+	using ::SNAP_NAMESPACE::test::digits_v;
+	using ::SNAP_NAMESPACE::test::pow2;
 
 	template <class T> constexpr int reference_countl_zero(T value)
 	{
@@ -68,9 +69,7 @@ namespace
 	{
 	};
 
-	using UnsignedTypes = ::testing::Types<unsigned char, unsigned short, unsigned int, unsigned long, unsigned long long>;
-
-	TYPED_TEST_SUITE(CountLeadingTrailingTyped, UnsignedTypes);
+	SNAP_TYPED_TEST_SUITE(CountLeadingTrailingTyped, SNAP_NAMESPACE::test::type_sets::CommonUnsigned);
 
 	// NOLINTNEXTLINE(readability-function-cognitive-complexity)
 	TYPED_TEST(CountLeadingTrailingTyped, CountlZeroMatchesReference)
@@ -90,7 +89,7 @@ namespace
 		{
 			for (int bit = 0; bit < digits; ++bit)
 			{
-				const T value = T{ 1 } << bit;
+				const T value = pow2<T>(bit);
 				EXPECT_EQ(SNAP_NAMESPACE::countl_zero(value), reference_countl_zero(value));
 				EXPECT_EQ(SNAP_NAMESPACE::countl_zero(T(value - T{ 1 })), reference_countl_zero(T(value - T{ 1 })));
 			}
@@ -117,7 +116,7 @@ namespace
 		{
 			for (int bit = 0; bit < digits; ++bit)
 			{
-				const T value = T{ 1 } << bit;
+				const T value = pow2<T>(bit);
 				EXPECT_EQ(SNAP_NAMESPACE::countl_one(value), reference_countl_one(value));
 				EXPECT_EQ(SNAP_NAMESPACE::countl_one(T(value - T{ 1 })), reference_countl_one(T(value - T{ 1 })));
 			}
@@ -143,7 +142,7 @@ namespace
 		{
 			for (int bit = 0; bit < digits; ++bit)
 			{
-				const T value = T{ 1 } << bit;
+				const T value = pow2<T>(bit);
 				EXPECT_EQ(SNAP_NAMESPACE::countr_zero(value), reference_countr_zero(value));
 				EXPECT_EQ(SNAP_NAMESPACE::countr_zero(T(value - T{ 1 })), reference_countr_zero(T(value - T{ 1 })));
 			}
@@ -170,7 +169,7 @@ namespace
 		{
 			for (int bit = 0; bit < digits; ++bit)
 			{
-				const T value = T{ 1 } << bit;
+				const T value = pow2<T>(bit);
 				EXPECT_EQ(SNAP_NAMESPACE::countr_one(value), reference_countr_one(value));
 				EXPECT_EQ(SNAP_NAMESPACE::countr_one(T(value - T{ 1 })), reference_countr_one(T(value - T{ 1 })));
 			}
@@ -184,7 +183,7 @@ namespace
 		using T = TypeParam;
 		for (int bit = 0; bit < digits_v<T>; ++bit)
 		{
-			const T value = T{ 1 } << bit;
+			const T value = pow2<T>(bit);
 			EXPECT_EQ(SNAP_NAMESPACE::countl_zero(value), std::countl_zero(value));
 			EXPECT_EQ(SNAP_NAMESPACE::countr_zero(value), std::countr_zero(value));
 			EXPECT_EQ(SNAP_NAMESPACE::countl_one(value), std::countl_one(value));

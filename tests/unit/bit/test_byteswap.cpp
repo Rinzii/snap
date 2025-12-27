@@ -1,6 +1,6 @@
 #include "snap/bit/byteswap.hpp"
 
-#include <gtest/gtest.h>
+#include "snap/testing/gtest_helpers.hpp"
 
 #include <cstdint>
 #include <cstring>
@@ -31,7 +31,7 @@ namespace
 
 	using IntegralTypes = ::testing::Types<std::uint8_t, std::int8_t, std::uint16_t, std::int16_t, std::uint32_t, std::int32_t, std::uint64_t, std::int64_t>;
 
-	TYPED_TEST_SUITE(ByteswapTyped, IntegralTypes);
+	SNAP_TYPED_TEST_SUITE(ByteswapTyped, IntegralTypes);
 
 	TYPED_TEST(ByteswapTyped, MatchesReferenceAndIsInvolutory)
 	{

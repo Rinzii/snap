@@ -1,7 +1,7 @@
 #include "snap/bit/bit_ceil.hpp"
 #include "snap/internal/compat/std.hpp"
 
-#include <gtest/gtest.h>
+#include "snap/testing/gtest_helpers.hpp"
 
 #include <cstdint>
 #include <limits>
@@ -16,19 +16,9 @@
 namespace
 {
 
-	template <class T> constexpr bool is_power_of_two(T v)
-	{
-		return v != T{ 0 } && (v & (v - T{ 1 })) == T{ 0 };
-	}
-
-	template <class T> constexpr int digits_v = std::numeric_limits<T>::digits; // value bits
-
-	template <class T> constexpr T pow2(int exponent)
-	{
-		return static_cast<T>(T{ 1 } << exponent);
-	}
-
-	template <class T> constexpr T highest_pow2() { return pow2<T>(digits_v<T> - 1); }
+	using ::SNAP_NAMESPACE::test::digits_v;
+	using ::SNAP_NAMESPACE::test::highest_pow2;
+	using ::SNAP_NAMESPACE::test::pow2;
 
 	// Typed test over common unsigned integer types
 	template <class T> class BitCeilTyped : public ::testing::Test
@@ -36,8 +26,7 @@ namespace
 		static_assert(std::is_unsigned_v<T>, "BitCeilTyped requires an unsigned T");
 	};
 
-	using TestTypes = ::testing::Types<unsigned char, unsigned short, unsigned int, unsigned long, unsigned long long>;
-	TYPED_TEST_SUITE(BitCeilTyped, TestTypes, ::testing::internal::DefaultNameGenerator);
+	SNAP_TYPED_TEST_SUITE(BitCeilTyped, SNAP_NAMESPACE::test::type_sets::CommonUnsigned);
 
 	// 0 and 1 well-defined
 	TYPED_TEST(BitCeilTyped, ZeroAndOne)

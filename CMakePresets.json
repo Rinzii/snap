@@ -35,6 +35,23 @@
       }
     },
     {
+      "name": "base-vs22-arm64",
+      "generator": "Visual Studio 17 2022",
+      "hidden": true,
+      "binaryDir": "${sourceDir}/out/build/vs22-arm64/${presetName}",
+      "architecture": {
+        "value": "ARM64",
+        "strategy": "external"
+      },
+      "cacheVariables": {
+        "CMAKE_CXX_STANDARD": "17",
+        "SNAP_TEST_GROUPED": "OFF",
+        "SNAP_TEST_ENABLE_ASAN": "OFF",
+        "SNAP_TEST_ENABLE_TSAN": "OFF",
+        "SNAP_TEST_WERROR": "OFF"
+      }
+    },
+    {
       "name": "gcc",
       "hidden": true,
       "cacheVariables": {
@@ -101,6 +118,13 @@
         "base-vs22"
       ],
       "description": "VS2022"
+    },
+    {
+      "name": "vs22-arm64",
+      "inherits": [
+        "base-vs22-arm64"
+      ],
+      "description": "VS2022 ARM64"
     },
     {
       "name": "vs22-grouped",
@@ -221,6 +245,15 @@
     {
       "name": "build-vs22-werror-release",
       "configurePreset": "vs22-werror",
+      "configuration": "Release",
+      "targets": [
+        "ALL_BUILD"
+      ],
+      "jobs": 0
+    },
+    {
+      "name": "build-vs22-arm64-release",
+      "configurePreset": "vs22-arm64",
       "configuration": "Release",
       "targets": [
         "ALL_BUILD"

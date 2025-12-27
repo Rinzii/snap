@@ -1,6 +1,6 @@
 #include "snap/bit/bit_cast.hpp"
 
-#include <gtest/gtest.h>
+#include "snap/testing/gtest_helpers.hpp"
 
 #include <array>
 #include <cmath>
@@ -144,7 +144,7 @@ protected:
 	static_assert(std::is_trivially_copyable_v<To>, "To must be trivially copyable");
 	static_assert(std::is_trivially_copyable_v<From>, "From must be trivially copyable");
 };
-TYPED_TEST_SUITE(BitCastTyped, BitCastPairs, ::testing::internal::DefaultNameGenerator);
+SNAP_TYPED_TEST_SUITE(BitCastTyped, BitCastPairs);
 
 // Round-trip preserves object representation (bytes) regardless of type
 TYPED_TEST(BitCastTyped, RoundTripPreservesBytes)

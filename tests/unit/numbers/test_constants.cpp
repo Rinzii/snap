@@ -3,7 +3,7 @@
 
 #include "snap/numbers.hpp"
 #include "snap/testing/assertions.hpp"
-#include "snap/testing/type_name.hpp"
+#include "snap/testing/gtest_helpers.hpp"
 
 #include <cmath>
 #include <limits>
@@ -34,7 +34,7 @@ namespace numbers
 		};
 
 		using FloatingTypes = ::testing::Types<float, double, long double>;
-		TYPED_TEST_SUITE(NumbersTypedTest, FloatingTypes, SNAP_NAMESPACE::test::TypeNameGenerator);
+		SNAP_TYPED_TEST_SUITE(NumbersTypedTest, FloatingTypes);
 
 		TYPED_TEST(NumbersTypedTest, VariableTemplatesMatchDoubleSpecializations)
 		{

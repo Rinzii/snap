@@ -1,6 +1,6 @@
 #include "snap/bit/has_single_bit.hpp"
 
-#include <gtest/gtest.h>
+#include "snap/testing/gtest_helpers.hpp"
 
 #include <cstdint>
 #include <limits>
@@ -9,13 +9,13 @@
 namespace
 {
 
+	using ::SNAP_NAMESPACE::test::pow2;
+
 	template <class T> class HasSingleBitTyped : public ::testing::Test
 	{
 	};
 
-	using UnsignedTypes = ::testing::Types<unsigned short, unsigned int, unsigned long, unsigned long long>;
-
-	TYPED_TEST_SUITE(HasSingleBitTyped, UnsignedTypes);
+	SNAP_TYPED_TEST_SUITE(HasSingleBitTyped, SNAP_NAMESPACE::test::type_sets::UnsignedWithoutChar);
 
 	TYPED_TEST(HasSingleBitTyped, ZeroIsFalse)
 	{
@@ -28,7 +28,7 @@ namespace
 		using T = TypeParam;
 		for (int bit = 0; bit < std::numeric_limits<T>::digits; ++bit)
 		{
-			const T value = T{ 1 } << bit;
+			const T value = pow2<T>(bit);
 			EXPECT_TRUE(SNAP_NAMESPACE::has_single_bit(value));
 		}
 	}
@@ -38,7 +38,7 @@ namespace
 		using T = TypeParam;
 		for (int bit = 1; bit < std::numeric_limits<T>::digits; ++bit)
 		{
-			const T value = (T{ 1 } << bit) | T{ 1 };
+			const T value = static_cast<T>(pow2<T>(bit) | T{ 1 });
 			EXPECT_FALSE(SNAP_NAMESPACE::has_single_bit(value));
 		}
 	}

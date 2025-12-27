@@ -35,8 +35,7 @@ namespace
 			return TagIterator(ptr + n); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 		}
 		auto operator->() const { return ptr; }
-		friend bool operator==(const TagIterator& a, const TagIterator& b) { return a.ptr == b.ptr; }
-		friend bool operator!=(const TagIterator& a, const TagIterator& b) { return !(a == b); }
+		[[maybe_unused]] friend bool operator==(const TagIterator& a, const TagIterator& b) { return a.ptr == b.ptr; }
 	};
 
 	struct Proxy
@@ -59,8 +58,7 @@ namespace
 			return *this;
 		}
 		auto operator->() const { return ptr; }
-		friend bool operator==(const NonLvalueRandomAccess& a, const NonLvalueRandomAccess& b) { return a.ptr == b.ptr; }
-		friend bool operator!=(const NonLvalueRandomAccess& a, const NonLvalueRandomAccess& b) { return !(a == b); }
+		[[maybe_unused]] friend bool operator==(const NonLvalueRandomAccess& a, const NonLvalueRandomAccess& b) { return a.ptr == b.ptr; }
 	};
 } // namespace
 

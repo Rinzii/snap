@@ -21,27 +21,27 @@ namespace
 		int value{};
 	};
 
-	inline bool operator==(const EqRel& lhs, const EqRel& rhs)
+[[maybe_unused]] inline bool operator==(const EqRel& lhs, const EqRel& rhs)
 	{
 		return lhs.value == rhs.value;
 	}
-	inline bool operator!=(const EqRel& lhs, const EqRel& rhs)
+[[maybe_unused]] inline bool operator!=(const EqRel& lhs, const EqRel& rhs)
 	{
 		return lhs.value != rhs.value;
 	}
-	inline bool operator<(const EqRel& lhs, const EqRel& rhs)
+[[maybe_unused]] inline bool operator<(const EqRel& lhs, const EqRel& rhs)
 	{
 		return lhs.value < rhs.value;
 	}
-	inline bool operator<=(const EqRel& lhs, const EqRel& rhs)
+[[maybe_unused]] inline bool operator<=(const EqRel& lhs, const EqRel& rhs)
 	{
 		return lhs.value <= rhs.value;
 	}
-	inline bool operator>(const EqRel& lhs, const EqRel& rhs)
+[[maybe_unused]] inline bool operator>(const EqRel& lhs, const EqRel& rhs)
 	{
 		return lhs.value > rhs.value;
 	}
-	inline bool operator>=(const EqRel& lhs, const EqRel& rhs)
+[[maybe_unused]] inline bool operator>=(const EqRel& lhs, const EqRel& rhs)
 	{
 		return lhs.value >= rhs.value;
 	}
@@ -50,11 +50,11 @@ namespace
 	{
 	};
 
-	inline bool operator==(const EqOnly& /*lhs*/, const EqOnly& /*rhs*/)
+[[maybe_unused]] inline bool operator==(const EqOnly& /*lhs*/, const EqOnly& /*rhs*/)
 	{
 		return true;
 	}
-	inline bool operator!=(const EqOnly& /*lhs*/, const EqOnly& /*rhs*/)
+[[maybe_unused]] inline bool operator!=(const EqOnly& /*lhs*/, const EqOnly& /*rhs*/)
 	{
 		return false;
 	}
@@ -64,11 +64,11 @@ namespace
 		bool value{};
 	};
 
-	inline bool operator&&(const LogicalPair& lhs, const LogicalPair& rhs)
+[[maybe_unused]] inline bool operator&&(const LogicalPair& lhs, const LogicalPair& rhs)
 	{
 		return lhs.value && rhs.value;
 	}
-	inline bool operator||(const LogicalPair& lhs, const LogicalPair& rhs)
+[[maybe_unused]] inline bool operator||(const LogicalPair& lhs, const LogicalPair& rhs)
 	{
 		return lhs.value || rhs.value;
 	}
@@ -168,7 +168,7 @@ namespace
 		int payload{};
 	};
 
-	inline std::ostream& operator<<(std::ostream& os, const Streamable& s)
+[[maybe_unused]] inline std::ostream& operator<<(std::ostream& os, const Streamable& s)
 	{
 		return os << s.payload;
 	}
@@ -207,31 +207,31 @@ namespace
 		std::array<int, 2> storage{};
 	};
 
-	[[nodiscard]] inline int* begin(RangeAdl& r)
+[[nodiscard]] [[maybe_unused]] inline int* begin(RangeAdl& r)
 	{
 		return r.storage.data();
 	}
-	[[nodiscard]] inline int* end(RangeAdl& r)
+[[nodiscard]] [[maybe_unused]] inline int* end(RangeAdl& r)
 	{
 		return std::next(r.storage.data(), static_cast<std::ptrdiff_t>(r.storage.size()));
 	}
-	[[nodiscard]] inline const int* begin(const RangeAdl& r)
+[[nodiscard]] [[maybe_unused]] inline const int* begin(const RangeAdl& r)
 	{
 		return r.storage.data();
 	}
-	[[nodiscard]] inline const int* end(const RangeAdl& r)
+[[nodiscard]] [[maybe_unused]] inline const int* end(const RangeAdl& r)
 	{
 		return std::next(r.storage.data(), static_cast<std::ptrdiff_t>(r.storage.size()));
 	}
-	[[nodiscard]] inline std::size_t size(const RangeAdl& r)
+[[nodiscard]] [[maybe_unused]] inline std::size_t size(const RangeAdl& r)
 	{
 		return r.storage.size();
 	}
-	[[nodiscard]] inline int* data(RangeAdl& r)
+[[nodiscard]] [[maybe_unused]] inline int* data(RangeAdl& r)
 	{
 		return r.storage.data();
 	}
-	[[nodiscard]] inline const int* data(const RangeAdl& r)
+[[nodiscard]] [[maybe_unused]] inline const int* data(const RangeAdl& r)
 	{
 		return r.storage.data();
 	}
@@ -241,19 +241,19 @@ namespace
 		std::array<int, 2> storage{};
 	};
 
-	[[nodiscard]] inline int* begin(RangeAdlNoSize& r)
+[[nodiscard]] [[maybe_unused]] inline int* begin(RangeAdlNoSize& r)
 	{
 		return r.storage.data();
 	}
-	[[nodiscard]] inline int* end(RangeAdlNoSize& r)
+[[nodiscard]] [[maybe_unused]] inline int* end(RangeAdlNoSize& r)
 	{
 		return std::next(r.storage.data(), static_cast<std::ptrdiff_t>(r.storage.size()));
 	}
-	[[nodiscard]] inline const int* begin(const RangeAdlNoSize& r)
+[[nodiscard]] [[maybe_unused]] inline const int* begin(const RangeAdlNoSize& r)
 	{
 		return r.storage.data();
 	}
-	[[nodiscard]] inline const int* end(const RangeAdlNoSize& r)
+[[nodiscard]] [[maybe_unused]] inline const int* end(const RangeAdlNoSize& r)
 	{
 		return std::next(r.storage.data(), static_cast<std::ptrdiff_t>(r.storage.size()));
 	}
@@ -263,23 +263,23 @@ namespace
 		std::array<int, 2> storage{};
 	};
 
-	[[nodiscard]] inline int* begin(RangeAdlNoData& r)
+[[nodiscard]] [[maybe_unused]] inline int* begin(RangeAdlNoData& r)
 	{
 		return r.storage.data();
 	}
-	[[nodiscard]] inline int* end(RangeAdlNoData& r)
+[[nodiscard]] [[maybe_unused]] inline int* end(RangeAdlNoData& r)
 	{
 		return std::next(r.storage.data(), static_cast<std::ptrdiff_t>(r.storage.size()));
 	}
-	[[nodiscard]] inline const int* begin(const RangeAdlNoData& r)
+[[nodiscard]] [[maybe_unused]] inline const int* begin(const RangeAdlNoData& r)
 	{
 		return r.storage.data();
 	}
-	[[nodiscard]] inline const int* end(const RangeAdlNoData& r)
+[[nodiscard]] [[maybe_unused]] inline const int* end(const RangeAdlNoData& r)
 	{
 		return std::next(r.storage.data(), static_cast<std::ptrdiff_t>(r.storage.size()));
 	}
-	[[nodiscard]] inline std::size_t size(const RangeAdlNoData& r)
+[[nodiscard]] [[maybe_unused]] inline std::size_t size(const RangeAdlNoData& r)
 	{
 		return r.storage.size();
 	}
@@ -298,7 +298,7 @@ namespace
 		int value{};
 	};
 
-	inline void swap(Swappable& lhs, Swappable& rhs) noexcept
+[[maybe_unused]] inline void swap(Swappable& lhs, Swappable& rhs) noexcept
 	{
 		auto tmp  = lhs.value;
 		lhs.value = rhs.value;

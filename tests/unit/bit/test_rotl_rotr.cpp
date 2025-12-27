@@ -2,7 +2,7 @@
 #include "snap/bit/rotr.hpp"
 #include "snap/internal/compat/std.hpp"
 
-#include <gtest/gtest.h>
+#include "snap/testing/gtest_helpers.hpp"
 
 #include <array>
 #include <limits>
@@ -57,9 +57,9 @@ namespace
 	{
 	};
 
-	using UnsignedTypes = ::testing::Types<std::uint8_t, std::uint16_t, std::uint32_t, std::uint64_t>;
+	using UnsignedTypes = SNAP_NAMESPACE::test::type_sets::FixedWidthUnsigned;
 
-	TYPED_TEST_SUITE(RotateTyped, UnsignedTypes);
+	SNAP_TYPED_TEST_SUITE(RotateTyped, UnsignedTypes);
 
 	TYPED_TEST(RotateTyped, RotlMatchesReference)
 	{

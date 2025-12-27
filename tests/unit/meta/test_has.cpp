@@ -83,51 +83,51 @@ namespace
 		int storage[2]{};
 	};
 
-	inline int* begin(RangeAdl& r)
+[[maybe_unused]] inline int* begin(RangeAdl& r)
 	{
 		return r.storage;
 	}
-	inline int* end(RangeAdl& r)
+[[maybe_unused]] inline int* end(RangeAdl& r)
 	{
 		return r.storage + 2;
 	}
-	inline const int* begin(const RangeAdl& r)
+[[maybe_unused]] inline const int* begin(const RangeAdl& r)
 	{
 		return r.storage;
 	}
-	inline const int* end(const RangeAdl& r)
+[[maybe_unused]] inline const int* end(const RangeAdl& r)
 	{
 		return r.storage + 2;
 	}
-	inline std::size_t size(const RangeAdl&)
+[[maybe_unused]] inline std::size_t size(const RangeAdl&)
 	{
 		return 2;
 	}
-	inline int* data(RangeAdl& r)
+[[maybe_unused]] inline int* data(RangeAdl& r)
 	{
 		return r.storage;
 	}
-	inline const int* data(const RangeAdl& r)
+[[maybe_unused]] inline const int* data(const RangeAdl& r)
 	{
 		return r.storage;
 	}
-	inline bool empty(const RangeAdl&)
+[[maybe_unused]] inline bool empty(const RangeAdl&)
 	{
 		return false;
 	}
-	inline int* rbegin(RangeAdl& r)
+[[maybe_unused]] inline int* rbegin(RangeAdl& r)
 	{
 		return r.storage + 1;
 	}
-	inline int* rend(RangeAdl& r)
+[[maybe_unused]] inline int* rend(RangeAdl& r)
 	{
 		return r.storage;
 	}
-	inline const int* rbegin(const RangeAdl& r)
+[[maybe_unused]] inline const int* rbegin(const RangeAdl& r)
 	{
 		return r.storage + 1;
 	}
-	inline const int* rend(const RangeAdl& r)
+[[maybe_unused]] inline const int* rend(const RangeAdl& r)
 	{
 		return r.storage;
 	}

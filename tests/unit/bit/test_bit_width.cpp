@@ -1,7 +1,7 @@
 #include "snap/bit/bit_width.hpp"
 #include "snap/internal/compat/std.hpp"
 
-#include <gtest/gtest.h>
+#include "snap/testing/gtest_helpers.hpp"
 
 #include <limits>
 #include <type_traits>
@@ -13,7 +13,8 @@
 namespace
 {
 
-	template <class T> constexpr int digits_v = std::numeric_limits<T>::digits;
+	using ::SNAP_NAMESPACE::test::digits_v;
+	using ::SNAP_NAMESPACE::test::pow2;
 
 	template <class T> constexpr int reference_bit_width(T value)
 	{
@@ -30,10 +31,7 @@ namespace
 	template <class T> class BitWidthTyped : public ::testing::Test
 	{
 	};
-
-	using UnsignedTypes = ::testing::Types<unsigned char, unsigned short, unsigned int, unsigned long, unsigned long long>;
-
-	TYPED_TEST_SUITE(BitWidthTyped, UnsignedTypes);
+	SNAP_TYPED_TEST_SUITE(BitWidthTyped, SNAP_NAMESPACE::test::type_sets::CommonUnsigned);
 
 	TYPED_TEST(BitWidthTyped, ZeroHasZeroWidth)
 	{
@@ -46,7 +44,7 @@ namespace
 		using T = TypeParam;
 		for (int bit = 0; bit < digits_v<T>; ++bit)
 		{
-			const T value = T{ 1 } << bit;
+			const T value = pow2<T>(bit);
 			EXPECT_EQ(SNAP_NAMESPACE::bit_width(value), bit + 1);
 		}
 	}
@@ -68,13 +66,15 @@ namespace
 		{
 			for (int bit = 0; bit < digits; ++bit)
 			{
-				const T value = T{ 1 } << bit;
+				const T value = pow2<T>(bit);
 				EXPECT_EQ(SNAP_NAMESPACE::bit_width(value), reference_bit_width(value));
 				if (bit > 0)
 				{
-					const T prev = T{ 1 } << (bit - 1);
-					EXPECT_EQ(SNAP_NAMESPACE::bit_width(T(value - T{ 1 })), reference_bit_width(T(value - T{ 1 })));
-					EXPECT_EQ(SNAP_NAMESPACE::bit_width(T(prev + T{ 1 })), reference_bit_width(T(prev + T{ 1 })));
+					const T prev		   = pow2<T>(bit - 1);
+					const T value_minus_one = static_cast<T>(value - T{ 1 });
+					const T prev_plus_one	  = static_cast<T>(prev + T{ 1 });
+					EXPECT_EQ(SNAP_NAMESPACE::bit_width(value_minus_one), reference_bit_width(value_minus_one));
+					EXPECT_EQ(SNAP_NAMESPACE::bit_width(prev_plus_one), reference_bit_width(prev_plus_one));
 				}
 			}
 
@@ -92,11 +92,11 @@ namespace
 	TYPED_TEST(BitWidthTyped, MonotonicIncrease)
 	{
 		using T			 = TypeParam;
-		T prev_width	 = 0;
+		int prev_width	 = 0;
 		const int digits = digits_v<T>;
 		for (int bit = 0; bit < digits; ++bit)
 		{
-			const T value	= T{ 1 } << bit;
+			const T value	= pow2<T>(bit);
 			const int width = SNAP_NAMESPACE::bit_width(value);
 			EXPECT_GE(width, prev_width);
 			prev_width = width;
@@ -109,13 +109,15 @@ namespace
 		using T = TypeParam;
 		for (int bit = 0; bit < digits_v<T>; ++bit)
 		{
-			const T value = T{ 1 } << bit;
+			const T value = pow2<T>(bit);
 			EXPECT_EQ(SNAP_NAMESPACE::bit_width(value), std::bit_width(value));
 			if (bit > 0)
 			{
-				const T prev = T{ 1 } << (bit - 1);
-				EXPECT_EQ(SNAP_NAMESPACE::bit_width(T(value - T{ 1 })), std::bit_width(T(value - T{ 1 })));
-				EXPECT_EQ(SNAP_NAMESPACE::bit_width(T(prev + T{ 1 })), std::bit_width(T(prev + T{ 1 })));
+				const T prev			  = pow2<T>(bit - 1);
+				const T value_minus_one = static_cast<T>(value - T{ 1 });
+				const T prev_plus_one	  = static_cast<T>(prev + T{ 1 });
+				EXPECT_EQ(SNAP_NAMESPACE::bit_width(value_minus_one), std::bit_width(value_minus_one));
+				EXPECT_EQ(SNAP_NAMESPACE::bit_width(prev_plus_one), std::bit_width(prev_plus_one));
 			}
 		}
 	}

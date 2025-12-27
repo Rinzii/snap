@@ -76,7 +76,7 @@ namespace
 
 		static void reset() { alive = constructions = destructions = copies = moves = 0; }
 
-		friend bool operator==(const Tracking& lhs, const Tracking& rhs) { return lhs.value == rhs.value; }
+		[[maybe_unused]] friend bool operator==(const Tracking& lhs, const Tracking& rhs) { return lhs.value == rhs.value; }
 	};
 
 	struct ThrowOnCopy

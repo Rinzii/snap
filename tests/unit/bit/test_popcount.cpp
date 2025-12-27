@@ -1,7 +1,7 @@
 #include "snap/bit/popcount.hpp"
 #include "snap/internal/compat/std.hpp"
 
-#include <gtest/gtest.h>
+#include "snap/testing/gtest_helpers.hpp"
 
 #include <limits>
 #include <type_traits>
@@ -12,7 +12,8 @@
 
 namespace
 {
-	template <class T> constexpr int digits_v = std::numeric_limits<T>::digits;
+	using ::SNAP_NAMESPACE::test::digits_v;
+	using ::SNAP_NAMESPACE::test::pow2;
 
 	template <class T> constexpr unsigned reference_popcount(T v) noexcept
 	{
@@ -34,9 +35,7 @@ namespace
 	{
 	};
 
-	using UnsignedTypes = ::testing::Types<unsigned char, unsigned short, unsigned int, unsigned long, unsigned long long>;
-
-	TYPED_TEST_SUITE(PopcountTyped, UnsignedTypes);
+	SNAP_TYPED_TEST_SUITE(PopcountTyped, SNAP_NAMESPACE::test::type_sets::CommonUnsigned);
 
 	// NOLINTNEXTLINE(readability-function-cognitive-complexity)
 	TYPED_TEST(PopcountTyped, MatchesReference)
@@ -55,7 +54,7 @@ namespace
 		{
 			for (int bit = 0; bit < digits; ++bit)
 			{
-				const T value = T{ 1 } << bit;
+				const T value = pow2<T>(bit);
 				EXPECT_EQ(SNAP_NAMESPACE::popcount(value), reference_popcount(value));
 				EXPECT_EQ(SNAP_NAMESPACE::popcount(T(value - T{ 1 })), reference_popcount(T(value - T{ 1 })));
 			}
@@ -70,7 +69,7 @@ namespace
 		using T = TypeParam;
 		for (int bit = 0; bit < digits_v<T>; ++bit)
 		{
-			const T value = T{ 1 } << bit;
+			const T value = pow2<T>(bit);
 			EXPECT_EQ(SNAP_NAMESPACE::popcount(value), std::popcount(value));
 		}
 	}

@@ -61,7 +61,7 @@ namespace
 			return *this;
 		}
 
-		friend void swap(MoveOnly&, MoveOnly&) noexcept {}
+		[[maybe_unused]] friend void swap(MoveOnly&, MoveOnly&) noexcept {}
 	};
 
 	struct NonMovable
@@ -79,9 +79,9 @@ namespace
 	{
 		int value = 0;
 
-		friend bool operator==(const RegularType& a, const RegularType& b) noexcept { return a.value == b.value; }
+		[[maybe_unused]] friend bool operator==(const RegularType& a, const RegularType& b) noexcept { return a.value == b.value; }
 
-		friend bool operator!=(const RegularType& a, const RegularType& b) noexcept { return !(a == b); }
+		[[maybe_unused]] friend bool operator!=(const RegularType& a, const RegularType& b) noexcept { return !(a == b); }
 	};
 
 	struct NoEquality
@@ -89,7 +89,7 @@ namespace
 		int value = 0;
 	};
 
-	inline bool operator<(const RegularType& lhs, const RegularType& rhs) noexcept
+[[maybe_unused]] inline bool operator<(const RegularType& lhs, const RegularType& rhs) noexcept
 	{
 		return lhs.value < rhs.value;
 	}
