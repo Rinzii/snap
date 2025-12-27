@@ -1,11 +1,8 @@
 # Snap CI Guide
 
-This document explains the layered GitHub Actions pipeline introduced in
-`ci.yml`. It mirrors the staged approach LLVM describes in its
-[Testing Guide](https://llvm.org/docs/TestingGuide.html#llvm-testing-infrastructure-organization)
-and the [Developer Policy CI section](https://llvm.org/docs/DeveloperPolicy.html#working-with-the-ci-system):
-fast checks run first, progressively broader jobs follow, and failures in an
-earlier tier prevent unnecessary work in later tiers.
+This doc is the living map for `ci.yml`. The workflow borrows LLVM’s layered
+playbook—fast sanity checks get the first swing, broader test suites only run if
+earlier tiers stay green, and we bail out as soon as something obvious breaks.
 
 ## Workflow Overview
 
@@ -19,32 +16,28 @@ All downstream tiers declare `needs` on the earlier stage, so we bail out as soo
 as fast checks fail. Within each matrix we also set `fail-fast: true`, matching
 LLVM’s preference for halting broken builders quickly.
 
-## Toolchain and Standard Coverage
+## Toolchain and Platform Coverage
 
-The matrix intentionally mixes compilers, build types, and C++ standards:
+First-class platforms (blockers):
+- **Linux x64:** GCC 13 Debug (`-std=c++17`) plus Clang 18 Release (`-std=c++23`)
+- **Linux arm64:** native `ubuntu-24.04-arm` runner, Clang 18 Release (`-std=c++23`)
+- **macOS arm64 & Intel:** Apple Clang Release/Debug on `macos-15` + `macos-15-intel`
+- **Windows x64:** MSVC Debug (`-std=c++20`) and Release (`-std=c++23`)
 
-- GCC 13 / Ninja Debug on Ubuntu with `-std=c++17`
-- Clang 18 / Ninja Release on Ubuntu with `-std=c++23`
-- Clang 18 + ASan Debug on Ubuntu with `-std=c++20`
-- Apple Clang on `macos-15-intel` (x86_64) and `macos-15` (arm64) covering C++17/C++20; these follow GitHub’s guidance for the post-`macos-13` runner retirement ([GitHub blog](https://github.blog/changelog/2025-09-19-github-actions-macos-13-runner-image-is-closing-down/)).
-- MSVC 17 (VS 2022) Debug C++20 and Release C++23
-- Cross-runs on armv7 (clang-16) and aarch64 (gcc-13) plus FreeBSD 14.2 smoke tests
+Second-class platforms (`continue-on-error: true`):
+- **FreeBSD 14.2:** [`vmactions/freebsd-vm`](https://github.com/vmactions/freebsd-vm) spins up the VM and handles pkg bootstrap for us
+- **Linux armv7:** `uraimo/run-on-arch-action` driving QEMU with GCC 12
+- **Windows arm64:** cross-compile Release on x64 runners until native hosts exist
 
-Tier 2 jobs run only the labeled smoke tests to keep emulated hardware runs
-under one hour; Tier 1 always runs the entire unit suite with randomized order.
+Tier 2 smoke jobs run only labeled tests to keep runtime bounded.
 
-## Maintenance Tips
+## Maintenance
 
-- Add new host/architecture combos by extending the `matrix.include` blocks.
-- Prefer new `CMakePresets` entries over ad-hoc `cmake` command lines so that
-  developers and CI stay aligned.
-- When touching `scripts/lint.sh` or `tests/CMakeLists.txt`, expect cache keys
-  to invalidate (lint, smoke, and host caches intentionally hash those files).
-- Keep smoke tests focused and fast; Tier 0 relies on them to gate the pipeline.
-- The lint job is marked `continue-on-error` so failures surface in the UI but
-  still allow Tier 1+ to run; fix lint ASAP but it won’t block other coverage.
-- If a platform becomes flaky, temporarily set `continue-on-error: true` for the
-  offending matrix row but open an issue to track reverting that exception.
+- Extend the relevant `matrix.include` to add a host/toolchain.
+- Prefer CMake presets over inline commands.
+- Updating `.clang-tidy` / `.clang-format` reruns [`cpp-linter/cpp-linter-action`](https://github.com/cpp-linter/cpp-linter-action); only tool installs are cached.
+- Keep smoke suites minimal.
+- For flaky runners, temporarily set `continue-on-error: true` and track the follow-up.
 
 ## Future Extensions
 
