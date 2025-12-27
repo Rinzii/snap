@@ -403,7 +403,7 @@ jobs:
     timeout-minutes: 40
     continue-on-error: true
     container:
-      image: ghcr.io/dockcross/linux-armv7:latest
+      image: dockcross/linux-armv7:latest
     env:
       CC: arm-linux-gnueabihf-gcc
       CXX: arm-linux-gnueabihf-g++
