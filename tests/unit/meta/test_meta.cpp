@@ -1,17 +1,16 @@
-#include <snap/internal/abi_namespace.hpp>
+#include <gtest/gtest.h>
 
+#include <snap/internal/abi_namespace.hpp>
 #include <snap/meta/always_false.hpp>
 #include <snap/meta/has.hpp>
 #include <snap/meta/placeholder.hpp>
-
-#include <gtest/gtest.h>
 
 #include <string>
 #include <type_traits>
 #include <vector>
 
-template <class T> using begin_expr = decltype(std::declval<T&>().begin());
-template <class T> using size_expr	= decltype(std::declval<T&>().size());
+template <class T> using begin_expr			  = decltype(std::declval<T &>().begin());
+template <class T> using size_expr			  = decltype(std::declval<T &>().size());
 template <class T, class U> using equals_expr = decltype(std::declval<T>() == std::declval<U>());
 
 TEST(MetaTraits, AlwaysFalseIsAlwaysFalse)
@@ -44,4 +43,3 @@ TEST(MetaTraits, HasUtilitiesDetectExpressions)
 	static_assert(has_either_as<equals_expr, bool, int, double>);
 	static_assert(!has_either_as<equals_expr, bool, std::string, SNAP_NAMESPACE::placeholder_t>);
 }
-

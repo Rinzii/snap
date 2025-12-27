@@ -1,10 +1,9 @@
-#include <snap/internal/abi_namespace.hpp>
+#include <gtest/gtest.h>
 
+#include <snap/internal/abi_namespace.hpp>
 #include <snap/memory/inout_ptr.hpp>
 #include <snap/memory/out_ptr.hpp>
 #include <snap/memory/ptr_traits.hpp>
-
-#include <gtest/gtest.h>
 
 #include <memory>
 
@@ -75,4 +74,3 @@ TEST(MemoryPtrTraits, DetectsCapabilities)
 	static_assert(SNAP_NAMESPACE::is_releasable_smart_pointer_v<std::unique_ptr<int>>);
 	static_assert(!SNAP_NAMESPACE::is_releasable_smart_pointer_v<std::shared_ptr<int>>);
 }
-

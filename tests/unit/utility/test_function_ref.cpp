@@ -1,14 +1,16 @@
-#include <snap/internal/abi_namespace.hpp>
-
-#include <snap/utility/function_ref.hpp>
-
 #include <gtest/gtest.h>
+
+#include <snap/internal/abi_namespace.hpp>
+#include <snap/utility/function_ref.hpp>
 
 #include <functional>
 
 namespace
 {
-	int add_pair(int a, int b) { return a + b; }
+	int add_pair(int a, int b)
+	{
+		return a + b;
+	}
 
 	struct Tracker
 	{
@@ -20,12 +22,8 @@ namespace
 
 TEST(UtilityFunctionRef, InvokesLvalueCallable)
 {
-	int sum = 0;
-	auto accumulate =
-		[&sum](int v)
-		{
-			sum += v;
-		};
+	int sum			= 0;
+	auto accumulate = [&sum](int v) { sum += v; };
 
 	SNAP_NAMESPACE::function_ref<void(int)> ref(accumulate);
 	ASSERT_TRUE(ref);
@@ -43,11 +41,7 @@ TEST(UtilityFunctionRef, WrapsFunctionPointer)
 TEST(UtilityFunctionRef, WorksWithMemberAccessThroughLambda)
 {
 	Tracker tracker{ 3 };
-	auto lambda =
-		[&tracker](int x)
-		{
-			return tracker.multiply(x);
-		};
+	auto lambda = [&tracker](int x) { return tracker.multiply(x); };
 
 	SNAP_NAMESPACE::function_ref<int(int)> ref(lambda);
 	EXPECT_EQ(ref(5), 15);
@@ -56,15 +50,10 @@ TEST(UtilityFunctionRef, WorksWithMemberAccessThroughLambda)
 TEST(UtilityFunctionRef, SupportsNoexceptSignatures)
 {
 	int calls = 0;
-	auto ping =
-		[&calls]() noexcept
-		{
-			++calls;
-		};
+	auto ping = [&calls]() noexcept { ++calls; };
 
 	SNAP_NAMESPACE::function_ref<void() noexcept> ref(ping);
 	static_assert(noexcept(ref()));
 	ref();
 	EXPECT_EQ(calls, 1);
 }
-

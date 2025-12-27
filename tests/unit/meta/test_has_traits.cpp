@@ -1,9 +1,9 @@
-#include <snap/meta/has_traits.hpp>
-
 #include <gtest/gtest.h>
 
-#include <cstddef>
+#include <snap/meta/has_traits.hpp>
+
 #include <array>
+#include <cstddef>
 #include <functional>
 #include <iterator>
 #include <ostream>
@@ -21,27 +21,57 @@ namespace
 		int value{};
 	};
 
-	inline bool operator==(const EqRel& lhs, const EqRel& rhs) { return lhs.value == rhs.value; }
-	inline bool operator!=(const EqRel& lhs, const EqRel& rhs) { return lhs.value != rhs.value; }
-	inline bool operator<(const EqRel& lhs, const EqRel& rhs) { return lhs.value < rhs.value; }
-	inline bool operator<=(const EqRel& lhs, const EqRel& rhs) { return lhs.value <= rhs.value; }
-	inline bool operator>(const EqRel& lhs, const EqRel& rhs) { return lhs.value > rhs.value; }
-	inline bool operator>=(const EqRel& lhs, const EqRel& rhs) { return lhs.value >= rhs.value; }
+	inline bool operator==(const EqRel& lhs, const EqRel& rhs)
+	{
+		return lhs.value == rhs.value;
+	}
+	inline bool operator!=(const EqRel& lhs, const EqRel& rhs)
+	{
+		return lhs.value != rhs.value;
+	}
+	inline bool operator<(const EqRel& lhs, const EqRel& rhs)
+	{
+		return lhs.value < rhs.value;
+	}
+	inline bool operator<=(const EqRel& lhs, const EqRel& rhs)
+	{
+		return lhs.value <= rhs.value;
+	}
+	inline bool operator>(const EqRel& lhs, const EqRel& rhs)
+	{
+		return lhs.value > rhs.value;
+	}
+	inline bool operator>=(const EqRel& lhs, const EqRel& rhs)
+	{
+		return lhs.value >= rhs.value;
+	}
 
 	struct EqOnly
 	{
 	};
 
-inline bool operator==(const EqOnly& /*lhs*/, const EqOnly& /*rhs*/) { return true; }
-inline bool operator!=(const EqOnly& /*lhs*/, const EqOnly& /*rhs*/) { return false; }
+	inline bool operator==(const EqOnly& /*lhs*/, const EqOnly& /*rhs*/)
+	{
+		return true;
+	}
+	inline bool operator!=(const EqOnly& /*lhs*/, const EqOnly& /*rhs*/)
+	{
+		return false;
+	}
 
 	struct LogicalPair
 	{
 		bool value{};
 	};
 
-	inline bool operator&&(const LogicalPair& lhs, const LogicalPair& rhs) { return lhs.value && rhs.value; }
-	inline bool operator||(const LogicalPair& lhs, const LogicalPair& rhs) { return lhs.value || rhs.value; }
+	inline bool operator&&(const LogicalPair& lhs, const LogicalPair& rhs)
+	{
+		return lhs.value && rhs.value;
+	}
+	inline bool operator||(const LogicalPair& lhs, const LogicalPair& rhs)
+	{
+		return lhs.value || rhs.value;
+	}
 
 	struct Compound
 	{
@@ -104,19 +134,16 @@ inline bool operator!=(const EqOnly& /*lhs*/, const EqOnly& /*rhs*/) { return fa
 		int operator*() const;
 	};
 
-	inline int Derefable::operator*() const { return 0; }
+	inline int Derefable::operator*() const
+	{
+		return 0;
+	}
 
 	struct DecrementOnly
 	{
-		DecrementOnly& operator--()
-		{
-			return *this;
-		}
+		DecrementOnly& operator--() { return *this; }
 
-		DecrementOnly operator--(int)
-		{
-			return {};
-		}
+		DecrementOnly operator--(int) { return {}; }
 	};
 
 	struct CallableLValue
@@ -131,10 +158,10 @@ inline bool operator!=(const EqOnly& /*lhs*/, const EqOnly& /*rhs*/) { return fa
 		int operator()(int x) const&& { return x * 3; }
 	};
 
-struct RValueLocked
-{
-	int operator()(int) & { return 0; }
-};
+	struct RValueLocked
+	{
+		int operator()(int) & { return 0; }
+	};
 
 	struct Streamable
 	{
@@ -150,17 +177,17 @@ struct RValueLocked
 	{
 	};
 
-struct NonIncrementable
-{
-	NonIncrementable& operator++() = delete;
-	NonIncrementable operator++(int) = delete;
-};
+	struct NonIncrementable
+	{
+		NonIncrementable& operator++()	 = delete;
+		NonIncrementable operator++(int) = delete;
+	};
 
-struct NonDecrementable
-{
-	NonDecrementable& operator--() = delete;
-	NonDecrementable operator--(int) = delete;
-};
+	struct NonDecrementable
+	{
+		NonDecrementable& operator--()	 = delete;
+		NonDecrementable operator--(int) = delete;
+	};
 
 	struct RangeMember
 	{
@@ -180,52 +207,82 @@ struct NonDecrementable
 		std::array<int, 2> storage{};
 	};
 
-[[nodiscard]] inline int* begin(RangeAdl& r) { return r.storage.data(); }
-[[nodiscard]] inline int* end(RangeAdl& r)
-{
-	return std::next(r.storage.data(), static_cast<std::ptrdiff_t>(r.storage.size()));
-}
-[[nodiscard]] inline const int* begin(const RangeAdl& r) { return r.storage.data(); }
-[[nodiscard]] inline const int* end(const RangeAdl& r)
-{
-	return std::next(r.storage.data(), static_cast<std::ptrdiff_t>(r.storage.size()));
-}
-[[nodiscard]] inline std::size_t size(const RangeAdl& r) { return r.storage.size(); }
-[[nodiscard]] inline int* data(RangeAdl& r) { return r.storage.data(); }
-[[nodiscard]] inline const int* data(const RangeAdl& r) { return r.storage.data(); }
+	[[nodiscard]] inline int* begin(RangeAdl& r)
+	{
+		return r.storage.data();
+	}
+	[[nodiscard]] inline int* end(RangeAdl& r)
+	{
+		return std::next(r.storage.data(), static_cast<std::ptrdiff_t>(r.storage.size()));
+	}
+	[[nodiscard]] inline const int* begin(const RangeAdl& r)
+	{
+		return r.storage.data();
+	}
+	[[nodiscard]] inline const int* end(const RangeAdl& r)
+	{
+		return std::next(r.storage.data(), static_cast<std::ptrdiff_t>(r.storage.size()));
+	}
+	[[nodiscard]] inline std::size_t size(const RangeAdl& r)
+	{
+		return r.storage.size();
+	}
+	[[nodiscard]] inline int* data(RangeAdl& r)
+	{
+		return r.storage.data();
+	}
+	[[nodiscard]] inline const int* data(const RangeAdl& r)
+	{
+		return r.storage.data();
+	}
 
-struct RangeAdlNoSize
-{
-	std::array<int, 2> storage{};
-};
+	struct RangeAdlNoSize
+	{
+		std::array<int, 2> storage{};
+	};
 
-[[nodiscard]] inline int* begin(RangeAdlNoSize& r) { return r.storage.data(); }
-[[nodiscard]] inline int* end(RangeAdlNoSize& r)
-{
-	return std::next(r.storage.data(), static_cast<std::ptrdiff_t>(r.storage.size()));
-}
-[[nodiscard]] inline const int* begin(const RangeAdlNoSize& r) { return r.storage.data(); }
-[[nodiscard]] inline const int* end(const RangeAdlNoSize& r)
-{
-	return std::next(r.storage.data(), static_cast<std::ptrdiff_t>(r.storage.size()));
-}
+	[[nodiscard]] inline int* begin(RangeAdlNoSize& r)
+	{
+		return r.storage.data();
+	}
+	[[nodiscard]] inline int* end(RangeAdlNoSize& r)
+	{
+		return std::next(r.storage.data(), static_cast<std::ptrdiff_t>(r.storage.size()));
+	}
+	[[nodiscard]] inline const int* begin(const RangeAdlNoSize& r)
+	{
+		return r.storage.data();
+	}
+	[[nodiscard]] inline const int* end(const RangeAdlNoSize& r)
+	{
+		return std::next(r.storage.data(), static_cast<std::ptrdiff_t>(r.storage.size()));
+	}
 
-struct RangeAdlNoData
-{
-	std::array<int, 2> storage{};
-};
+	struct RangeAdlNoData
+	{
+		std::array<int, 2> storage{};
+	};
 
-[[nodiscard]] inline int* begin(RangeAdlNoData& r) { return r.storage.data(); }
-[[nodiscard]] inline int* end(RangeAdlNoData& r)
-{
-	return std::next(r.storage.data(), static_cast<std::ptrdiff_t>(r.storage.size()));
-}
-[[nodiscard]] inline const int* begin(const RangeAdlNoData& r) { return r.storage.data(); }
-[[nodiscard]] inline const int* end(const RangeAdlNoData& r)
-{
-	return std::next(r.storage.data(), static_cast<std::ptrdiff_t>(r.storage.size()));
-}
-[[nodiscard]] inline std::size_t size(const RangeAdlNoData& r) { return r.storage.size(); }
+	[[nodiscard]] inline int* begin(RangeAdlNoData& r)
+	{
+		return r.storage.data();
+	}
+	[[nodiscard]] inline int* end(RangeAdlNoData& r)
+	{
+		return std::next(r.storage.data(), static_cast<std::ptrdiff_t>(r.storage.size()));
+	}
+	[[nodiscard]] inline const int* begin(const RangeAdlNoData& r)
+	{
+		return r.storage.data();
+	}
+	[[nodiscard]] inline const int* end(const RangeAdlNoData& r)
+	{
+		return std::next(r.storage.data(), static_cast<std::ptrdiff_t>(r.storage.size()));
+	}
+	[[nodiscard]] inline std::size_t size(const RangeAdlNoData& r)
+	{
+		return r.storage.size();
+	}
 
 	struct Indexable
 	{
@@ -243,7 +300,7 @@ struct RangeAdlNoData
 
 	inline void swap(Swappable& lhs, Swappable& rhs) noexcept
 	{
-		auto tmp = lhs.value;
+		auto tmp  = lhs.value;
 		lhs.value = rhs.value;
 		rhs.value = tmp;
 	}
@@ -263,12 +320,9 @@ namespace std
 {
 	template <> struct hash<Hashable>
 	{
-		std::size_t operator()(const Hashable& h) const noexcept
-		{
-			return static_cast<std::size_t>(h.value);
-		}
+		std::size_t operator()(const Hashable& h) const noexcept { return static_cast<std::size_t>(h.value); }
 	};
-}
+} // namespace std
 
 namespace
 {
@@ -286,7 +340,9 @@ namespace
 		explicit FunctionalConstructible(int);
 	};
 
-	inline FunctionalConstructible::FunctionalConstructible(int) {}
+	inline FunctionalConstructible::FunctionalConstructible(int)
+	{
+	}
 
 	struct ListConstructible
 	{
@@ -399,4 +455,3 @@ TEST(MetaHasTraits, RangesAndSwapHash)
 	static_assert(is_hashable_v<Hashable>);
 	static_assert(!is_hashable_v<NonHashable>);
 }
-

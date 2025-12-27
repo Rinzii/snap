@@ -25,11 +25,17 @@ public:
 			  [&smart]
 			  {
 				  if constexpr (std::is_pointer_v<Smart>) { return smart; }
-				  else { return smart.get(); }
+				  else
+				  {
+					  return smart.get();
+				  }
 			  }())
 	{
 		if constexpr (is_releasable_smart_pointer_v<Smart>) { m_smart.release(); }
-		else { m_smart = Smart(); }
+		else
+		{
+			m_smart = Smart();
+		}
 	}
 
 	inout_ptr_t(const inout_ptr_t&) = delete;

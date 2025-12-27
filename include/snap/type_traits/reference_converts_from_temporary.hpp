@@ -26,12 +26,18 @@ namespace internal
 			if constexpr (std::is_lvalue_reference_v<T>)
 			{
 				if constexpr (std::is_lvalue_reference_v<V>) { return ref_compatible_v<TR, VR>; }
-				else { return (std::is_const_v<TR> && !std::is_volatile_v<TR>) && ref_compatible_v<TR, VR>; }
+				else
+				{
+					return (std::is_const_v<TR> && !std::is_volatile_v<TR>) && ref_compatible_v<TR, VR>;
+				}
 			}
 			else
 			{
 				if constexpr (std::is_rvalue_reference_v<V>) { return ref_compatible_v<TR, VR>; }
-				else { return false; }
+				else
+				{
+					return false;
+				}
 			}
 		}
 	}();
@@ -44,7 +50,10 @@ namespace internal
 			using TR = std::remove_reference_t<T>;
 
 			if constexpr (std::is_rvalue_reference_v<T>) { return std::is_convertible_v<V, std::add_rvalue_reference_t<TR>>; }
-			else { return std::is_convertible_v<V, std::add_lvalue_reference_t<TR>>; }
+			else
+			{
+				return std::is_convertible_v<V, std::add_lvalue_reference_t<TR>>;
+			}
 		}
 	}();
 
@@ -59,7 +68,10 @@ namespace internal
 			using VR0 = std::remove_cv_t<VR>;
 
 			if constexpr (std::is_scalar_v<TR0> && std::is_scalar_v<VR0> && !std::is_same_v<TR0, VR0>) { return std::is_convertible_v<V, T>; }
-			else { return false; }
+			else
+			{
+				return false;
+			}
 		}
 	}();
 
@@ -77,7 +89,10 @@ namespace internal
 		else if constexpr (direct_ref_bind_no_new_temp_v<T, V>) { return false; }
 		else if constexpr (scalar_conversion_must_create_temp_v<T, V>) { return true; }
 		else if constexpr (convertible_via_reference_no_new_temp_v<T, V>) { return false; }
-		else { return true; }
+		else
+		{
+			return true;
+		}
 	}();
 
 	template <class T, class U, bool = builtin::has_any_reference_temporary_builtin> struct reference_converts_from_temporary_dispatch

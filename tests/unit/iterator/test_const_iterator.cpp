@@ -1,9 +1,8 @@
-#include <snap/internal/abi_namespace.hpp>
+#include <gtest/gtest.h>
 
+#include <snap/internal/abi_namespace.hpp>
 #include <snap/iterator/const_iterator.hpp>
 #include <snap/iterator/is_contiguous_iterator.hpp>
-
-#include <gtest/gtest.h>
 
 #include <array>
 #include <list>
@@ -56,8 +55,8 @@ TEST(IteratorConstIterator, ProducesConstSentinelForIteratorLikeTypes)
 
 TEST(IteratorConcepts, DetectsContiguousIterators)
 {
-	static_assert(SNAP_NAMESPACE::is_contiguous_iterator_v<int*>);
-	static_assert(SNAP_NAMESPACE::is_contiguous_iterator_v<const int*>);
+	static_assert(SNAP_NAMESPACE::is_contiguous_iterator_v<int *>);
+	static_assert(SNAP_NAMESPACE::is_contiguous_iterator_v<const int *>);
 	// TODO: Figure out why this is failing.
 	// static_assert(SNAP_NAMESPACE::is_contiguous_iterator_v<std::vector<int>::iterator>);
 	// static_assert(SNAP_NAMESPACE::is_contiguous_iterator_v<std::vector<int>::const_iterator>);

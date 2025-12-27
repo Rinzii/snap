@@ -1,8 +1,7 @@
-#include <snap/internal/abi_namespace.hpp>
-
-#include <snap/memory/observer_ptr.hpp>
-
 #include <gtest/gtest.h>
+
+#include <snap/internal/abi_namespace.hpp>
+#include <snap/memory/observer_ptr.hpp>
 
 #include <functional>
 #include <unordered_set>
@@ -11,12 +10,12 @@ namespace
 {
 	struct Base
 	{
-		Base()                              = default;
+		Base()						 = default;
 		Base(const Base&)			 = delete;
 		Base& operator=(const Base&) = delete;
 		Base(Base&&)				 = delete;
 		Base& operator=(Base&&)		 = delete;
-		virtual ~Base() = default;
+		virtual ~Base()				 = default;
 	};
 
 	struct Derived : Base
@@ -47,7 +46,7 @@ TEST(MemoryObserverPtr, BasicOperations)
 
 TEST(MemoryObserverPtr, AllowsCovariantConversions)
 {
-	Derived			   derived;
+	Derived derived;
 	SNAP_NAMESPACE::observer_ptr derived_ptr(&derived);
 	SNAP_NAMESPACE::observer_ptr<Base> base_ptr(derived_ptr);
 	EXPECT_EQ(base_ptr.get(), static_cast<Base*>(&derived));
@@ -58,7 +57,7 @@ TEST(MemoryObserverPtr, AllowsCovariantConversions)
 
 TEST(MemoryObserverPtr, HashUsesUnderlyingPointer)
 {
-	int						 value = 5;
+	int value = 5;
 	SNAP_NAMESPACE::observer_ptr<int> ptr(&value);
 	std::unordered_set<SNAP_NAMESPACE::observer_ptr<int>> set;
 	set.insert(ptr);
@@ -68,8 +67,7 @@ TEST(MemoryObserverPtr, HashUsesUnderlyingPointer)
 TEST(MemoryObserverPtr, MakeObserverConstructsConveniently)
 {
 	int value = 9;
-	auto ptr   = SNAP_NAMESPACE::make_observer(&value);
+	auto ptr  = SNAP_NAMESPACE::make_observer(&value);
 	EXPECT_TRUE(ptr);
 	EXPECT_EQ(*ptr, 9);
 }
-

@@ -1,5 +1,7 @@
 #include "snap/internal/abi_namespace.hpp"
 
+#include <gtest/gtest.h>
+
 #include <snap/type_traits/common_reference.hpp>
 #include <snap/type_traits/dependent_type.hpp>
 #include <snap/type_traits/is_assignable_from.hpp>
@@ -32,8 +34,6 @@
 #include <snap/type_traits/remove_cvref.hpp>
 #include <snap/type_traits/type_identity.hpp>
 #include <snap/type_traits/unwrap_reference.hpp>
-
-#include <gtest/gtest.h>
 
 #include <array>
 #include <functional>

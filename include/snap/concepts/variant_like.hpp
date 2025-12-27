@@ -36,7 +36,10 @@ namespace concepts
 		template <class U> constexpr bool variant_like_impl()
 		{
 			if constexpr (!requires { std::variant_size_v<U>; }) { return false; }
-			else { return variant_like_alternatives<U>(std::make_index_sequence<std::variant_size_v<U>>{}); }
+			else
+			{
+				return variant_like_alternatives<U>(std::make_index_sequence<std::variant_size_v<U>>{});
+			}
 		}
 	} // namespace detail
 

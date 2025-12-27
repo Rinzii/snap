@@ -22,7 +22,10 @@ constexpr R invoke_r(F&& f, Args&&... args) noexcept(std::is_nothrow_invocable_r
 		std::invoke(std::forward<F>(f), std::forward<Args>(args)...);
 		return;
 	}
-	else { return static_cast<R>(std::invoke(std::forward<F>(f), std::forward<Args>(args)...)); }
+	else
+	{
+		return static_cast<R>(std::invoke(std::forward<F>(f), std::forward<Args>(args)...));
+	}
 }
 SNAP_END_NAMESPACE
 

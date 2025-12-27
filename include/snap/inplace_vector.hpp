@@ -1073,7 +1073,10 @@ template <class T, std::size_t N, class U> typename inplace_vector<T, N>::size_t
 			it = c.erase(it);
 			++removed;
 		}
-		else { ++it; }
+		else
+		{
+			++it;
+		}
 	}
 	return removed;
 }
@@ -1089,7 +1092,10 @@ template <class T, std::size_t N, class Pred> typename inplace_vector<T, N>::siz
 			it = c.erase(it);
 			++removed;
 		}
-		else { ++it; }
+		else
+		{
+			++it;
+		}
 	}
 	return removed;
 }

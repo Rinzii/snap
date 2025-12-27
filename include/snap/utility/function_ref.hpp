@@ -54,7 +54,7 @@ namespace details
 
 		template <class F> void bind(F* ptr) noexcept
 		{
-		object	= const_cast<void*>(static_cast<const void*>(ptr)); // NOLINT(cppcoreguidelines-pro-type-const-cast)
+			object	= const_cast<void*>(static_cast<const void*>(ptr)); // NOLINT(cppcoreguidelines-pro-type-const-cast)
 			invoker = [](void* obj, Args... call_args) noexcept(Noexcept) -> R { return std::invoke(*static_cast<F*>(obj), std::forward<Args>(call_args)...); };
 		}
 	};

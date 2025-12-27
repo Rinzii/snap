@@ -128,10 +128,7 @@ namespace test_cases
 	{
 		std::vector<int> result;
 		result.reserve(container.size());
-		for (const auto& element : container)
-		{
-			result.push_back(element.value);
-		}
+		for (const auto& element : container) { result.push_back(element.value); }
 		return result;
 	}
 

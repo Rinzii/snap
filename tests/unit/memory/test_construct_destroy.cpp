@@ -1,10 +1,9 @@
-#include <snap/internal/abi_namespace.hpp>
+#include <gtest/gtest.h>
 
+#include <snap/internal/abi_namespace.hpp>
 #include <snap/memory/construct_at.hpp>
 #include <snap/memory/inplace_storage.hpp>
 #include <snap/memory/raw_ptr.hpp>
-
-#include <gtest/gtest.h>
 
 #include <cstdint>
 #include <new>
@@ -15,13 +14,13 @@ namespace
 	struct Tracker
 	{
 		explicit Tracker(int v) : value(v) { ++instances; }
-		Tracker(const Tracker&) = delete;
-	Tracker(Tracker&&)		 = delete;
+		Tracker(const Tracker&)			   = delete;
+		Tracker(Tracker&&)				   = delete;
 		Tracker& operator=(const Tracker&) = delete;
-	Tracker& operator=(Tracker&&) = delete;
+		Tracker& operator=(Tracker&&)	   = delete;
 		~Tracker() { --instances; }
 
-		int				   value;
+		int value;
 		static inline int instances = 0;
 	};
 } // namespace
@@ -32,7 +31,7 @@ TEST(MemoryConstructAt, BuildsAndDestroysObjects)
 {
 	using TrackerStorage = std::aligned_storage_t<sizeof(Tracker), alignof(Tracker)>;
 	TrackerStorage storage{};
-	auto*		   ptr = reinterpret_cast<Tracker*>(&storage); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
+	auto* ptr = reinterpret_cast<Tracker*>(&storage); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
 
 	auto* constructed = SNAP_NAMESPACE::construct_at(ptr, 7);
 	EXPECT_EQ(constructed->value, 7);
@@ -47,7 +46,7 @@ TEST(MemoryConstructAt, ValueInitializesArrays)
 {
 	using Int2Storage = std::aligned_storage_t<sizeof(int[2]), alignof(int[2])>;
 	Int2Storage storage{};
-	auto*		 arr = reinterpret_cast<int (*)[2]>(&storage); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
+	auto* arr = reinterpret_cast<int (*)[2]>(&storage); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
 
 	// NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays)
 	auto* constructed = SNAP_NAMESPACE::construct_at<int[2]>(arr);
@@ -77,9 +76,9 @@ TEST(MemoryInplaceStorage, SupportsArrays)
 	SNAP_NAMESPACE::inplace_storage<sizeof(int[3]), alignof(int[3])> storage;
 	// NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays)
 	auto& arr = storage.construct<int[3]>();
-	arr[0]	 = 1;
-	arr[1]	 = 2;
-	arr[2]	 = 3;
+	arr[0]	  = 1;
+	arr[1]	  = 2;
+	arr[2]	  = 3;
 
 	// NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays)
 	auto* typed = storage.get<int[3]>();
@@ -88,4 +87,3 @@ TEST(MemoryInplaceStorage, SupportsArrays)
 	storage.destroy<int[3]>();
 }
 // NOLINTEND(cppcoreguidelines-avoid-c-arrays)
-

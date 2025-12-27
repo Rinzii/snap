@@ -308,7 +308,10 @@ constexpr auto operator-(const basic_const_iterator<I>& a, const J& b)
 	-> std::common_type_t<typename std::iterator_traits<I>::difference_type, typename std::iterator_traits<J>::difference_type>
 {
 	if constexpr (std::is_convertible_v<J, I>) { return a.base() - static_cast<I>(b); }
-	else { return static_cast<J>(a.base()) - b; }
+	else
+	{
+		return static_cast<J>(a.base()) - b;
+	}
 }
 
 template <class I,
@@ -318,7 +321,10 @@ constexpr auto operator-(const J& a, const basic_const_iterator<I>& b)
 	-> std::common_type_t<typename std::iterator_traits<I>::difference_type, typename std::iterator_traits<J>::difference_type>
 {
 	if constexpr (std::is_convertible_v<J, I>) { return static_cast<I>(a) - b.base(); }
-	else { return a - static_cast<J>(b.base()); }
+	else
+	{
+		return a - static_cast<J>(b.base());
+	}
 }
 
 template <class I, class = std::enable_if_t<details::is_random_access_like_v<I>, int>>

@@ -36,9 +36,9 @@ namespace
 
 	template <class T> std::vector<T> sample_values()
 	{
-		using U				  = std::make_unsigned_t<T>;
+		using U			  = std::make_unsigned_t<T>;
 		const auto digits = static_cast<unsigned>(std::numeric_limits<T>::digits);
-		const U mask		  = digits == sizeof(U) * 8 ? static_cast<U>(~U{ 0 }) : ((U{ 1 } << digits) - U{ 1 });
+		const U mask	  = digits == sizeof(U) * 8 ? static_cast<U>(~U{ 0 }) : ((U{ 1 } << digits) - U{ 1 });
 
 		const auto clip = [&](unsigned long long v) -> T { return static_cast<T>(static_cast<U>(v) & mask); };
 
@@ -63,9 +63,9 @@ namespace
 
 	TYPED_TEST(RotateTyped, RotlMatchesReference)
 	{
-		using T			   = TypeParam;
-		const auto samples			 = sample_values<T>();
-		const std::array counts		 = { 0, 1, 2, -1, -2, 7, -7, 8, -8, 16, -16, 31, -31, 64, -64 };
+		using T					= TypeParam;
+		const auto samples		= sample_values<T>();
+		const std::array counts = { 0, 1, 2, -1, -2, 7, -7, 8, -8, 16, -16, 31, -31, 64, -64 };
 
 		for (const auto value : samples)
 		{
@@ -79,9 +79,9 @@ namespace
 
 	TYPED_TEST(RotateTyped, RotrMatchesReference)
 	{
-		using T			   = TypeParam;
-		const auto samples			 = sample_values<T>();
-		const std::array counts		 = { 0, 1, 2, -1, -2, 7, -7, 8, -8, 16, -16, 31, -31, 64, -64 };
+		using T					= TypeParam;
+		const auto samples		= sample_values<T>();
+		const std::array counts = { 0, 1, 2, -1, -2, 7, -7, 8, -8, 16, -16, 31, -31, 64, -64 };
 
 		for (const auto value : samples)
 		{

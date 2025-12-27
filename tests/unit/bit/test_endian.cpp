@@ -23,7 +23,10 @@ namespace
 		const bool runtime_is_little = bytes[0] == 0x04;
 
 		if (runtime_is_little) { EXPECT_EQ(SNAP_NAMESPACE::endian::native, SNAP_NAMESPACE::endian::little); }
-		else { EXPECT_EQ(SNAP_NAMESPACE::endian::native, SNAP_NAMESPACE::endian::big); }
+		else
+		{
+			EXPECT_EQ(SNAP_NAMESPACE::endian::native, SNAP_NAMESPACE::endian::big);
+		}
 	}
 
 	TEST(Endian, NativeIsEitherLittleOrBig)

@@ -1,9 +1,8 @@
-#include <snap/internal/abi_namespace.hpp>
+#include <gtest/gtest.h>
 
+#include <snap/internal/abi_namespace.hpp>
 #include <snap/iterator/is_contiguous_iterator.hpp>
 #include <snap/memory/to_address.hpp>
-
-#include <gtest/gtest.h>
 
 #include <cstddef>
 #include <iterator>
@@ -81,5 +80,3 @@ TEST(IteratorIsContiguous, HonorsIteratorConceptTagAndReferenceRules)
 	static_assert(SNAP_NAMESPACE::details::iter_concept_is_contiguous_v<TagIterator>);
 	static_assert(!SNAP_NAMESPACE::is_contiguous_iterator_v<NonLvalueRandomAccess>);
 }
-
-

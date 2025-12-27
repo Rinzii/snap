@@ -31,7 +31,9 @@ SNAP_CONSTEXPR20 T* construct_at(T* location, Args&&... args)
 	return ::new (details::voidify(*location)) T(std::forward<Args>(args)...);
 }
 
-template <class T, class... Args, std::enable_if_t<std::is_same_v<T, std::remove_cv_t<T>> && SNAP_NAMESPACE::is_bounded_array_v<T> && (sizeof...(Args) == 0), int> = 0>
+template <class T,
+		  class... Args,
+		  std::enable_if_t<std::is_same_v<T, std::remove_cv_t<T>> && SNAP_NAMESPACE::is_bounded_array_v<T> && (sizeof...(Args) == 0), int> = 0>
 SNAP_CONSTEXPR20 T* construct_at(T* location, Args&&...)
 {
 	assert(location && "null pointer given to construct_at(T* array)");

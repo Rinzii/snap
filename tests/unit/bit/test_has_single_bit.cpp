@@ -47,7 +47,10 @@ namespace
 	{
 		using T = TypeParam;
 		if constexpr (std::numeric_limits<T>::digits == 1) { EXPECT_TRUE(SNAP_NAMESPACE::has_single_bit(std::numeric_limits<T>::max())); }
-		else { EXPECT_FALSE(SNAP_NAMESPACE::has_single_bit(std::numeric_limits<T>::max())); }
+		else
+		{
+			EXPECT_FALSE(SNAP_NAMESPACE::has_single_bit(std::numeric_limits<T>::max()));
+		}
 	}
 
 } // namespace

@@ -80,7 +80,7 @@
 SNAP_BEGIN_NAMESPACE
 namespace builtin
 {
-inline constexpr bool has_constexpr_bit_cast =
+	inline constexpr bool has_constexpr_bit_cast =
 #ifdef SNAP_HAS_BUILTIN_BIT_CAST
 		true
 #else

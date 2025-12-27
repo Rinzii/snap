@@ -18,11 +18,7 @@
 #endif
 
 #if defined(_WIN32)
-extern "C" __declspec(dllimport) void __stdcall RaiseException(
-	unsigned long,
-	unsigned long,
-	unsigned long,
-	const void *);
+extern "C" __declspec(dllimport) void __stdcall RaiseException(unsigned long, unsigned long, unsigned long, const void *);
 #endif
 
 SNAP_BEGIN_NAMESPACE

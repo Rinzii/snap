@@ -1,11 +1,10 @@
-#include <snap/internal/abi_namespace.hpp>
+#include <gtest/gtest.h>
 
+#include <snap/internal/abi_namespace.hpp>
 #include <snap/utility/cmp.hpp>
 #include <snap/utility/forward_like.hpp>
 #include <snap/utility/nontype.hpp>
 #include <snap/utility/unreachable.hpp>
-
-#include <gtest/gtest.h>
 
 #include <type_traits>
 #include <utility>
@@ -16,7 +15,8 @@ namespace
 	{
 	};
 
-	template <class T, class U> struct cmp_equal_is_valid<T, U, std::void_t<decltype(SNAP_NAMESPACE::cmp_equal(std::declval<T>(), std::declval<U>()))>> : std::true_type
+	template <class T, class U> struct cmp_equal_is_valid<T, U, std::void_t<decltype(SNAP_NAMESPACE::cmp_equal(std::declval<T>(), std::declval<U>()))>>
+		: std::true_type
 	{
 	};
 } // namespace
@@ -69,4 +69,3 @@ TEST(UtilityUnreachable, TriggersDeath)
 	GTEST_SKIP() << "Death tests not supported on this platform.";
 }
 #endif
-

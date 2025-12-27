@@ -30,7 +30,10 @@ template <class T, class = std::enable_if_t<std::is_arithmetic_v<T> && !std::is_
 			const U diff = U(static_cast<U>(a) - static_cast<U>(b));
 			return static_cast<T>(static_cast<U>(a) - (diff >> 1));
 		}
-		else { return a; }
+		else
+		{
+			return a;
+		}
 	}
 }
 
@@ -70,7 +73,10 @@ template <class T, class = std::enable_if_t<std::is_arithmetic_v<T> && !std::is_
 			const U diff = U(static_cast<U>(a) - static_cast<U>(b));
 			return static_cast<T>(static_cast<U>(a) - (diff >> 1));
 		}
-		else { return a; }
+		else
+		{
+			return a;
+		}
 	}
 }
 

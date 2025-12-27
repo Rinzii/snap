@@ -24,7 +24,10 @@ namespace test
 		for (char ch : input)
 		{
 			if ((ch >= '0' && ch <= '9') || (ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z')) { result.push_back(ch); }
-			else { result.push_back('_'); }
+			else
+			{
+				result.push_back('_');
+			}
 		}
 		return result;
 	}

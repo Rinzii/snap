@@ -110,7 +110,7 @@ public:
 	// Destroy the active object/array. Caller must provide the active T.
 	template <typename T> constexpr void destruct()
 	{
-		if (!m_engaged) return;		  // idempotent
+		if (!m_engaged) return;					// idempotent
 		::SNAP_NAMESPACE::destroy_at(get<T>()); // array-aware
 		m_engaged = false;
 	}

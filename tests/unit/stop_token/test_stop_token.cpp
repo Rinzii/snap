@@ -1,11 +1,11 @@
 #include "snap/internal/abi_namespace.hpp"
 
+#include <gtest/gtest.h>
+
 #include <snap/stop_token/intrusive_list_view.hpp>
 #include <snap/stop_token/intrusive_shared_ptr.hpp>
 #include <snap/stop_token/stop_source.hpp>
 #include <snap/stop_token/stop_state.hpp>
-
-#include <gtest/gtest.h>
 
 #include <atomic>
 #include <thread>
@@ -19,12 +19,12 @@ struct TestNode : SNAP_NAMESPACE::intrusive_node_base<TestNode>
 TEST(StopTokenIntrusiveListView, PushPopAndRemove)
 {
 	SNAP_NAMESPACE::intrusive_list_view<TestNode> list;
-	TestNode							   first;
-	TestNode							   second;
-	TestNode							   third;
-	first.value  = 1;
+	TestNode first;
+	TestNode second;
+	TestNode third;
+	first.value	 = 1;
 	second.value = 2;
-	third.value  = 3;
+	third.value	 = 3;
 
 	list.push_front(&third);
 	list.push_front(&second);
@@ -48,16 +48,16 @@ namespace
 		~SharedTarget() { --instances; }
 
 		std::atomic<unsigned> ref_count{ 0 };
-		static inline int	  instances = 0;
+		static inline int instances = 0;
 	};
 } // namespace
 
 namespace SNAP_NAMESPACE
 {
-template <> struct intrusive_shared_ptr_traits<SharedTarget>
-{
-	static std::atomic<unsigned>& get_atomic_ref_count(SharedTarget& target) noexcept { return target.ref_count; }
-};
+	template <> struct intrusive_shared_ptr_traits<SharedTarget>
+	{
+		static std::atomic<unsigned>& get_atomic_ref_count(SharedTarget& target) noexcept { return target.ref_count; }
+	};
 } // namespace SNAP_NAMESPACE
 
 TEST(StopTokenIntrusiveSharedPtr, ReferenceCountingDeletesObject)
@@ -116,7 +116,7 @@ TEST(StopTokenStopState, RemoveCallbackBeforeExecution)
 TEST(StopTokenStopSource, TokensReflectState)
 {
 	SNAP_NAMESPACE::stop_source source;
-	auto			  token = source.get_token();
+	auto token = source.get_token();
 
 	EXPECT_TRUE(source.stop_possible());
 	EXPECT_TRUE(token.stop_possible());
@@ -132,4 +132,3 @@ TEST(StopTokenStopSource, TokensReflectState)
 	EXPECT_FALSE(none.stop_possible());
 	EXPECT_FALSE(none.get_token().stop_possible());
 }
-

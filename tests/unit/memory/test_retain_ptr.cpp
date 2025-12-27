@@ -1,8 +1,7 @@
-#include <snap/internal/abi_namespace.hpp>
-
-#include <snap/memory/retain_ptr.hpp>
-
 #include <gtest/gtest.h>
+
+#include <snap/internal/abi_namespace.hpp>
+#include <snap/memory/retain_ptr.hpp>
 
 namespace
 {
@@ -15,7 +14,7 @@ namespace
 		explicit RefCounted(int v) : value(v) { ++instances; }
 		~RefCounted() { --instances; }
 
-		int					 value;
+		int value;
 		static inline int instances = 0;
 	};
 } // namespace
@@ -54,4 +53,3 @@ TEST(MemoryRetainPtr, AdoptAndRetainBehaviors)
 	}
 	EXPECT_EQ(RefCounted::instances, 0);
 }
-

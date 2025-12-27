@@ -1,6 +1,6 @@
-#include <snap/meta/type_list.hpp>
-
 #include <gtest/gtest.h>
+
+#include <snap/meta/type_list.hpp>
 
 #include <tuple>
 #include <type_traits>
@@ -9,18 +9,17 @@
 
 namespace
 {
-template <class... Ts>
-struct capture_pack
-{
-	static constexpr std::size_t size = sizeof...(Ts);
-};
+	template <class... Ts> struct capture_pack
+	{
+		static constexpr std::size_t size = sizeof...(Ts);
+	};
 } // namespace
 
 TEST(TypeList, ApplyPropagatesPack)
 {
-	using list		 = SNAP_NAMESPACE::type_list<int, double, char>;
-	using applied	 = SNAP_NAMESPACE::typelist::apply_t<list, capture_pack>;
-	using expect	 = capture_pack<int, double, char>;
+	using list	  = SNAP_NAMESPACE::type_list<int, double, char>;
+	using applied = SNAP_NAMESPACE::typelist::apply_t<list, capture_pack>;
+	using expect  = capture_pack<int, double, char>;
 	static_assert(std::is_same_v<applied, expect>);
 	EXPECT_EQ(applied::size, 3U);
 }
@@ -50,13 +49,11 @@ TEST(TypeList, RoundTripsThroughStdContainers)
 	using pair_t = SNAP_NAMESPACE::typelist::to_pair_t<list>;
 	static_assert(std::is_same_v<pair_t, std::pair<int, short>>);
 
-	using tuple_back = SNAP_NAMESPACE::typelist::from_tuple_t<tuple_t>;
+	using tuple_back   = SNAP_NAMESPACE::typelist::from_tuple_t<tuple_t>;
 	using variant_back = SNAP_NAMESPACE::typelist::from_variant_t<variant_t>;
-	using pair_back = SNAP_NAMESPACE::typelist::from_pair_t<pair_t>;
+	using pair_back	   = SNAP_NAMESPACE::typelist::from_pair_t<pair_t>;
 
 	static_assert(std::is_same_v<tuple_back, list>);
 	static_assert(std::is_same_v<variant_back, list>);
 	static_assert(std::is_same_v<pair_back, list>);
 }
-
-

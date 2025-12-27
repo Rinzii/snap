@@ -156,7 +156,10 @@ public:
 				if (cb->destroyed) *cb->destroyed = true;
 			}
 		}
-		else { callbacks_.remove(cb); }
+		else
+		{
+			callbacks_.remove(cb);
+		}
 	}
 
 private:

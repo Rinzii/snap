@@ -93,7 +93,10 @@ private:
 		constexpr bool takes_token = std::is_invocable_v<FunD, stop_token, std::decay_t<Args>...>;
 
 		if constexpr (takes_token) { return std::thread(std::forward<Fun>(fun), ss.get_token(), std::forward<Args>(args)...); }
-		else { return std::thread(std::forward<Fun>(fun), std::forward<Args>(args)...); }
+		else
+		{
+			return std::thread(std::forward<Fun>(fun), std::forward<Args>(args)...);
+		}
 	}
 
 	stop_source stop_source_{};

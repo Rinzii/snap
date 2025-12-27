@@ -1,8 +1,7 @@
-#include <snap/internal/abi_namespace.hpp>
-
-#include <snap/memory/temp_value.hpp>
-
 #include <gtest/gtest.h>
+
+#include <snap/internal/abi_namespace.hpp>
+#include <snap/memory/temp_value.hpp>
 
 #include <memory>
 #include <type_traits>
@@ -14,7 +13,7 @@ namespace
 		using value_type = T;
 
 		int* constructs = nullptr;
-		int* destroys   = nullptr;
+		int* destroys	= nullptr;
 
 		explicit CountingAllocator(int* c, int* d) : constructs(c), destroys(d) {}
 
@@ -58,4 +57,3 @@ TEST(MemoryTempValue, UsesAllocatorForLifetime)
 	EXPECT_EQ(constructs, 1);
 	EXPECT_EQ(destroys, 1);
 }
-

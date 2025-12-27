@@ -93,13 +93,13 @@ namespace internal::detail
 		}
 
 #if defined(_WIN32)
-		using wait_on_address_fn		  = BOOL(WINAPI*)(volatile void*, void*, SIZE_T, DWORD);
+		using wait_on_address_fn		= BOOL(WINAPI*)(volatile void*, void*, SIZE_T, DWORD);
 		using wake_by_address_single_fn = VOID(WINAPI*)(void*);
-		using wake_by_address_all_fn	  = VOID(WINAPI*)(void*);
+		using wake_by_address_all_fn	= VOID(WINAPI*)(void*);
 
-		wait_on_address_fn g_wait_on_address			  = nullptr;
+		wait_on_address_fn g_wait_on_address			   = nullptr;
 		wake_by_address_single_fn g_wake_by_address_single = nullptr;
-		wake_by_address_all_fn g_wake_by_address_all		  = nullptr;
+		wake_by_address_all_fn g_wake_by_address_all	   = nullptr;
 
 		std::once_flag g_wait_address_once;
 		bool g_wait_address_available = false;
@@ -109,13 +109,11 @@ namespace internal::detail
 			const HMODULE kernel = ::GetModuleHandleW(L"kernel32.dll");
 			if (kernel == nullptr) { return; }
 
-			g_wait_on_address = reinterpret_cast<wait_on_address_fn>(::GetProcAddress(kernel, "WaitOnAddress"));
-			g_wake_by_address_single =
-				reinterpret_cast<wake_by_address_single_fn>(::GetProcAddress(kernel, "WakeByAddressSingle"));
-			g_wake_by_address_all = reinterpret_cast<wake_by_address_all_fn>(::GetProcAddress(kernel, "WakeByAddressAll"));
+			g_wait_on_address		 = reinterpret_cast<wait_on_address_fn>(::GetProcAddress(kernel, "WaitOnAddress"));
+			g_wake_by_address_single = reinterpret_cast<wake_by_address_single_fn>(::GetProcAddress(kernel, "WakeByAddressSingle"));
+			g_wake_by_address_all	 = reinterpret_cast<wake_by_address_all_fn>(::GetProcAddress(kernel, "WakeByAddressAll"));
 
-			g_wait_address_available =
-				g_wait_on_address != nullptr && g_wake_by_address_single != nullptr && g_wake_by_address_all != nullptr;
+			g_wait_address_available = g_wait_on_address != nullptr && g_wake_by_address_single != nullptr && g_wake_by_address_all != nullptr;
 		}
 
 		bool win32_wait_functions_available() noexcept

@@ -39,7 +39,10 @@ namespace concepts
 		template <class U> constexpr bool tuple_like_impl()
 		{
 			if constexpr (!requires { std::tuple_size_v<U>; }) { return false; }
-			else { return tuple_like_elements<U>(std::make_index_sequence<std::tuple_size_v<U>>{}); }
+			else
+			{
+				return tuple_like_elements<U>(std::make_index_sequence<std::tuple_size_v<U>>{});
+			}
 		}
 	} // namespace detail
 

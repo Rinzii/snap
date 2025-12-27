@@ -1,6 +1,6 @@
-#include <snap/meta/has.hpp>
-
 #include <gtest/gtest.h>
+
+#include <snap/meta/has.hpp>
 
 #include <cstddef>
 #include <iterator>
@@ -23,15 +23,24 @@ namespace
 		Accum& operator-=(const Accum&);
 	};
 
-	inline Accum& Accum::operator+=(const Accum&) { return *this; }
-	inline Accum& Accum::operator-=(const Accum&) { return *this; }
+	inline Accum& Accum::operator+=(const Accum&)
+	{
+		return *this;
+	}
+	inline Accum& Accum::operator-=(const Accum&)
+	{
+		return *this;
+	}
 
 	struct Callable
 	{
 		int operator()(int, double) const;
 	};
 
-	inline int Callable::operator()(int, double) const { return 0; }
+	inline int Callable::operator()(int, double) const
+	{
+		return 0;
+	}
 
 	struct NonCallable
 	{
@@ -42,7 +51,10 @@ namespace
 		int operator[](int) const;
 	};
 
-	inline int Subscriptable::operator[](int) const { return 0; }
+	inline int Subscriptable::operator[](int) const
+	{
+		return 0;
+	}
 
 	struct NonSubscriptable
 	{
@@ -71,18 +83,54 @@ namespace
 		int storage[2]{};
 	};
 
-inline int* begin(RangeAdl& r) { return r.storage; }
-inline int* end(RangeAdl& r) { return r.storage + 2; }
-inline const int* begin(const RangeAdl& r) { return r.storage; }
-inline const int* end(const RangeAdl& r) { return r.storage + 2; }
-inline std::size_t size(const RangeAdl&) { return 2; }
-inline int* data(RangeAdl& r) { return r.storage; }
-inline const int* data(const RangeAdl& r) { return r.storage; }
-inline bool empty(const RangeAdl&) { return false; }
-inline int* rbegin(RangeAdl& r) { return r.storage + 1; }
-inline int* rend(RangeAdl& r) { return r.storage; }
-inline const int* rbegin(const RangeAdl& r) { return r.storage + 1; }
-inline const int* rend(const RangeAdl& r) { return r.storage; }
+	inline int* begin(RangeAdl& r)
+	{
+		return r.storage;
+	}
+	inline int* end(RangeAdl& r)
+	{
+		return r.storage + 2;
+	}
+	inline const int* begin(const RangeAdl& r)
+	{
+		return r.storage;
+	}
+	inline const int* end(const RangeAdl& r)
+	{
+		return r.storage + 2;
+	}
+	inline std::size_t size(const RangeAdl&)
+	{
+		return 2;
+	}
+	inline int* data(RangeAdl& r)
+	{
+		return r.storage;
+	}
+	inline const int* data(const RangeAdl& r)
+	{
+		return r.storage;
+	}
+	inline bool empty(const RangeAdl&)
+	{
+		return false;
+	}
+	inline int* rbegin(RangeAdl& r)
+	{
+		return r.storage + 1;
+	}
+	inline int* rend(RangeAdl& r)
+	{
+		return r.storage;
+	}
+	inline const int* rbegin(const RangeAdl& r)
+	{
+		return r.storage + 1;
+	}
+	inline const int* rend(const RangeAdl& r)
+	{
+		return r.storage;
+	}
 
 	struct NonRange
 	{
@@ -94,7 +142,10 @@ inline const int* rend(const RangeAdl& r) { return r.storage; }
 		int method() const;
 	};
 
-	inline int MemberSample::method() const { return field; }
+	inline int MemberSample::method() const
+	{
+		return field;
+	}
 
 	struct Unrelated
 	{
@@ -120,16 +171,27 @@ inline const int* rend(const RangeAdl& r) { return r.storage; }
 		ArrowProxy operator->() const;
 	};
 
-	inline ArrowLeaf* ArrowProxy::operator->() const { return nullptr; }
-	inline ArrowLeaf* MemberArrow::operator->() const { return nullptr; }
-	inline ArrowProxy DeepArrow::operator->() const { return {}; }
+	inline ArrowLeaf* ArrowProxy::operator->() const
+	{
+		return nullptr;
+	}
+	inline ArrowLeaf* MemberArrow::operator->() const
+	{
+		return nullptr;
+	}
+	inline ArrowProxy DeepArrow::operator->() const
+	{
+		return {};
+	}
 
 	struct Constructible
 	{
 		Constructible(int, double) noexcept;
 	};
 
-	inline Constructible::Constructible(int, double) noexcept {}
+	inline Constructible::Constructible(int, double) noexcept
+	{
+	}
 
 	struct NonConstructible
 	{
@@ -176,51 +238,66 @@ inline const int* rend(const RangeAdl& r) { return r.storage; }
 	struct NonIncrementable
 	{
 		NonIncrementable operator++(int) = delete;
-		NonIncrementable& operator++() = delete;
+		NonIncrementable& operator++()	 = delete;
 	};
 
-struct CvrefFriendly
-{
-	int foo() const;
-};
+	struct CvrefFriendly
+	{
+		int foo() const;
+	};
 
-inline int CvrefFriendly::foo() const { return 0; }
+	inline int CvrefFriendly::foo() const
+	{
+		return 0;
+	}
 
-struct ConstCallable
-{
-	void mutate() const;
-};
+	struct ConstCallable
+	{
+		void mutate() const;
+	};
 
-inline void ConstCallable::mutate() const {}
+	inline void ConstCallable::mutate() const
+	{
+	}
 
-struct NonConstCallable
-{
-	void mutate();
-};
+	struct NonConstCallable
+	{
+		void mutate();
+	};
 
-inline void NonConstCallable::mutate() {}
+	inline void NonConstCallable::mutate()
+	{
+	}
 
-struct ComboQualifiers
-{
-	int foo() const;
-	void mutate() const;
-};
+	struct ComboQualifiers
+	{
+		int foo() const;
+		void mutate() const;
+	};
 
-inline int ComboQualifiers::foo() const { return 0; }
-inline void ComboQualifiers::mutate() const {}
+	inline int ComboQualifiers::foo() const
+	{
+		return 0;
+	}
+	inline void ComboQualifiers::mutate() const
+	{
+	}
 
-struct OnlyFoo
-{
-	int foo() const;
-};
+	struct OnlyFoo
+	{
+		int foo() const;
+	};
 
-inline int OnlyFoo::foo() const { return 0; }
+	inline int OnlyFoo::foo() const
+	{
+		return 0;
+	}
 
-template <class T> using method_expr		 = decltype(std::declval<T&>().method());
-template <class T> using field_expr			 = decltype(std::declval<T&>().field);
-template <class T> using foo_expr			 = decltype(std::declval<T>().foo());
-template <class T> using const_mutate_expr	 = decltype(std::declval<std::add_const_t<std::remove_reference_t<T>>&>().mutate());
-template <class T, class U> using plus_expr = decltype(std::declval<T>() + std::declval<U>());
+	template <class T> using method_expr		= decltype(std::declval<T&>().method());
+	template <class T> using field_expr			= decltype(std::declval<T&>().field);
+	template <class T> using foo_expr			= decltype(std::declval<T>().foo());
+	template <class T> using const_mutate_expr	= decltype(std::declval<std::add_const_t<std::remove_reference_t<T>>&>().mutate());
+	template <class T, class U> using plus_expr = decltype(std::declval<T>() + std::declval<U>());
 
 } // namespace
 
@@ -349,7 +426,7 @@ TEST(MetaHas, PointerMembersAndArrowChains)
 {
 	using namespace SNAP_NAMESPACE::probe;
 
-	using MemberPtr	 = int MemberSample::*;
+	using MemberPtr	   = int MemberSample::*;
 	using BadMemberPtr = int Unrelated::*;
 
 	static_assert(has<op::member_pointer_access, MemberSample, MemberPtr>);
@@ -402,4 +479,3 @@ TEST(MetaHas, AllocationCastsAndSizeIntrospection)
 	static_assert(has<op::sizeof_type, MemberSample>);
 	static_assert(has<op::alignof_type, MemberSample>);
 }
-

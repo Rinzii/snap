@@ -11,7 +11,7 @@
 // General feature testing backport. Disable-able through macro.
 #elif !defined(SNAP_DISABLE_FEATURE_TEST_BACKPORTS)
 
-/// C++14
+	/// C++14
 
 	#if !defined(__cpp_lib_chrono_udls)
 		#if SNAP_LANG_AT_LEAST(201402)
@@ -138,7 +138,7 @@
 		#endif
 	#endif
 
-/// C++17
+	/// C++17
 
 	#if !defined(__cpp_lib_addressof_constexpr)
 		#if SNAP_LANG_AT_LEAST(201703)

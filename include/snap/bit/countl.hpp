@@ -36,7 +36,10 @@ template <typename T> [[nodiscard]] constexpr std::enable_if_t<std::is_unsigned_
 	{
 		T tmp = value >> shift;
 		if (tmp) { value = tmp; }
-		else { zero_bits |= shift; }
+		else
+		{
+			zero_bits |= shift;
+		}
 	}
 	return zero_bits;
 }

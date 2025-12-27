@@ -177,7 +177,10 @@ template <class T, class R = retain_traits<T>> struct retain_ptr
 	long use_count() const
 	{
 		if constexpr (has_use_count) { return this->get() ? traits_type::use_count(this->get()) : 0; }
-		else { return -1; }
+		else
+		{
+			return -1;
+		}
 	}
 
 	SNAP_CONSTEXPR20 pointer detach() noexcept
@@ -221,7 +224,10 @@ SNAP_END_NAMESPACE
 // hash support
 template <class T, class R> struct std::hash<SNAP_NAMESPACE::retain_ptr<T, R>>
 {
-	std::size_t operator()(const SNAP_NAMESPACE::retain_ptr<T, R> &p) const noexcept { return std::hash<typename SNAP_NAMESPACE::retain_ptr<T, R>::pointer>()(p.get()); }
+	std::size_t operator()(const SNAP_NAMESPACE::retain_ptr<T, R> &p) const noexcept
+	{
+		return std::hash<typename SNAP_NAMESPACE::retain_ptr<T, R>::pointer>()(p.get());
+	}
 };
 
 SNAP_BEGIN_NAMESPACE
