@@ -343,9 +343,9 @@ jobs:
               git ninja-build cmake clang lld python3
             cc: clang
             cxx: clang++
-          - name: riscv64-bookworm-gcc
+          - name: riscv64-ubuntu24-gcc
             arch: riscv64
-            distro: bookworm
+            distro: ubuntu24.04
             std: 20
             pkg: >
               git ninja-build cmake build-essential python3
@@ -405,10 +405,10 @@ jobs:
     container:
       image: dockcross/linux-armv7:latest
     env:
-      CC: arm-linux-gnueabihf-gcc
-      CXX: arm-linux-gnueabihf-g++
+      CC: /usr/bin/arm-linux-gnueabihf-gcc
+      CXX: /usr/bin/arm-linux-gnueabihf-g++
       ARMV7_SYSROOT: /usr/arm-linux-gnueabihf
-      CMAKE_CROSSCOMPILING_EMULATOR: qemu-arm;-L;/usr/arm-linux-gnueabihf
+      CMAKE_CROSSCOMPILING_EMULATOR: /usr/bin/qemu-arm;-L;/usr/arm-linux-gnueabihf
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -462,9 +462,11 @@ jobs:
             image: opensuse/leap:15.6
             install: |
               zypper --non-interactive refresh
-              zypper --non-interactive install git ninja cmake gcc gcc-c++ make python3
-            cc: gcc
-            cxx: g++
+              zypper --non-interactive install git ninja cmake gcc gcc-c++ gcc13 gcc13-c++ make python3
+              update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-13 100
+              update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-13 100
+            cc: gcc-13
+            cxx: g++-13
             std: 20
           - name: alpine-320-gcc
             image: alpine:3.20
