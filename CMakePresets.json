@@ -257,7 +257,7 @@
     {
       "name": "build-ninja-clang-release",
       "configurePreset": "ninja-clang",
-      "configuration": "Debug",
+      "configuration": "Release",
       "targets": [
         "all"
       ],

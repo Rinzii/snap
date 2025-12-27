@@ -1,0 +1,320 @@
+name: ci
+
+on:
+  push:
+    branches: ["**"]
+    tags-ignore: ["v*.*"]
+  pull_request:
+    branches: ["*"]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  CTEST_PARALLEL_LEVEL: 0
+  SNAP_ENABLE_COLOR: "1"
+
+jobs:
+  lint:
+    name: tier0 · lint + header smoke
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    continue-on-error: true
+    steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@v2.11.0
+        with:
+          egress-policy: audit
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install tooling (apt)
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -yqq clang-tidy ninja-build cmake python3
+
+      - name: Cache lint build dir
+        uses: actions/cache@v4
+        with:
+          path: out/clang-tidy
+          key: snap-lint-${{ runner.os }}-${{ hashFiles('scripts/lint.sh', 'CMakeLists.txt', 'CMakePresets.json') }}
+
+      - name: Run lint script (clang-tidy)
+        env:
+          SNAP_LINT_STD: c++20
+        run: ./scripts/lint.sh
+
+      - name: Configure + smoke tests (clang-fast)
+        env:
+          CC: clang-18
+          CXX: clang++-18
+        run: |
+          sudo apt-get install -yqq clang-18 lld-18
+          cmake -E make_directory out/ci/smoke
+      - name: Cache smoke build
+        uses: actions/cache@v4
+        with:
+          path: |
+            out/ci/smoke
+            out/ci/smoke/CMakeCache.txt
+            out/ci/smoke/CMakeFiles
+          key: snap-smoke-${{ runner.os }}-${{ hashFiles('CMakePresets.json', 'tests/CMakeLists.txt', 'cmake/config/ProjectOptions.cmake') }}
+
+      - name: Configure + build smoke
+        env:
+          CC: clang-18
+          CXX: clang++-18
+        run: |
+          cmake -S . -B out/ci/smoke -G Ninja \
+            -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+            -DCMAKE_CXX_STANDARD=20 \
+            -DSNAP_TEST_WERROR=ON
+          cmake --build out/ci/smoke --parallel
+          ctest --test-dir out/ci/smoke --label-regex smoke --output-on-failure --stop-on-failure
+
+  tier1-posix:
+    name: tier1 · host builds (${{ matrix.name }})
+    needs: lint
+    runs-on: ${{ matrix.runs_on }}
+    timeout-minutes: 50
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - name: linux-gcc-debug-cpp17
+            runs_on: ubuntu-24.04
+            configurePreset: ninja-gcc
+            buildPreset: build-ninja-gcc-debug
+            testPreset: test-ninja-gcc-debug
+            buildDir: out/build/ninja/ninja-gcc
+            cxxStandard: 17
+            cc: gcc-13
+            cxx: g++-13
+            packages: >
+              ninja-build cmake gcc-13 g++-13 python3
+
+          - name: linux-clang-release-cpp23
+            runs_on: ubuntu-24.04
+            configurePreset: ninja-clang
+            buildPreset: build-ninja-clang-release
+            testPreset: test-ninja-clang-release
+            buildDir: out/build/ninja/ninja-clang
+            cxxStandard: 23
+            cc: clang-18
+            cxx: clang++-18
+            packages: >
+              ninja-build cmake clang-18 lld-18 python3
+
+          - name: linux-clang-asan-cpp20
+            runs_on: ubuntu-24.04
+            configurePreset: ninja-clang-asan
+            buildPreset: build-ninja-clang-asan-debug
+            testPreset: test-ninja-clang-asan-debug
+            buildDir: out/build/ninja/ninja-clang-asan
+            cxxStandard: 20
+            cc: clang-18
+            cxx: clang++-18
+            packages: >
+              ninja-build cmake clang-18 lld-18 python3
+
+          - name: macos-arm64-clang-release-cpp20
+            runs_on: macos-15
+            configurePreset: ninja-clang
+            buildPreset: build-ninja-clang-release
+            testPreset: test-ninja-clang-release
+            buildDir: out/build/ninja/ninja-clang
+            cxxStandard: 20
+            cc: ""
+            cxx: ""
+
+          - name: macos-intel-clang-debug-cpp17
+            runs_on: macos-15-intel
+            configurePreset: ninja-clang
+            buildPreset: build-ninja-clang-debug
+            testPreset: test-ninja-clang-debug
+            buildDir: out/build/ninja/ninja-clang
+            cxxStandard: 17
+            cc: ""
+            cxx: ""
+
+    steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@v2.11.0
+        with:
+          egress-policy: audit
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -yqq ${{ matrix.packages }}
+
+      - name: Install dependencies (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          export HOMEBREW_NO_AUTO_UPDATE=1
+          export HOMEBREW_NO_INSTALL_CLEANUP=1
+          brew install ninja || true
+
+      - name: Configure toolchain env
+        if: ${{ matrix.cc != '' }}
+        run: |
+          echo "CC=${{ matrix.cc }}" >> "$GITHUB_ENV"
+          echo "CXX=${{ matrix.cxx }}" >> "$GITHUB_ENV"
+
+      - name: Cache build tree
+        uses: actions/cache@v4
+        with:
+          path: ${{ matrix.buildDir }}
+          key: snap-${{ runner.os }}-${{ matrix.name }}-${{ hashFiles('CMakePresets.json', 'tests/CMakeLists.txt', 'cmake/config/ProjectOptions.cmake') }}
+
+      - name: Configure
+        run: cmake --preset "${{ matrix.configurePreset }}" -DCMAKE_CXX_STANDARD=${{ matrix.cxxStandard }}
+
+      - name: Build
+        run: cmake --build --preset "${{ matrix.buildPreset }}" --parallel
+
+      - name: Test
+        run: ctest --preset "${{ matrix.testPreset }}" --output-on-failure --schedule-random -F
+
+  tier1-windows:
+    name: tier1 · windows builds (${{ matrix.name }})
+    needs: lint
+    runs-on: windows-2022
+    timeout-minutes: 50
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - name: msvc-debug-cpp20
+            configurePreset: vs22
+            buildPreset: build-vs22-debug
+            testPreset: test-vs22-debug
+            cxxStandard: 20
+          - name: msvc-release-cpp23
+            configurePreset: vs22
+            buildPreset: build-vs22-release
+            testPreset: test-vs22-release
+            cxxStandard: 23
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@v2.11.0
+        with:
+          egress-policy: audit
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Cache build tree
+        uses: actions/cache@v4
+        with:
+          path: out/build/vs22
+          key: snap-windows-${{ matrix.name }}-${{ hashFiles('CMakePresets.json', 'tests/CMakeLists.txt', 'cmake/config/ProjectOptions.cmake') }}
+
+      - name: Configure
+        run: cmake --preset "${{ matrix.configurePreset }}" -DCMAKE_CXX_STANDARD=${{ matrix.cxxStandard }}
+
+      - name: Build
+        run: cmake --build --preset "${{ matrix.buildPreset }}" --parallel
+
+      - name: Test
+        run: ctest --preset "${{ matrix.testPreset }}" --output-on-failure --schedule-random -F
+
+  tier2-arm:
+    name: tier2 · linux (${{ matrix.arch }}) smoke
+    needs:
+      - tier1-posix
+      - tier1-windows
+    runs-on: ubuntu-24.04
+    timeout-minutes: 75
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - arch: armv7
+            distro: ubuntu22.04
+            std: 17
+            pkg: >
+              ninja-build cmake clang-16 lld-16 python3
+            cc: clang-16
+            cxx: clang++-16
+          - arch: aarch64
+            distro: ubuntu24.04
+            std: 23
+            pkg: >
+              ninja-build cmake gcc-13 g++-13 python3
+            cc: gcc-13
+            cxx: g++-13
+    steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@v2.11.0
+        with:
+          egress-policy: audit
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build + test
+        uses: uraimo/run-on-arch-action@v2
+        with:
+          arch: ${{ matrix.arch }}
+          distro: ${{ matrix.distro }}
+          githubToken: ${{ github.token }}
+          install: |
+            apt-get update -qq
+            DEBIAN_FRONTEND=noninteractive apt-get install -yqq ${{ matrix.pkg }}
+          run: |
+            cmake -S . -B out/build/${{ matrix.arch }} -G Ninja \
+              -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+              -DCMAKE_C_COMPILER=${{ matrix.cc }} \
+              -DCMAKE_CXX_COMPILER=${{ matrix.cxx }} \
+              -DCMAKE_CXX_STANDARD=${{ matrix.std }} \
+              -DSNAP_TEST_GROUPED=ON
+            cmake --build out/build/${{ matrix.arch }} --parallel
+            ctest --test-dir out/build/${{ matrix.arch }} --label-regex smoke --output-on-failure --stop-on-failure
+
+  tier2-bsd:
+    name: tier2 · freebsd smoke
+    needs:
+      - tier1-posix
+      - tier1-windows
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@v2.11.0
+        with:
+          egress-policy: audit
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build + test (FreeBSD 14.2)
+        uses: cross-platform-actions/action@v0.26.0
+        with:
+          operating_system: freebsd
+          version: '14.2'
+          run: |
+            env ASSUME_ALWAYS_YES=yes pkg update -f
+            env ASSUME_ALWAYS_YES=yes pkg install cmake ninja llvm git
+            export CC=clang
+            export CXX=clang++
+            cmake -S . -B out/build/freebsd -G Ninja \
+              -DCMAKE_BUILD_TYPE=Release \
+              -DCMAKE_CXX_STANDARD=20 \
+              -DSNAP_TEST_GROUPED=ON
+            cmake --build out/build/freebsd --parallel
+            ctest --test-dir out/build/freebsd --label-regex smoke --output-on-failure --stop-on-failure
+
