@@ -50,6 +50,11 @@ set(SNAP_GTEST_VERSION_VAR "v${SNAP_GTEST_VERSION}")
 
 find_package(GTest ${SNAP_GTEST_VERSION} QUIET CONFIG)
 if (NOT GTest_FOUND)
+    if (SNAP_DISABLE_FETCHCONTENT)
+        message(FATAL_ERROR
+                "GTest ${SNAP_GTEST_VERSION} not found (SNAP_DISABLE_FETCHCONTENT=ON). "
+                "Provide a configured GTest package or turn the toggle OFF to allow FetchContent.")
+    endif ()
     include(FetchContent)
     FetchContent_Declare(
             googletest

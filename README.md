@@ -77,6 +77,13 @@ FetchContent_MakeAvailable(snap)
 target_link_libraries(your_target PRIVATE snap::snap)
 ```
 
+## CMake Options
+
+- `SNAP_DISABLE_FETCHCONTENT`: Default `OFF`. Turn this `ON` to prevent snap from
+  using `FetchContent` fallbacks (for example, the tests normally download
+  GoogleTest automatically if it is not installed). With the toggle enabled you
+  must provide those dependencies yourself, otherwise configuration fails early.
+
 ## License
 
 snap is licensed under the **Apache License 2.0 with LLVM Exception**. See `LICENSE` for the full text.

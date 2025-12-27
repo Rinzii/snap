@@ -19,6 +19,7 @@ snap_option(SNAP_ENABLE_SANITIZER_BUILD "Enable AddressSanitizer when building s
 snap_option(SNAP_ENABLE_RUNTIME_SIMD "Enable runtime SIMD feature detection" ON ON)
 snap_option(SNAP_DISABLE_SVML_USAGE "Skip Intel SVML detection during SIMD checks" OFF OFF)
 snap_option(SNAP_DISABLE_CMAKE_FEATURE_CHECKS "Skip snap's feature detection CMake checks" OFF OFF)
+snap_option(SNAP_DISABLE_FETCHCONTENT "Disallow FetchContent fallbacks for dependencies" OFF OFF)
 
 # ==================================================================
 # Test-specific toggles
