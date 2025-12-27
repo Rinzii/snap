@@ -38,16 +38,22 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -yqq clang-tidy ninja-build cmake python3
 
-      - name: Cache lint build dir
-        uses: actions/cache@v4
-        with:
-          path: out/clang-tidy
-          key: snap-lint-${{ runner.os }}-${{ hashFiles('scripts/lint.sh', 'CMakeLists.txt', 'CMakePresets.json') }}
-
-      - name: Run lint script (clang-tidy)
+      - name: Run C/C++ linter (clang-tidy + clang-format)
+        id: cpp-lint
+        uses: cpp-linter/cpp-linter-action@v2
         env:
-          SNAP_LINT_STD: c++20
-        run: ./scripts/lint.sh
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          style: file
+          tidy-checks: ''
+          thread-comments: ${{ github.event_name == 'pull_request' && 'update' }}
+          files: |
+            include/snap
+            tests
+
+      - name: Fail on lint findings
+        if: steps.cpp-lint.outputs.checks-failed > 0
+        run: exit 1
 
       - name: Configure + smoke tests (clang-fast)
         env:
@@ -258,7 +264,7 @@ jobs:
             distro: ubuntu22.04
             std: 17
             pkg: >
-              ninja-build cmake gcc-12 g++-12 python3
+              git ninja-build cmake gcc-12 g++-12 python3
             cc: gcc-12
             cxx: g++-12
     steps:
@@ -297,24 +303,17 @@ jobs:
     timeout-minutes: 60
     continue-on-error: true
     steps:
-      - name: Harden runner
-        uses: step-security/harden-runner@v2.11.0
-        with:
-          egress-policy: audit
-
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: Build + test (FreeBSD 14.2)
-        uses: cross-platform-actions/action@v0.26.0
+        uses: vmactions/freebsd-vm@v1
         with:
-          operating_system: freebsd
-          version: '14.2'
+          release: '14.2'
+          usesh: true
           run: |
-            sudo pkg update -f
-            sudo pkg install -y cmake ninja llvm git
-            export CC=clang
-            export CXX=clang++
+            pkg update -f
+            pkg install -y cmake ninja llvm git
             cmake -S . -B out/build/freebsd -G Ninja \
               -DCMAKE_BUILD_TYPE=Release \
               -DCMAKE_CXX_STANDARD=20 \

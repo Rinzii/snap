@@ -56,6 +56,9 @@ if [[ -z "$sysroot" && "$(uname -s)" == "Darwin" ]] && command -v xcrun >/dev/nu
 fi
 
 extra_args=(--extra-arg="-std=${std_ver}" --warnings-as-errors=)
+if [[ "${SNAP_LINT_DISABLE_WARNINGS:-0}" == "1" ]]; then
+	extra_args+=(--extra-arg="-w")
+fi
 if [[ -n "$sysroot" ]]; then
 	extra_args+=(--extra-arg="-isysroot${sysroot}")
 fi
@@ -72,7 +75,53 @@ if [[ ! -d "$source_dir" ]]; then
 	die "Source dir '$source_dir' not found (set SNAP_LINT_SOURCE_DIR)."
 fi
 
-echo "Beginning linting..."
+declare -a headers=()
+
+add_header() {
+	local path="$1"
+	[[ -z "$path" ]] && return
+	if [[ -f "$path" ]]; then
+		headers+=("$path")
+	fi
+}
+
+if [[ -n "${SNAP_LINT_FILE_LIST:-}" ]]; then
+	while IFS= read -r line; do
+		add_header "$line"
+	done <<< "${SNAP_LINT_FILE_LIST}"
+elif [[ -n "${SNAP_LINT_GIT_BASE:-}" ]]; then
+	while IFS= read -r line; do
+		add_header "$line"
+	done < <(git diff --name-only "${SNAP_LINT_GIT_BASE}"...HEAD -- 'include/**/*.hpp' 'tests/**/*.hpp' 2>/dev/null || true)
+fi
+
+if [[ ${#headers[@]} -eq 0 ]]; then
+	while IFS= read -r -d '' header; do
+		headers+=("$header")
+	done < <(find "$source_dir" -type f -name "$file_glob" -print0 | sort -z)
+fi
+
+if [[ ${#headers[@]} -eq 0 ]]; then
+	echo "Lint: no headers to process."
+	exit 0
+fi
+
+detect_nproc() {
+	if command -v getconf >/dev/null 2>&1; then
+		getconf _NPROCESSORS_ONLN 2>/dev/null && return
+	fi
+	if command -v sysctl >/dev/null 2>&1; then
+		sysctl -n hw.ncpu 2>/dev/null && return
+	fi
+	echo 2
+}
+
+max_jobs="${SNAP_LINT_MAX_JOBS:-$(detect_nproc)}"
+if ! [[ "$max_jobs" =~ ^[0-9]+$ ]] || [[ "$max_jobs" -lt 1 ]]; then
+	max_jobs=1
+fi
+
+echo "Beginning linting on ${#headers[@]} file(s) using up to ${max_jobs} job(s)..."
 rc=0
 files_seen=0
 only_errors=0
@@ -108,24 +157,60 @@ print_tidy_output() {
 	fi
 }
 
-while IFS= read -r -d '' header; do
-	files_seen=1
-	cmd=( "$clang_tidy_bin" "$header" -p="$build_dir" --quiet "${extra_args[@]}" )
+status_dir="$(mktemp -d)"
+cleanup() { rm -rf "$status_dir"; }
+trap cleanup EXIT
+
+run_single() {
+	local header=$1
+	local status_file=$2
+	local output
+	local cmd=( "$clang_tidy_bin" "$header" -p="$build_dir" --quiet "${extra_args[@]}" )
 	if [[ $only_errors -eq 1 ]]; then
 		if ! output="$("${cmd[@]}" 2>&1)"; then
 			print_tidy_output "$output"
 			echo "Error in $header"
-			rc=1
+			echo 1 > "$status_file"
+			return
 		else
 			print_tidy_output "$output"
 		fi
 	else
 		if ! "${cmd[@]}"; then
 			echo "Error in $header"
+			echo 1 > "$status_file"
+			return
+		fi
+	fi
+	echo 0 > "$status_file"
+}
+
+job_index=0
+for header in "${headers[@]}"; do
+	files_seen=1
+	status_file="$status_dir/job_$job_index"
+	run_single "$header" "$status_file" &
+	((job_index++))
+	while true; do
+		running=$(jobs -pr | wc -l | tr -d '[:space:]')
+		[[ -z "$running" ]] && running=0
+		if [[ "$running" -lt "$max_jobs" ]]; then
+			break
+		fi
+		sleep 0.1
+	done
+done
+
+wait || rc=1
+
+for status_file in "$status_dir"/job_*; do
+	[[ -f "$status_file" ]] || continue
+	if read -r code < "$status_file"; then
+		if [[ "$code" != "0" ]]; then
 			rc=1
 		fi
 	fi
-done < <(find "$source_dir" -type f -name "$file_glob" -print0 | sort -z)
+done
 
 if [[ $files_seen -eq 0 ]]; then
 	echo "No headers matched in $source_dir (glob: $file_glob)"
