@@ -47,9 +47,6 @@ jobs:
           style: file
           tidy-checks: ''
           thread-comments: ${{ github.event_name == 'pull_request' && 'update' }}
-          files: |
-            include/snap
-            tests
 
       - name: Fail on lint findings
         if: steps.cpp-lint.outputs.checks-failed > 0
@@ -103,6 +100,8 @@ jobs:
             cxx: g++-13
             packages: >
               ninja-build cmake gcc-13 g++-13 python3
+            toolchain: ""
+            brew_packages: ""
 
           - name: linux-clang-release-cpp23
             runs_on: ubuntu-24.04
@@ -115,6 +114,8 @@ jobs:
             cxx: clang++-18
             packages: >
               ninja-build cmake clang-18 lld-18 python3
+            toolchain: ""
+            brew_packages: ""
 
           - name: linux-clang-asan-cpp20
             runs_on: ubuntu-24.04
@@ -127,6 +128,8 @@ jobs:
             cxx: clang++-18
             packages: >
               ninja-build cmake clang-18 lld-18 python3
+            toolchain: ""
+            brew_packages: ""
 
           - name: linux-arm64-clang-release-cpp23
             runs_on: ubuntu-24.04-arm
@@ -139,7 +142,10 @@ jobs:
             cxx: clang++-18
             packages: >
               ninja-build cmake clang-18 lld-18 python3
-          - name: macos-arm64-clang-release-cpp20
+            toolchain: ""
+            brew_packages: ""
+
+          - name: macos-arm64-apple-clang-release-cpp20
             runs_on: macos-15
             configurePreset: ninja-clang
             buildPreset: build-ninja-clang-release
@@ -148,6 +154,32 @@ jobs:
             cxxStandard: 20
             cc: ""
             cxx: ""
+            toolchain: apple-clang
+            brew_packages: ninja
+
+          - name: macos-arm64-llvm-clang-release-cpp23
+            runs_on: macos-15
+            configurePreset: ninja-clang
+            buildPreset: build-ninja-clang-release
+            testPreset: test-ninja-clang-release
+            buildDir: out/build/ninja/ninja-clang
+            cxxStandard: 23
+            cc: ""
+            cxx: ""
+            toolchain: llvm-clang
+            brew_packages: "ninja llvm@18"
+
+          - name: macos-arm64-gcc-debug-cpp20
+            runs_on: macos-15
+            configurePreset: ninja-gcc
+            buildPreset: build-ninja-gcc-debug
+            testPreset: test-ninja-gcc-debug
+            buildDir: out/build/ninja/ninja-gcc
+            cxxStandard: 20
+            cc: ""
+            cxx: ""
+            toolchain: gcc
+            brew_packages: "ninja gcc@14"
 
           - name: macos-intel-clang-debug-cpp17
             runs_on: macos-15-intel
@@ -158,6 +190,8 @@ jobs:
             cxxStandard: 17
             cc: ""
             cxx: ""
+            toolchain: apple-clang
+            brew_packages: ninja
 
     steps:
       - name: Harden runner
@@ -176,10 +210,51 @@ jobs:
 
       - name: Install dependencies (macOS)
         if: runner.os == 'macOS'
+        env:
+          HOMEBREW_NO_AUTO_UPDATE: 1
+          HOMEBREW_NO_INSTALL_CLEANUP: 1
         run: |
-          export HOMEBREW_NO_AUTO_UPDATE=1
-          export HOMEBREW_NO_INSTALL_CLEANUP=1
-          brew install ninja || true
+          if [[ -n "${{ matrix.brew_packages }}" ]]; then
+            for pkg in ${{ matrix.brew_packages }}; do
+              if ! brew list --versions "$pkg" >/dev/null 2>&1; then
+                brew install "$pkg"
+              else
+                echo "brew package '$pkg' already installed"
+              fi
+            done
+          fi
+
+      - name: Configure macOS toolchain
+        if: runner.os == 'macOS'
+        run: |
+          TOOL_DIR="$RUNNER_TEMP/snap-toolchain"
+          mkdir -p "$TOOL_DIR"
+          case "${{ matrix.toolchain }}" in
+            llvm-clang)
+              LLVM_PREFIX="$(brew --prefix llvm@18)"
+              ln -sf "${LLVM_PREFIX}/bin/clang" "$TOOL_DIR/clang"
+              ln -sf "${LLVM_PREFIX}/bin/clang++" "$TOOL_DIR/clang++"
+              echo "$TOOL_DIR" >> "$GITHUB_PATH"
+              echo "CC=clang" >> "$GITHUB_ENV"
+              echo "CXX=clang++" >> "$GITHUB_ENV"
+              ;;
+            gcc)
+              GCC_PREFIX="$(brew --prefix gcc@14)"
+              ln -sf "${GCC_PREFIX}/bin/gcc-14" "$TOOL_DIR/gcc"
+              ln -sf "${GCC_PREFIX}/bin/g++-14" "$TOOL_DIR/g++"
+              echo "$TOOL_DIR" >> "$GITHUB_PATH"
+              echo "CC=gcc" >> "$GITHUB_ENV"
+              echo "CXX=g++" >> "$GITHUB_ENV"
+              ;;
+            apple-clang|"")
+              echo "CC=clang" >> "$GITHUB_ENV"
+              echo "CXX=clang++" >> "$GITHUB_ENV"
+              ;;
+            *)
+              echo "Unknown macOS toolchain '${{ matrix.toolchain }}'" >&2
+              exit 1
+              ;;
+          esac
 
       - name: Configure toolchain env
         if: ${{ matrix.cc != '' }}
@@ -248,8 +323,8 @@ jobs:
       - name: Test
         run: ctest --preset "${{ matrix.testPreset }}" --output-on-failure --schedule-random -F
 
-  tier2-arm:
-    name: tier2 · linux (armv7) smoke
+  tier2-alt-arch:
+    name: tier2 · linux (alt arch) smoke (${{ matrix.name }})
     needs:
       - tier1-posix
       - tier1-windows
@@ -260,13 +335,38 @@ jobs:
       fail-fast: true
       matrix:
         include:
-          - arch: armv7
-            distro: ubuntu22.04
-            std: 17
+          - name: aarch64-ubuntu24-clang
+            arch: aarch64
+            distro: ubuntu24.04
+            std: 23
             pkg: >
-              git ninja-build cmake gcc-12 g++-12 python3
-            cc: gcc-12
-            cxx: g++-12
+              git ninja-build cmake clang lld python3
+            cc: clang
+            cxx: clang++
+          - name: riscv64-bookworm-gcc
+            arch: riscv64
+            distro: bookworm
+            std: 20
+            pkg: >
+              git ninja-build cmake build-essential python3
+            cc: gcc
+            cxx: g++
+          - name: ppc64le-ubuntu22-gcc
+            arch: ppc64le
+            distro: ubuntu22.04
+            std: 20
+            pkg: >
+              git ninja-build cmake build-essential python3
+            cc: gcc
+            cxx: g++
+          - name: s390x-ubuntu24-gcc
+            arch: s390x
+            distro: ubuntu24.04
+            std: 20
+            pkg: >
+              git ninja-build cmake build-essential python3
+            cc: gcc
+            cxx: g++
     steps:
       - name: Harden runner
         uses: step-security/harden-runner@v2.11.0
@@ -293,6 +393,111 @@ jobs:
               -DSNAP_TEST_GROUPED=ON
             cmake --build out/build/${{ matrix.arch }} --parallel
             ctest --test-dir out/build/${{ matrix.arch }} --label-regex smoke --output-on-failure --stop-on-failure
+
+  tier2-armv7-cross:
+    name: tier2 · linux (armv7 cross) smoke
+    needs:
+      - tier1-posix
+      - tier1-windows
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    continue-on-error: true
+    container:
+      image: ghcr.io/dockcross/linux-armv7:latest
+    env:
+      CC: arm-linux-gnueabihf-gcc
+      CXX: arm-linux-gnueabihf-g++
+      ARMV7_SYSROOT: /usr/arm-linux-gnueabihf
+      CMAKE_CROSSCOMPILING_EMULATOR: qemu-arm;-L;/usr/arm-linux-gnueabihf
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure + build
+        run: |
+          cmake -S . -B out/build/armv7-cross -G Ninja \
+            -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+            -DCMAKE_CXX_STANDARD=20 \
+            -DCMAKE_SYSTEM_NAME=Linux \
+            -DCMAKE_C_COMPILER="${CC}" \
+            -DCMAKE_CXX_COMPILER="${CXX}" \
+            -DCMAKE_CROSSCOMPILING_EMULATOR="${CMAKE_CROSSCOMPILING_EMULATOR}" \
+            -DCMAKE_SYSROOT="${ARMV7_SYSROOT}" \
+            -DSNAP_TEST_GROUPED=ON
+          cmake --build out/build/armv7-cross --parallel
+
+      - name: Test smoke suite (qemu-arm)
+        run: |
+          ctest --test-dir out/build/armv7-cross --label-regex smoke --output-on-failure --stop-on-failure
+
+  tier2-linux-distros:
+    name: tier2 · linux (distro matrix) smoke (${{ matrix.name }})
+    needs:
+      - tier1-posix
+      - tier1-windows
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    continue-on-error: true
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - name: debian-12-gcc
+            image: debian:12-slim
+            install: |
+              apt-get update -qq
+              DEBIAN_FRONTEND=noninteractive apt-get install -yqq git ninja-build cmake build-essential python3
+            cc: gcc
+            cxx: g++
+            std: 20
+          - name: fedora-41-clang
+            image: fedora:41
+            install: |
+              dnf -y update
+              dnf -y install git ninja-build cmake clang lld python3
+            cc: clang
+            cxx: clang++
+            std: 23
+          - name: opensuse-156-gcc
+            image: opensuse/leap:15.6
+            install: |
+              zypper --non-interactive refresh
+              zypper --non-interactive install git ninja cmake gcc gcc-c++ make python3
+            cc: gcc
+            cxx: g++
+            std: 20
+          - name: alpine-320-gcc
+            image: alpine:3.20
+            install: |
+              apk add --no-cache build-base cmake ninja git python3
+            cc: gcc
+            cxx: g++
+            std: 20
+    container:
+      image: ${{ matrix.image }}
+    steps:
+      - name: Install base toolchain
+        run: ${{ matrix.install }}
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure toolchain env
+        run: |
+          echo "CC=${{ matrix.cc }}" >> "$GITHUB_ENV"
+          echo "CXX=${{ matrix.cxx }}" >> "$GITHUB_ENV"
+
+      - name: Configure + build
+        run: |
+          cmake -S . -B out/build/distro/${{ matrix.name }} -G Ninja \
+            -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+            -DCMAKE_CXX_STANDARD=${{ matrix.std }} \
+            -DSNAP_TEST_GROUPED=ON
+          cmake --build out/build/distro/${{ matrix.name }} --parallel
+
+      - name: Test smoke suite
+        run: |
+          ctest --test-dir out/build/distro/${{ matrix.name }} --label-regex smoke --output-on-failure --stop-on-failure
 
   tier2-bsd:
     name: tier2 · freebsd smoke
